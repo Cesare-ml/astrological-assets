@@ -53,8 +53,8 @@ Known unresolved path: the skins reference `risuonatore-solare-bianco.png` where
 
 ### Gate B — independent graphics development
 - [ ] `astrological-charts` clean `npm install`, TypeScript build, standalone Angular build, and tests succeed.
-- [ ] Contributor can clone `astrological-charts` and `astrological-assets` (but **cannot** access `virgo-stars`) and render synthetic natal/transits/synastry/latitude fixtures.
-- [ ] Verify all seven skins, PNG export and missing-asset diagnostics; compare against baseline screenshots.
+- [x] The Charts draft includes a synthetic Angular demo for natal/transits/synastry/latitude with no backend or VirgoStars checkout. Its local browser smoke test exercised all seven skins and PNG export with generated placeholders.
+- [ ] Compare against approved real-artwork baselines; test a clean collaborator checkout and the real pack after rights review.
 - [ ] Verify local server CORS/network and GPU texture lifecycle. No live customer data.
 
 ### Gate C — safe integration into VirgoStars
@@ -97,7 +97,7 @@ npm run test:assets
 node scripts/serve-local-assets.mjs --root ../astrological-assets/public/assets --manifest ../astrological-assets/manifests/approved-assets.json
 ```
 
-A dedicated Angular demo remains to be developed. These commands do not imply current graphics build readiness.
+The [Angular demo guide](https://github.com/Cesare-ml/astrological-charts/blob/feat/verified-asset-preview/docs/ANGULAR_DEMO.md) describes the synthetic renderer demo. These commands do not imply compatibility with real artwork or production consumers.
 
 ## 8. Cross-project documentation
 
@@ -114,5 +114,7 @@ A dedicated Angular demo remains to be developed. These commands do not imply cu
 A new [Charts preview candidate](https://github.com/Cesare-ml/astrological-charts/blob/feat/verified-asset-preview/docs/LOCAL_ASSET_PREVIEW.md) provides a SHA-256 gated localhost asset gallery, plus a locally generated synthetic fixture pack with the 78 exact preload paths. This permits a collaborator to check image paths/CORS without a VirgoStars repository checkout or real artwork. **It does not yet render an Angular natal chart, and no production asset rights were approved or PNG files transferred.**
 
 Current draft PR for the independent asset-only smoke preview: [Charts #13](https://github.com/Cesare-ml/astrological-charts/pull/13), stacked after #11. It adds local synthetic PNG generation, strict manifest-gated serving and a web gallery. Do not treat synthetic success as visual compatibility with the seven skins or as production readiness.
+
+Charts #13 also contains the separate Angular renderer demo and a browser smoke test. The gallery remains an asset-only preview. All real-image approvals and imports remain pending.
 
 The asset-pack verifier now rejects empty manifests and records missing rights metadata, matching the Charts development server's structural checks. This validates recorded evidence fields and hashes; it does not establish whether the legal evidence is genuine or sufficient. All 78 white-symbol review records remain pending.
