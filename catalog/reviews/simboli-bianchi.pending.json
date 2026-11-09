@@ -1,0 +1,716 @@
+{
+  "schemaVersion": 1,
+  "sourceSnapshot": "9900c36acc309bc2a6e87009f554b2e4141e4864",
+  "reviewStatus": "pending",
+  "note": "Rights have NOT been verified. Entries are NOT approved for copying, sharing or publication.",
+  "groups": {
+    "case": 12,
+    "elementi-celesti": 50,
+    "elementi": 4,
+    "segni": 12
+  },
+  "assets": [
+    {
+      "path": "img/simboli-bianchi/case/01.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "caafa0c1ffae894f8d825991e251dcd240e450a9",
+      "sourceBytes": 3447
+    },
+    {
+      "path": "img/simboli-bianchi/case/02.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "b3deaca676fddad0c2eac2747baecd8fe6e25305",
+      "sourceBytes": 4289
+    },
+    {
+      "path": "img/simboli-bianchi/case/03.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "6e6f0e139c1e5d68a3305491478a4ce2de13b3b3",
+      "sourceBytes": 4535
+    },
+    {
+      "path": "img/simboli-bianchi/case/04.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "739b2b730cc91188c611c233eca5693876b67744",
+      "sourceBytes": 4612
+    },
+    {
+      "path": "img/simboli-bianchi/case/05.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "1880375a4cd9623e64728156b09141cf5389e064",
+      "sourceBytes": 4450
+    },
+    {
+      "path": "img/simboli-bianchi/case/06.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "1cb7c3dce0abb7fdc2aa2c274f186f8b1964461a",
+      "sourceBytes": 4650
+    },
+    {
+      "path": "img/simboli-bianchi/case/07.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "f7971ef44907d722de4553331e69593a08863b96",
+      "sourceBytes": 4685
+    },
+    {
+      "path": "img/simboli-bianchi/case/08.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "b2fc93e247d589c6190ebb38be75f92a5d75c696",
+      "sourceBytes": 4634
+    },
+    {
+      "path": "img/simboli-bianchi/case/09.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "f82cd4ddeb6debfdf78cc5a7d8746b1da80d1079",
+      "sourceBytes": 4668
+    },
+    {
+      "path": "img/simboli-bianchi/case/10.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "efaac096376c475d58b5a8960a48548934243a1b",
+      "sourceBytes": 4372
+    },
+    {
+      "path": "img/simboli-bianchi/case/11.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "3a31167c9fabc09f33aa9e7fde2150b31d80611e",
+      "sourceBytes": 4063
+    },
+    {
+      "path": "img/simboli-bianchi/case/12.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "6d85ae9c26524cd1a1b8a8a50269efec176f9d0c",
+      "sourceBytes": 4768
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/AS.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "94d44ce16dd4a4472208dd76bbeb24d383b3a661",
+      "sourceBytes": 2401
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Ananke.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "831161860b585cc6da4e5ca2ede47ef74a4c0573",
+      "sourceBytes": 1835
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Basis.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "540667d869f92b9d7182dd8de3ac84747b1c715b",
+      "sourceBytes": 598
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Chiron-r.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "5d023eb47b0a2d10d91765ba5988895f3d99d03e",
+      "sourceBytes": 2027
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Chiron.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "105ddd7d37e10c4f3b5352cb64b1a4eb2b3146fe",
+      "sourceBytes": 1290
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/DS.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "141c2c572be638c47dbe86c94a665239c56ad0b4",
+      "sourceBytes": 1641
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Daimon.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "d5fcb9cc1934ae0daaeaa053bb5390ab6333fb6e",
+      "sourceBytes": 1211
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Eros.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "ff60142c461446e9ca15d8277804a8b47fdb2fbd",
+      "sourceBytes": 1190
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Hermes.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "0cd3bab60a3c3427d5956bab57a868e3d90ed8ad",
+      "sourceBytes": 1112
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/IC.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "37e1c352e21a931e04488a52cef3c810fe51b6b1",
+      "sourceBytes": 1063
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Infrarosso.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "dd1640a5c31db46b5f984528bc6825bb8c6e1ecb",
+      "sourceBytes": 1251
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Jupiter-r.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "78e438af0b442a7cf70d4290f33d427b1e2e1fd8",
+      "sourceBytes": 4922
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Jupiter.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "9a8d24f936ec2024f8fb115c5a653e8e5182bd20",
+      "sourceBytes": 4393
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/MC.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "52f79dc3f248a6025fc642b5be7d91353da4f404",
+      "sourceBytes": 1769
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Mars-r.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "878f542f69431218c64478eec43d5b3c26b693a1",
+      "sourceBytes": 5655
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Mars.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "7cfc19dc5c5e6a861176fe4b1e1861a8eea85056",
+      "sourceBytes": 5161
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Mercury-r.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "411a1378b2050878e31f923aaaf3e0b4e0e59f45",
+      "sourceBytes": 5024
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Mercury.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "90a1f206aef9616ab0ef84afccbff53742bc2d88",
+      "sourceBytes": 4552
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Moon.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "49ac0c02696c2bfbfb2078658abb956d3b7e33f1",
+      "sourceBytes": 4995
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Nemesi.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "9ae72eab4ea5e3bd1b5479f03a204684f778d935",
+      "sourceBytes": 1101
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Neptune-r.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "2dc2a6745b13ede577bb29e5bcac5268e5379998",
+      "sourceBytes": 2039
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Neptune.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "2445c55658c5c7a92dbb4411a14f2e022fcae2cd",
+      "sourceBytes": 1298
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Nike.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "0243739ff3ab662bb1eb97a200605ccc5d8fac5d",
+      "sourceBytes": 1083
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Pluto-r.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "83548d6df501e2bc07c5de7ea32057427ba7d9a7",
+      "sourceBytes": 2398
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Pluto.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "e5020cc1b260a6863fc7efeece1101482d1a3d69",
+      "sourceBytes": 1605
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Saturn-r.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "7f450053084566a48f73c009221ce7dba021368f",
+      "sourceBytes": 4925
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Saturn.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "36fdf2d398d5be5df178ae0183c5a10a7efeb312",
+      "sourceBytes": 4415
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Sun.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "805a47df82cd057001e9874f9350bc44b2d28643",
+      "sourceBytes": 5096
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Tolma.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "5bf20cd8e63b60d001af4ac99233a2a444ced406",
+      "sourceBytes": 1071
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Tyche.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "c6b79530dad8333d8f8050ef12f6cb7e9958fabd",
+      "sourceBytes": 1470
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Ultravioletto.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "cead646efb21d615b0274e255f1669150b79fc62",
+      "sourceBytes": 1942
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Uranus-r.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "c3b9930d3624d9edb7705148fa4850eaccd2938f",
+      "sourceBytes": 2680
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Uranus.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "f8b506892c4d800b49ff245eceed4aae30066189",
+      "sourceBytes": 2002
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Venus-r.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "85af5b5a0f84a42168c53899d784e69e512e5b4a",
+      "sourceBytes": 4991
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/Venus.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "3a05b2e548c154e739ec13d4cd8190f6a0853a59",
+      "sourceBytes": 4469
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/VerdeNegativo.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "d91b51b2b14f1d1068643dbeca197bd0eac9ab27",
+      "sourceBytes": 1493
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/mean Apogee.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "9899a2283769928150e731de1ce71cb993027706",
+      "sourceBytes": 1941
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/mean Node Sud-r.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "7105018487cd0d802f747c744637daed80f37b5b",
+      "sourceBytes": 5141
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/mean Node Sud.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "4c64533a46ff29670082acc1c01c7277eeeb2f3a",
+      "sourceBytes": 4645
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/mean Node-r.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "d0b9b0115b45ba04e6023ea7b87768b78dec0202",
+      "sourceBytes": 5198
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/mean Node.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "0bf1b0a790715851db9eddcdc429e5a345bd1850",
+      "sourceBytes": 4657
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/mean Perigee.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "ba445e7bbfd8031b9942e4f88276ae68834b225a",
+      "sourceBytes": 1966
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/osc. Apogee-r.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "92e86587697d4608ed0eb25e030d6ae32ae7e3a0",
+      "sourceBytes": 1982
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/osc. Apogee.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "93eed0399441bc2ad5279b64b8865a58429eaa1c",
+      "sourceBytes": 1253
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/osc. Perigee-r.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "f2301bc03f75d6e723586539cec583b555caa6a8",
+      "sourceBytes": 1947
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/osc. Perigee.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "8d6052c0a956a9be97b1249e331321329b07d14e",
+      "sourceBytes": 1277
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/true Node Sud-r.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "88bed92c188b864782a0c91867e7e1037eea858f",
+      "sourceBytes": 2132
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/true Node Sud.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "919389a562bd2ebf72550a404c707756f0cc4330",
+      "sourceBytes": 1658
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/true Node-r.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "046711ec3e81c7dfb65dc2ccb00f8d033fc00e1d",
+      "sourceBytes": 2222
+    },
+    {
+      "path": "img/simboli-bianchi/elementi-celesti/true Node.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "a32cfa0fd2f91ea8b2b7d3052491098e43df341f",
+      "sourceBytes": 1669
+    },
+    {
+      "path": "img/simboli-bianchi/elementi/0.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "f88dc0a58c60e4dfd99a0e0dc4b9487779f35274",
+      "sourceBytes": 2781
+    },
+    {
+      "path": "img/simboli-bianchi/elementi/1.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "11e8eecef25063b421dea94e1144d9f4bc2ae601",
+      "sourceBytes": 2737
+    },
+    {
+      "path": "img/simboli-bianchi/elementi/2.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "3ce3c70bd2988fe7a84aaab03b1cf23739e4b22d",
+      "sourceBytes": 2800
+    },
+    {
+      "path": "img/simboli-bianchi/elementi/3.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "50a6851d5a804e93afc7b6cda667a64555e9fd83",
+      "sourceBytes": 2918
+    },
+    {
+      "path": "img/simboli-bianchi/segni/01.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "4e053cb088f560dc7addb0e0b544a79c9a082c78",
+      "sourceBytes": 4963
+    },
+    {
+      "path": "img/simboli-bianchi/segni/02.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "2bb328b10779638b9509d195a56d9aa548b07f79",
+      "sourceBytes": 5134
+    },
+    {
+      "path": "img/simboli-bianchi/segni/03.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "9e210e376edfa38aa25ccf85b6619c73137fae08",
+      "sourceBytes": 3920
+    },
+    {
+      "path": "img/simboli-bianchi/segni/04.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "e4fdba25fd1b32ddedde42a53f76b37b0625d558",
+      "sourceBytes": 5973
+    },
+    {
+      "path": "img/simboli-bianchi/segni/05.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "873f93fadce6e5714b49918ce42222cb0b06f26c",
+      "sourceBytes": 5371
+    },
+    {
+      "path": "img/simboli-bianchi/segni/06.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "f003a362fc2402141f41b7eeab25f8755ad38bb1",
+      "sourceBytes": 5401
+    },
+    {
+      "path": "img/simboli-bianchi/segni/07.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "06ec2eede50f88ebd0ee04ec87da1f974a5de6c2",
+      "sourceBytes": 4872
+    },
+    {
+      "path": "img/simboli-bianchi/segni/08.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "897e4414990b9ba16409d4f42f3baf89521cf391",
+      "sourceBytes": 4768
+    },
+    {
+      "path": "img/simboli-bianchi/segni/09.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "bd5f797d4df824ca45af2934b456d197e2c2a6d4",
+      "sourceBytes": 4555
+    },
+    {
+      "path": "img/simboli-bianchi/segni/10.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "6927dc4a3ca92dd6ccdc603e77cf6cedb3a2208a",
+      "sourceBytes": 5524
+    },
+    {
+      "path": "img/simboli-bianchi/segni/11.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "131ad176ee22e51dcddb8f2ef5bce1f122d2c487",
+      "sourceBytes": 6525
+    },
+    {
+      "path": "img/simboli-bianchi/segni/12.png",
+      "status": "pending",
+      "rightsHolder": "",
+      "permissionBasis": "",
+      "approvalEvidence": "",
+      "sourceGitBlobSha": "7993fc17c4e597156304e896b297fae9720ed89c",
+      "sourceBytes": 5145
+    }
+  ]
+}
