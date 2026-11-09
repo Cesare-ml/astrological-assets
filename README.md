@@ -66,3 +66,7 @@ Così i simboli vengono serviti in sviluppo da `http://127.0.0.1:4177/assets/img
 - [CONTRIBUTING.md](CONTRIBUTING.md) — contributi
 
 Il progetto non ha una licenza open source, non esegue GitHub Actions e **non** apporta modifiche al sito in produzione o agli Astrolabi.
+
+### Nota sui permessi GitHub
+
+Il repository appartiene a un **account personale** (`Cesare-ml`): secondo la [documentazione ufficiale GitHub](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/repository-access-and-collaboration/permission-levels-for-a-personal-account-repository), nei repository privati gli invitati possono avere accesso di scrittura, non un ruolo read-only garantito. Prima di condividere asset riservati, verificare i permessi effettivi. Se è necessario un ruolo di sola lettura affidabile, valutare un'organizzazione GitHub con ruoli granulari oppure una distribuzione selettiva.
