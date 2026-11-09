@@ -104,3 +104,7 @@ A dedicated Angular demo remains to be developed. These commands do not imply cu
 - Assets: `docs/RIGHTS_AND_REVIEW.md`, `docs/ASSET_SCOPE.md`, `docs/MIGRATION_PLAN.md`.
 - Charts: `docs/SHARED_ASSET_ARCHITECTURE.md`, `docs/ASSET_MANIFEST.md`, `docs/ASSET_SELECTION_AUTOMATION.md`, `docs/INDEPENDENT_ASSETS_REPOSITORY.md`.
 - VirgoStars: `docs/graphics/SKINS_ASSETS_AND_HEADLESS.md`; no changes to the running monorepo in this workstream.
+
+## One-command Windows maintainer preflight
+
+`scripts/preflight-local.ps1` executes Node unit tests and metadata catalog audit in a local checkout. If `manifests/approved-assets.json` exists, it also validates the physical pack; with the optional `-VirgoStarsAssets` path it performs a read-only duplicate-source check. Exit code 3 from collision check is surfaced as a warning, meaning same-byte files must be excluded from a *future* double-source Angular build. No copy, approval, upload, or deployment occurs.
