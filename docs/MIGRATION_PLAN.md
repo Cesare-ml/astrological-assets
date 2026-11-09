@@ -38,3 +38,7 @@ Produce a per-device versioned subset by manifest and hash; package one local co
 ## Rollback
 
 Until Phase C is approved, VirgoStars continues using its current `public/assets` and original graphics library. A PR or bad asset pack update here cannot impact users or shipped devices.
+
+## Collaborator permissions caveat
+
+The repository is under a GitHub **personal account**. GitHub's permission documentation says private personal-account collaborators may receive write-level rights; do not assume invites are read-only. For enforceable read-only access, consider an organization with separate repository roles or distribute only the minimal approved asset pack. Never invite collaborators to `virgo-stars` merely to access artwork.
