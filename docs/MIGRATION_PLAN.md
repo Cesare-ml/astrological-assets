@@ -48,3 +48,7 @@ Until Phase C is approved, VirgoStars continues using its current `public/assets
 ## Collaborator permissions caveat
 
 The repository is under a GitHub **personal account**. GitHub's permission documentation says private personal-account collaborators may receive write-level rights; do not assume invites are read-only. For enforceable read-only access, consider an organization with separate repository roles or distribute only the minimal approved asset pack. Never invite collaborators to `virgo-stars` merely to access artwork.
+
+## Approved-manifest-gated collaborator preview
+
+The Charts development server now has a candidate implementation that requires the actual approved pack `manifests/approved-assets.json` as well as the `public/assets` root; it checks each file SHA-256 before serving and rejects unlisted files. A separate synthetic 78-PNG pack can be generated locally for smoke tests without artwork rights assumptions. Reference: [Charts local preview candidate](https://github.com/Cesare-ml/astrological-charts/blob/feat/verified-asset-preview/docs/LOCAL_ASSET_PREVIEW.md). The image gallery does **not** replace the future Angular chart rendering demo.
