@@ -7,6 +7,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { applyImport, gitBlobSha, planImport, validateAssetPath } from '../scripts/import-approved-assets.mjs';
+import { verifyPack } from '../scripts/verify-pack.mjs';
 
 function withFixture(callback) {
   const dir=mkdtempSync(join(tmpdir(),'astro-assets-import-'));
@@ -37,6 +38,7 @@ test('imports exactly the approved file with verified Git/SHA-256 metadata',()=>
     assert.equal(manifest.assets.length,1);
     assert.equal(manifest.assets[0].sha256,createHash('sha256').update(payload).digest('hex'));
     assert.deepEqual(readFileSync(join(target,...path.split('/'))),payload);
+    assert.deepEqual(verifyPack(target,manifest),{verified:1,bytes:payload.length});
     const repeated=planImport({sourceRoot:source,targetRoot:target,catalog,approvals:approved});
     assert.deepEqual(repeated.actions.map(x=>x.action),['unchanged']);
   });
@@ -89,5 +91,17 @@ test('rejects source symlinks (where supported by host permissions)',t=>{
       throw error;
     }
     assert.throws(()=>planImport({sourceRoot:source,targetRoot:target,catalog,approvals:approved}),/Symlink not allowed/);
+  });
+});
+
+
+test('pack verifier detects tampered or missing deployed images',()=>{
+  withFixture(({dir,source,target,path,catalog,approved})=>{
+    const planned=planImport({sourceRoot:source,targetRoot:target,catalog,approvals:approved});
+    const manifest=applyImport(planned,join(dir,'manifest.json'));
+    writeFileSync(join(target,...path.split('/')),'tampered');
+    assert.throws(()=>verifyPack(target,manifest),/Checksum mismatch/);
+    rmSync(join(target,...path.split('/')));
+    assert.throws(()=>verifyPack(target,manifest),/Missing image/);
   });
 });
