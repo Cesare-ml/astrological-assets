@@ -48,3 +48,7 @@ node scripts/prepare-review.mjs --family img/simboli-bianchi/segni/ --out ./segn
 ```
 
 Tutte le voci escono con `status: "pending"`, insieme a hash Git e dimensione per controllo. Solo il titolare dei diritti può confermare le autorizzazioni con documentazione verificabile. Il file locale non viene caricato automaticamente su GitHub e non copia nessuna immagine.
+
+## Prima scheda pronta alla verifica umana
+
+Il file [`catalog/reviews/simboli-bianchi.pending.json`](../catalog/reviews/simboli-bianchi.pending.json) censisce **78** immagini: 12 segni, 12 case, 50 elementi celesti e 4 elementi. L'elenco è stato generato dal catalogo del commit upstream pin-nato, ma **nessun diritto è stato verificato, non è stato copiato alcun PNG e nessun record contiene `approved`**. Il titolare può usarlo per la verifica per famiglie; solo dopo evidenze positive e approvazione esplicita i path potranno essere ricopiati in `catalog/approvals.json`.
