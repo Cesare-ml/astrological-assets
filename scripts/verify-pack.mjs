@@ -13,6 +13,7 @@ export function verifyPack(root, manifest) {
   const result={verified:0,bytes:0};
   for(const item of manifest.assets) {
     validateAssetPath(item.path);
+    if(item.status!==undefined && item.status!=='approved') throw new Error('Asset is not approved: '+item.path);
     const lower=item.path.normalize('NFC').toLowerCase();
     if(seen.has(lower)) throw new Error('Duplicate or case-colliding asset: '+item.path);
     seen.add(lower);

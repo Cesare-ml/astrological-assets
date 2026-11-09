@@ -35,7 +35,7 @@ function checkedFile(root, assetPath) {
 
 export function inspectWebAssetCollisions({ legacyRoot, packRoot, manifest }) {
   if (!legacyRoot || !packRoot || !manifest || manifest.schemaVersion !== 1
-    || !Array.isArray(manifest.assets)) throw new Error('Missing roots or invalid approved manifest');
+    || !Array.isArray(manifest.assets) || manifest.assets.length === 0) throw new Error('Missing roots or invalid or empty approved manifest');
   const report = {
     schemaVersion: 1,
     approvedCount: manifest.assets.length,
@@ -55,6 +55,9 @@ export function inspectWebAssetCollisions({ legacyRoot, packRoot, manifest }) {
     seen.add(folded);
     if (!/^[0-9a-f]{64}$/.test(asset.sha256) || !Number.isSafeInteger(asset.bytes) || asset.bytes < 0)
       throw new Error('Invalid manifest SHA-256 or size: ' + path);
+    if(asset.status!==undefined && asset.status!=='approved') throw new Error('Asset is not approved: '+path);
+    for(const field of ['rightsHolder','permissionBasis','approvalEvidence'])
+      if(typeof asset[field]!=='string' || !asset[field].trim()) throw new Error('Missing approval metadata '+field+': '+path);
     const pack = checkedFile(packRoot, path);
     if (!pack) { report.missingPack.push(path); continue; }
     if (pack.length !== asset.bytes || hash(pack) !== asset.sha256) {

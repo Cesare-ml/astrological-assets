@@ -15,7 +15,8 @@ function fixture(fn) {
   for (const root of [legacy, pack])
     mkdirSync(join(root, 'img', 'simboli-bianchi', 'segni'), { recursive: true });
   writeFileSync(join(pack, path), content);
-  const manifest = { schemaVersion: 1, assets: [{ path, bytes: content.length, sha256: digest(content) }] };
+  const manifest = { schemaVersion: 1, assets: [{ path, bytes: content.length, sha256: digest(content),
+    rightsHolder:'fixture',permissionBasis:'synthetic data',approvalEvidence:'test' }] };
   try { return fn({ legacy, pack, content, manifest }); }
   finally { rmSync(dir, { force: true, recursive: true }); }
 }
@@ -58,6 +59,16 @@ test('path traversal and case collision refused', () => {
       manifest: { schemaVersion: 1, assets: [x.manifest.assets[0], { ...x.manifest.assets[0], path: 'img/simboli-bianchi/segni/01.PNG' }] } }), /Duplicate/);
   });
 });
+test('empty manifest cannot pass the one-copy gate', () => {
+  fixture(x => assert.throws(() => inspectWebAssetCollisions({legacyRoot:x.legacy,packRoot:x.pack,
+    manifest:{schemaVersion:1,assets:[]}}), /empty/));
+});
+test('pending or undocumented manifest records cannot pass the one-copy gate', () => fixture(x => {
+  for(const patch of [{status:'pending'},{approvalEvidence:''}]) {
+    const manifest={schemaVersion:1,assets:[{...x.manifest.assets[0],...patch}]};
+    assert.throws(()=>inspectWebAssetCollisions({legacyRoot:x.legacy,packRoot:x.pack,manifest}),/not approved|approvalEvidence/);
+  }
+}));
 test('symlinks are not followed', t => {
   fixture(x => {
     rmSync(join(x.pack, path));

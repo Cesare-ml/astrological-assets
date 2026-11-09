@@ -35,6 +35,18 @@ Use `scripts/check-web-asset-collisions.mjs` with `--legacy ../virgo-stars/publi
 
 For every existing URL ensure the resulting site build has **exactly one emitted file** with the same bytes and path; compare manifests/checksums and check the browser network/cache. Then test deploy in staging, preserving rollback to the original build.
 
+### Actual build-output gate
+
+Once a real approved manifest and a candidate web build exist, run the following **read-only** check against the directory whose `assets/` child is actually served (for some Angular builders this is the `browser` directory):
+
+```sh
+node scripts/check-build-output.mjs --build <web-output-root> --manifest ./manifests/approved-assets.json
+```
+
+The command verifies every canonical `assets/<manifest path>` and SHA-256, scans regular output files for additional copies of approved content, and blocks missing, changed, duplicate or unexpected copies. Exit `0` means the checked files satisfy the gate; `2` means the report found a blocker; `1` means invalid input. It rejects empty manifests, missing approval metadata, symlinks and case-colliding paths. If two approved URLs have identical content, the strict duplicate check still blocks: decide how to preserve both required URLs without duplicate output and test that decision; never silently remove a legacy path. This does not prove browser routing, CORS, runtime references or the correctness of an incomplete manifest.
+
+The gate has been exercised with synthetic files, including a 392-file synthetic output and a deliberately added duplicate. No VirgoStars build or production asset manifest has been checked yet.
+
 **No integration in production has been made by this repository.**
 
 ## Phase D — offline Astrolabio

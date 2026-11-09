@@ -128,6 +128,8 @@ powershell -NoProfile -File .\scripts\preflight-local.ps1 `
 
 Il preflight non carica file su GitHub, non approva immagini e non modifica il sito. Prima dell'importazione vera il manifest approvato non esiste e questa parte del test viene correttamente saltata.
 
+Per verificare anche i file effettivamente emessi da una futura build web, usare `npm run check:build-output -- --build <cartella-output-web> --manifest ./manifests/approved-assets.json`. Il controllo e i suoi limiti sono descritti nel [piano di migrazione](docs/MIGRATION_PLAN.md); non è ancora stato eseguito su una build VirgoStars.
+
 ## Preview indipendente (prima e dopo l'importazione)
 
 Il repository [`astrological-charts`](https://github.com/Cesare-ml/astrological-charts) include una [PR #13](https://github.com/Cesare-ml/astrological-charts/pull/13) con una galleria di 78 PNG sintetici e una distinta [demo Angular](https://github.com/Cesare-ml/astrological-charts/blob/feat/verified-asset-preview/docs/ANGULAR_DEMO.md). La demo usa ulteriori risorse generate localmente per visualizzare grafici con fixture sintetiche, senza copiare artwork originale né accedere a VirgoStars.

@@ -14,6 +14,7 @@
     "verify:pack": "node scripts/verify-pack.mjs",
     "review:family": "node scripts/prepare-review.mjs",
     "catalog:refresh": "node scripts/refresh-source-catalog.mjs",
-    "check:web-collisions": "node scripts/check-web-asset-collisions.mjs"
+    "check:web-collisions": "node scripts/check-web-asset-collisions.mjs",
+    "check:build-output": "node scripts/check-build-output.mjs"
   }
 }

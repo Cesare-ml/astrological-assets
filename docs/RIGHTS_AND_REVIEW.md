@@ -41,6 +41,8 @@ At apply time the importer rechecks every selected source and destination agains
 
 Only the project owner or a reviewer explicitly authorized by the owner should sign off; an automated coding assistant cannot perform legal rights approval.
 
+An approved-pack record with an explicit `status` other than `approved` is rejected by the pack verifier and build gates, even if its textual fields are filled. Existing importer-generated manifests omit `status` and remain supported; their evidence fields still require human review and are not independently authenticated by these scripts.
+
 ## Revisione rapida per famiglia, senza approvare automaticamente
 
 Per preparare 12 schede dei segni senza compilarle manualmente una a una:

@@ -115,6 +115,8 @@ test('pack verifier rejects empty manifests and records without approval evidenc
       invalid.assets[0][field]='  ';
       assert.throws(()=>verifyPack(target,invalid),new RegExp(field));
     }
+    const pending=structuredClone(manifest); pending.assets[0].status='pending';
+    assert.throws(()=>verifyPack(target,pending),/not approved/);
   });
 });
 
