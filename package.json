@@ -1,0 +1,16 @@
+{
+  "name": "astrological-assets-workspace",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Private reviewed host-owned chart assets — no runtime JS package",
+  "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "audit:catalog": "node scripts/audit-catalog.mjs",
+    "import:approved": "node scripts/import-approved-assets.mjs",
+    "verify:pack": "node scripts/verify-pack.mjs"
+  }
+}
