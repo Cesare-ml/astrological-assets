@@ -11,6 +11,8 @@
     "test": "node --test tests/*.test.mjs",
     "audit:catalog": "node scripts/audit-catalog.mjs",
     "import:approved": "node scripts/import-approved-assets.mjs",
-    "verify:pack": "node scripts/verify-pack.mjs"
+    "verify:pack": "node scripts/verify-pack.mjs",
+    "review:family": "node scripts/prepare-review.mjs",
+    "catalog:refresh": "node scripts/refresh-source-catalog.mjs"
   }
 }
