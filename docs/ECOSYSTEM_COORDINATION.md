@@ -112,3 +112,5 @@ A dedicated Angular demo remains to be developed. These commands do not imply cu
 ## Latest candidate: local manifest-gated preview
 
 A new [Charts preview candidate](https://github.com/Cesare-ml/astrological-charts/blob/feat/verified-asset-preview/docs/LOCAL_ASSET_PREVIEW.md) provides a SHA-256 gated localhost asset gallery, plus a locally generated synthetic fixture pack with the 78 exact preload paths. This permits a collaborator to check image paths/CORS without a VirgoStars repository checkout or real artwork. **It does not yet render an Angular natal chart, and no production asset rights were approved or PNG files transferred.**
+
+Current draft PR for the independent asset-only smoke preview: [Charts #13](https://github.com/Cesare-ml/astrological-charts/pull/13), stacked after #11. It adds local synthetic PNG generation, strict manifest-gated serving and a web gallery. Do not treat synthetic success as visual compatibility with the seven skins or as production readiness.
