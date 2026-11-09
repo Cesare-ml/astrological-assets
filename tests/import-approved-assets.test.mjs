@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
-  mkdtempSync, mkdirSync, readFileSync, rmSync, symlinkSync, writeFileSync
+  existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, symlinkSync, writeFileSync
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -115,5 +115,66 @@ test('pack verifier rejects empty manifests and records without approval evidenc
       invalid.assets[0][field]='  ';
       assert.throws(()=>verifyPack(target,invalid),new RegExp(field));
     }
+  });
+});
+
+test('apply refuses changed source bytes before copying any selected file',()=>{
+  withFixture(({dir,source,target,path,catalog,approved})=>{
+    const second='img/simboli-bianchi/segni/02.png';
+    const body=Buffer.from('second synthetic asset');
+    writeFileSync(join(source,...second.split('/')),body);
+    catalog.files.push({path:second,bytes:body.length,gitBlobSha:gitBlobSha(body)});
+    approved.assets.push({...approved.assets[0],path:second});
+    const plan=planImport({sourceRoot:source,targetRoot:target,catalog,approvals:approved});
+    writeFileSync(join(source,...second.split('/')),'changed after planning');
+    assert.throws(()=>applyImport(plan,join(dir,'manifest.json')),/changed since planning/);
+    assert.equal(existsSync(join(target,...path.split('/'))),false);
+    assert.equal(existsSync(join(dir,'manifest.json')),false);
+  });
+});
+
+test('apply refuses a target that changed after an unchanged plan',()=>{
+  withFixture(({dir,source,target,path,catalog,approved})=>{
+    applyImport(planImport({sourceRoot:source,targetRoot:target,catalog,approvals:approved}),join(dir,'first.json'));
+    const plan=planImport({sourceRoot:source,targetRoot:target,catalog,approvals:approved});
+    assert.equal(plan.actions[0].action,'unchanged');
+    writeFileSync(join(target,...path.split('/')),'changed after planning');
+    assert.throws(()=>applyImport(plan,join(dir,'second.json')),/changed since planning/);
+    assert.equal(existsSync(join(dir,'second.json')),false);
+  });
+});
+
+test('rejects target paths through a symlinked parent',t=>{
+  withFixture(({dir,source,catalog,approved})=>{
+    const alias=join(dir,'alias');
+    try { symlinkSync(source,alias,'junction'); }
+    catch(error) {
+      if(process.platform==='win32' && ['EPERM','EACCES'].includes(error.code)) return t.skip('Junction creation unavailable');
+      throw error;
+    }
+    assert.throws(()=>planImport({sourceRoot:source,targetRoot:join(alias,'nested'),catalog,approvals:approved}),/symlink/i);
+  });
+});
+
+test('rejects overlapping source, target and manifest paths',()=>{
+  withFixture(({dir,source,target,path,catalog,approved})=>{
+    assert.throws(()=>planImport({sourceRoot:source,targetRoot:join(source,'nested'),catalog,approvals:approved}),/separate/);
+    assert.throws(()=>planImport({sourceRoot:source,targetRoot:dir,catalog,approvals:approved}),/separate/);
+    const plan=planImport({sourceRoot:source,targetRoot:target,catalog,approvals:approved});
+    assert.throws(()=>applyImport(plan,join(source,'manifest.json')),/inside the source/);
+    assert.throws(()=>applyImport(plan,join(target,...path.split('/'))),/overwrite a selected asset/);
+    assert.equal(existsSync(target),false);
+  });
+});
+
+test('replace refuses a destination changed after approval of the plan',()=>{
+  withFixture(({dir,source,target,path,catalog,approved})=>{
+    mkdirSync(join(target,'img','simboli-bianchi','segni'),{recursive:true});
+    const dest=join(target,...path.split('/'));
+    writeFileSync(dest,'old data');
+    const plan=planImport({sourceRoot:source,targetRoot:target,catalog,approvals:approved,replace:true});
+    writeFileSync(dest,'newer data');
+    assert.throws(()=>applyImport(plan,join(dir,'manifest.json')),/Target changed since planning/);
+    assert.equal(readFileSync(dest,'utf8'),'newer data');
   });
 });

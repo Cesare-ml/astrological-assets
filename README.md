@@ -43,6 +43,8 @@ node scripts/import-approved-assets.mjs `
   --manifest ./manifests/approved-assets.json
 ```
 
+Prima della prima scrittura, l'importatore ricontrolla **tutti** i file selezionati e le destinazioni rispetto al piano, rifiuta junction/symlink negli antenati della destinazione e usa i byte appena verificati. La copia di più file non è una transazione: in caso di errore di scrittura o interruzione possono rimanere file parzialmente importati senza un manifest aggiornato. Operare in una cartella di lavoro dedicata, senza altri processi che modifichino sorgente o destinazione, e ispezionare o ripristinare la cartella prima di riprovare.
+
 4. Verificare gli hash dell'archivio appena creato:
 
 ```powershell

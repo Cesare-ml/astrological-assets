@@ -35,6 +35,8 @@ This example is intentionally **pending**. When the rights holder authorizes a g
 
 The importer checks that the approved bytes still match the source catalog's Git blob ID and size; it then records SHA-256 in `manifests/approved-assets.json`.
 
+At apply time the importer rechecks every selected source and destination against the plan before the first write, rejects symlink/junction ancestors of the target, and writes the bytes it just verified. A changed input or destination blocks the import. This is not a filesystem transaction or a defence against a concurrently hostile process changing paths during the operation: an I/O error can leave a partial import and the previous manifest. Work in an isolated directory, inspect any partial result and restore it before retrying.
+
 **Do not enter personal data, private contract text, credentials or other secrets in the public-facing evidence field.** Use short opaque references to material stored securely elsewhere.
 
 Only the project owner or a reviewer explicitly authorized by the owner should sign off; an automated coding assistant cannot perform legal rights approval.

@@ -4,7 +4,7 @@
  * Default is dry-run. No network access, deployments, or unreviewed copies.
  */
 import {
-  constants, copyFileSync, existsSync, lstatSync, mkdirSync,
+  existsSync, lstatSync, mkdirSync,
   readFileSync, realpathSync, writeFileSync
 } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -39,16 +39,42 @@ function checkNoLinks(root, path, mustExist) {
   let current=root;
   for(let i=0;i<parts.length;i++) {
     current=join(current,parts[i]);
-    if(!existsSync(current)) {
+    let st;
+    try { st=lstatSync(current); }
+    catch(error) {
+      if(error.code!=='ENOENT') throw error;
       if(mustExist) throw new Error('Source file missing: '+path);
       continue;
     }
-    const st=lstatSync(current);
     if(st.isSymbolicLink()) throw new Error('Symlink not allowed: '+path);
     if(i<parts.length-1 && !st.isDirectory()) throw new Error('Parent is not a directory: '+path);
     if(i===parts.length-1 && !st.isFile()) throw new Error('Asset path is not a regular file: '+path);
   }
   return current;
+}
+
+function rejectSymlinkAncestors(path) {
+  let current=resolve(path);
+  while(true) {
+    try {
+      if(lstatSync(current).isSymbolicLink()) throw new Error('Symlink in target path: '+current);
+    } catch(error) {
+      if(error.code!=='ENOENT') throw error;
+    }
+    const parent=dirname(current);
+    if(parent===current) break;
+    current=parent;
+  }
+}
+
+function pathsOverlap(left,right) {
+  const a=process.platform==='win32'?left.toLowerCase():left;
+  const b=process.platform==='win32'?right.toLowerCase():right;
+  return a===b || a.startsWith(b+sep) || b.startsWith(a+sep);
+}
+
+function samePath(left,right) {
+  return process.platform==='win32' ? left.toLowerCase()===right.toLowerCase() : left===right;
 }
 
 export function planImport({sourceRoot, targetRoot, catalog, approvals, replace=false}) {
@@ -60,10 +86,9 @@ export function planImport({sourceRoot, targetRoot, catalog, approvals, replace=
   const source=realpathSync(resolve(sourceRoot));
   if(!lstatSync(source).isDirectory()) throw new Error('Source is not a directory');
   const target=resolve(targetRoot);
-  if(source===target || target.startsWith(source+sep))
+  rejectSymlinkAncestors(target);
+  if(pathsOverlap(source,target))
     throw new Error('Source and target must be separate');
-  if(existsSync(target) && lstatSync(target).isSymbolicLink())
-    throw new Error('Target may not be a symlink');
 
   const candidate=new Map();
   for(const item of catalog.files) {
@@ -95,16 +120,17 @@ export function planImport({sourceRoot, targetRoot, catalog, approvals, replace=
       throw new Error('File differs from audited upstream catalog: '+path);
     const sha256=createHash('sha256').update(bytes).digest('hex');
     const dst=checkNoLinks(target,path,false);
-    let action='copy';
+    let action='copy', priorTargetSha256=null;
     if(existsSync(dst)) {
       const existing=readFileSync(dst);
-      if(existing.length===bytes.length && createHash('sha256').update(existing).digest('hex')===sha256)
+      priorTargetSha256=createHash('sha256').update(existing).digest('hex');
+      if(existing.length===bytes.length && priorTargetSha256===sha256)
         action='unchanged';
       else if(!replace) throw new Error('Target file differs; refusing overwrite: '+path);
       else action='replace';
     }
     actions.push({
-      path,src,dst,action,bytes:bytes.length,gitBlobSha:gitSha,sha256,
+      path,src,dst,action,bytes:bytes.length,gitBlobSha:gitSha,sha256,priorTargetSha256,
       rightsHolder:entry.rightsHolder.trim(),
       permissionBasis:entry.permissionBasis.trim(),
       approvalEvidence:entry.approvalEvidence.trim(),
@@ -117,18 +143,38 @@ export function planImport({sourceRoot, targetRoot, catalog, approvals, replace=
 
 export function applyImport(plan,manifestPath) {
   if(!manifestPath) throw new Error('An explicit --manifest output path is required');
+  rejectSymlinkAncestors(plan.targetRoot);
+  const manifest=resolve(manifestPath);
+  rejectSymlinkAncestors(manifest);
+  if(pathsOverlap(plan.sourceRoot,manifest)) throw new Error('Manifest must not be inside the source');
+  if(plan.actions.some(item=>samePath(resolve(item.dst),manifest))) throw new Error('Manifest cannot overwrite a selected asset');
+
+  // Revalidate every input before the first write; copy the verified buffers,
+  // not a second read of source files that may have changed after planning.
+  const staged=plan.actions.map(item=>{
+    const src=checkNoLinks(plan.sourceRoot,item.path,true);
+    const bytes=readFileSync(src);
+    if(bytes.length!==item.bytes || gitBlobSha(bytes)!==item.gitBlobSha ||
+       createHash('sha256').update(bytes).digest('hex')!==item.sha256)
+      throw new Error('Source changed since planning: '+item.path);
+    const dst=checkNoLinks(plan.targetRoot,item.path,false);
+    const current=existsSync(dst)?createHash('sha256').update(readFileSync(dst)).digest('hex'):null;
+    if(current!==item.priorTargetSha256)
+      throw new Error('Target changed since planning: '+item.path);
+    return {item,bytes};
+  });
   if(!existsSync(plan.targetRoot)) mkdirSync(plan.targetRoot,{recursive:true});
-  if(lstatSync(plan.targetRoot).isSymbolicLink()) throw new Error('Target root symlink rejected');
-  for(const item of plan.actions) {
+  rejectSymlinkAncestors(plan.targetRoot);
+  for(const {item,bytes} of staged) {
     checkNoLinks(plan.targetRoot,item.path,false);
     if(item.action==='unchanged') continue;
     mkdirSync(dirname(item.dst),{recursive:true});
-    copyFileSync(item.src,item.dst,item.action==='copy'?constants.COPYFILE_EXCL:0);
+    writeFileSync(item.dst,bytes,{flag:item.action==='copy'?'wx':'w'});
     const copied=readFileSync(item.dst);
     if(createHash('sha256').update(copied).digest('hex')!==item.sha256)
       throw new Error('Copied file hash mismatch: '+item.path);
   }
-  const manifest={
+  const result={
     schemaVersion:1,
     source:plan.catalogSource,
     assets:plan.actions.map(({path,bytes,sha256,gitBlobSha,rightsHolder,permissionBasis,approvalEvidence})=>({
@@ -136,9 +182,9 @@ export function applyImport(plan,manifestPath) {
     })),
   };
   // The manifest is metadata, never a replacement for the actual license documents.
-  mkdirSync(dirname(resolve(manifestPath)),{recursive:true});
-  writeFileSync(resolve(manifestPath),JSON.stringify(manifest,null,2)+'\n');
-  return manifest;
+  mkdirSync(dirname(manifest),{recursive:true});
+  writeFileSync(manifest,JSON.stringify(result,null,2)+'\n');
+  return result;
 }
 
 function argsMap(args) {
