@@ -128,6 +128,8 @@ Il preflight non carica file su GitHub, non approva immagini e non modifica il s
 
 ## Preview indipendente (prima e dopo l'importazione)
 
-Il repository [`astrological-charts`](https://github.com/Cesare-ml/astrological-charts) include un [branch di prova dedicato](https://github.com/Cesare-ml/astrological-charts/tree/feat/verified-asset-preview), che può generare **78 PNG fittizi e originali** sul PC del collaboratore e mostrarli in una galleria locale. Serve per testare i percorsi senza copiare artwork originale né accedere a VirgoStars. La galleria non è ancora un vero grafico natale Angular.
+Il repository [`astrological-charts`](https://github.com/Cesare-ml/astrological-charts) include una [PR #13 di preview dedicata](https://github.com/Cesare-ml/astrological-charts/pull/13), che può generare **78 PNG fittizi e originali** sul PC del collaboratore e mostrarli in una galleria locale. Serve per testare i percorsi senza copiare artwork originale né accedere a VirgoStars. La galleria non è ancora un vero grafico natale Angular.
 
 Dopo l'importazione dei file autentici approvati, il server richiede obbligatoriamente sia `public/assets` sia `manifests/approved-assets.json`; verifica SHA-256 e limita ogni richiesta ai file presenti nel manifest. Per ora il manifest di produzione non esiste e **nessuna immagine originale è stata importata**.
+
+**Preview locale del codice candidato:** `astrological-charts` [PR #13](https://github.com/Cesare-ml/astrological-charts/pull/13) genera 78 PNG originali sintetici e limita il server a un manifest SHA-256 verificato. Non è ancora una demo interattiva di temi natali e non contiene i PNG originali di VirgoStars. Rimane in bozza finché la suite non viene eseguita su un checkout pulito.
