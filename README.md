@@ -108,3 +108,20 @@ node scripts/check-web-asset-collisions.mjs `
 Codici: `0` = disgiunto; `3` = copie identiche ancora presenti nel sorgente legacy, da **escludere** dalla futura build; `2` = file divergenti, mancanti o alterati, migrazione bloccata. Non interpretare un confronto superato come prova che Angular copi correttamente i file: prima di un deploy serve anche verificare l'output della build.
 
 La [scheda di revisione iniziale dei 78 simboli](catalog/reviews/simboli-bianchi.pending.json) contiene **solo voci pending**, senza alcuna autorizzazione implicita. Il manifest degli asset approvati non è ancora stato creato.
+
+## Verifica locale rapida su Windows
+
+Senza importare o modificare nulla, puoi eseguire test Node, audit del catalogo e — quando esiste un manifest autorizzato — verificare gli hash:
+
+```powershell
+powershell -NoProfile -File .\scripts\preflight-local.ps1
+```
+
+Per aggiungere il controllo delle doppie copie rispetto al tuo checkout locale di VirgoStars:
+
+```powershell
+powershell -NoProfile -File .\scripts\preflight-local.ps1 `
+  -VirgoStarsAssets ..\virgo-stars\public\assets
+```
+
+Il preflight non carica file su GitHub, non approva immagini e non modifica il sito. Prima dell'importazione vera il manifest approvato non esiste e questa parte del test viene correttamente saltata.
