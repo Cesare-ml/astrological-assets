@@ -70,6 +70,8 @@ Known unresolved path: the skins reference `risuonatore-solare-bianco.png` where
 - [ ] Verify e-ink output, PNG conversion, resource disposal, offline start, and recovery after reboot.
 - [ ] Test incremental updates and version rollback before touching shipped devices.
 
+Charts PR #13 now includes a narrower synthetic smoke test: a desktop Firefox context is offline, verifies a generated fixture manifest, reads assets via `file://` and exports four chart modes. It does not exercise the shipped Astrolabio adapter, an approved/minimal asset subset, e-ink, updates or hardware, so the gate above remains open.
+
 ## 6. Contributor permissions and safety
 
 All three repositories are currently private. On GitHub **personal-account** repositories, invitations to private repos do not necessarily offer a strict read-only role. For actual permission separation consider an organization with `read`/`write` roles; otherwise assume code/assets collaborators may have write rights and protect review branches accordingly.
