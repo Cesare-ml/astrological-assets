@@ -9,3 +9,5 @@ Use a focused branch + PR. Describe files, source, license/rights evidence, SHA-
 For a proposed new asset, create or update the rights review records first. Never classify unreviewed upstream inventory data as distributable solely because it exists in a private repo or on a public website.
 
 Run `npm test` for import helper scripts. An integration test on real chart images requires separately approved access to the asset pack.
+
+**Access note:** GitHub personal-account private repository invitations may grant write access. If the intention is strictly read-only visibility for renderer contributors, choose an organization with granular roles before issuing invitations. Changes still require human review; protect the main branch where available.
