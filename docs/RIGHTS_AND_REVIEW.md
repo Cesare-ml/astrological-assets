@@ -38,3 +38,13 @@ The importer checks that the approved bytes still match the source catalog's Git
 **Do not enter personal data, private contract text, credentials or other secrets in the public-facing evidence field.** Use short opaque references to material stored securely elsewhere.
 
 Only the project owner or a reviewer explicitly authorized by the owner should sign off; an automated coding assistant cannot perform legal rights approval.
+
+## Revisione rapida per famiglia, senza approvare automaticamente
+
+Per preparare 12 schede dei segni senza compilarle manualmente una a una:
+
+```powershell
+node scripts/prepare-review.mjs --family img/simboli-bianchi/segni/ --out ./segni-review.local.json
+```
+
+Tutte le voci escono con `status: "pending"`, insieme a hash Git e dimensione per controllo. Solo il titolare dei diritti può confermare le autorizzazioni con documentazione verificabile. Il file locale non viene caricato automaticamente su GitHub e non copia nessuna immagine.
