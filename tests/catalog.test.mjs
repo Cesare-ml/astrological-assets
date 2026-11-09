@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import { readFileSync } from 'node:fs';
 import { auditCatalog } from '../scripts/audit-catalog.mjs';
 import { parseGitTreeOutput } from '../scripts/refresh-source-catalog.mjs';
+import { prepareReview } from '../scripts/prepare-review.mjs';
 
 test('pinned upstream catalog is internally consistent and has no path collisions',()=>{
   const catalog=JSON.parse(readFileSync(new URL('../catalog/upstream-candidates.json',import.meta.url),'utf8'));
@@ -32,4 +33,12 @@ test('catalog audit rejects unknown content hashes and case-colliding paths',()=
   const source={assetRoot:'public/assets',commit:'c'.repeat(40),repository:'test'};
   assert.throws(()=>auditCatalog({schemaVersion:1,fileCount:1,source,files:[{...a,gitBlobSha:'invalid'}]}),/Invalid source blob/);
   assert.throws(()=>auditCatalog({schemaVersion:1,fileCount:2,source,files:[a,{...a,path:'img/simboli-bianchi/segni/01.PNG'}]}),/collision/);
+});
+
+test('family review generator creates only pending permissions for known astrology symbols',()=>{
+  const catalog=JSON.parse(readFileSync(new URL('../catalog/upstream-candidates.json',import.meta.url),'utf8'));
+  const review=prepareReview(catalog,'img/simboli-bianchi/segni/');
+  assert.equal(review.assets.length,12);
+  assert.ok(review.assets.every(a=>a.status==='pending' && !a.permissionBasis && a.upstreamGitBlobSha));
+  assert.throws(()=>prepareReview(catalog,'../../private/'),/safe/);
 });
