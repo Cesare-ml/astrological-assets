@@ -44,7 +44,7 @@ Known unresolved path: the skins reference `risuonatore-solare-bianco.png` where
 ## 5. Release gates
 
 ### Gate A — private asset review and transfer
-- [ ] `npm test`, `npm run audit:catalog` on a fresh checkout of this branch.
+- [x] `npm test`, `npm run audit:catalog` on a clean export of the branch on Windows/Node 22.18.0 (2026-11-09); after verifier hardening, 17 tests passed.
 - [ ] Review the 78 records in `catalog/reviews/simboli-bianchi.pending.json`; every entry starts as `pending` and conveys no rights.
 - [ ] Rights and provenance verified, approved paths explicitly recorded.
 - [ ] `scripts/import-approved-assets.mjs` dry-run succeeds against pinned local clone, then the approved-only import is reviewed.
@@ -114,3 +114,5 @@ A dedicated Angular demo remains to be developed. These commands do not imply cu
 A new [Charts preview candidate](https://github.com/Cesare-ml/astrological-charts/blob/feat/verified-asset-preview/docs/LOCAL_ASSET_PREVIEW.md) provides a SHA-256 gated localhost asset gallery, plus a locally generated synthetic fixture pack with the 78 exact preload paths. This permits a collaborator to check image paths/CORS without a VirgoStars repository checkout or real artwork. **It does not yet render an Angular natal chart, and no production asset rights were approved or PNG files transferred.**
 
 Current draft PR for the independent asset-only smoke preview: [Charts #13](https://github.com/Cesare-ml/astrological-charts/pull/13), stacked after #11. It adds local synthetic PNG generation, strict manifest-gated serving and a web gallery. Do not treat synthetic success as visual compatibility with the seven skins or as production readiness.
+
+The asset-pack verifier now rejects empty manifests and records missing rights metadata, matching the Charts development server's structural checks. This validates recorded evidence fields and hashes; it does not establish whether the legal evidence is genuine or sufficient. All 78 white-symbol review records remain pending.

@@ -105,3 +105,15 @@ test('pack verifier detects tampered or missing deployed images',()=>{
     assert.throws(()=>verifyPack(target,manifest),/Missing image/);
   });
 });
+
+test('pack verifier rejects empty manifests and records without approval evidence',()=>{
+  withFixture(({dir,source,target,catalog,approved})=>{
+    assert.throws(()=>verifyPack(target,{schemaVersion:1,assets:[]}),/empty/);
+    const manifest=applyImport(planImport({sourceRoot:source,targetRoot:target,catalog,approvals:approved}),join(dir,'manifest.json'));
+    for(const field of ['rightsHolder','permissionBasis','approvalEvidence']) {
+      const invalid=structuredClone(manifest);
+      invalid.assets[0][field]='  ';
+      assert.throws(()=>verifyPack(target,invalid),new RegExp(field));
+    }
+  });
+});

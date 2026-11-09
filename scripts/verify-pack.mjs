@@ -7,8 +7,8 @@ import { fileURLToPath } from 'node:url';
 import { validateAssetPath } from './import-approved-assets.mjs';
 
 export function verifyPack(root, manifest) {
-  if(!manifest || manifest.schemaVersion!==1 || !Array.isArray(manifest.assets))
-    throw new Error('Invalid approved assets manifest');
+  if(!manifest || manifest.schemaVersion!==1 || !Array.isArray(manifest.assets) || manifest.assets.length===0)
+    throw new Error('Invalid or empty approved assets manifest');
   const seen=new Set();
   const result={verified:0,bytes:0};
   for(const item of manifest.assets) {
@@ -18,6 +18,9 @@ export function verifyPack(root, manifest) {
     seen.add(lower);
     if(!Number.isSafeInteger(item.bytes)||item.bytes<0||!/^[a-f0-9]{64}$/.test(item.sha256))
       throw new Error('Invalid hash or size for '+item.path);
+    for(const field of ['rightsHolder','permissionBasis','approvalEvidence'])
+      if(typeof item[field]!=='string' || !item[field].trim())
+        throw new Error('Missing approval metadata '+field+' for '+item.path);
     const parts=item.path.split('/');
     let file=resolve(root);
     for(const part of parts) {
