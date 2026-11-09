@@ -45,6 +45,7 @@ Known unresolved path: the skins reference `risuonatore-solare-bianco.png` where
 
 ### Gate A — private asset review and transfer
 - [ ] `npm test`, `npm run audit:catalog` on a fresh checkout of this branch.
+- [ ] Review the 78 records in `catalog/reviews/simboli-bianchi.pending.json`; every entry starts as `pending` and conveys no rights.
 - [ ] Rights and provenance verified, approved paths explicitly recorded.
 - [ ] `scripts/import-approved-assets.mjs` dry-run succeeds against pinned local clone, then the approved-only import is reviewed.
 - [ ] `scripts/verify-pack.mjs` validates every imported file; binaries arrive via a reviewed PR (not pasted or auto-downloaded).
@@ -58,6 +59,7 @@ Known unresolved path: the skins reference `risuonatore-solare-bianco.png` where
 
 ### Gate C — safe integration into VirgoStars
 - [ ] Pin exact graphics and asset commits.
+- [ ] Run `scripts/check-web-asset-collisions.mjs`: treat exit `3` (same-byte legacy copies) as a migration exclusion requirement, exit `2` (divergent/missing) as a hard block, and exit `0` as clean/disjoint.
 - [ ] Staging build emits each shared URL exactly once, with checksum parity to the baseline.
 - [ ] Angular HTML/CSS and Three.js use identical canonical URLs, preserving browser cache and existing paths.
 - [ ] Full site smoke checks, saved natal chart compatibility and regression tests; no backend schema or API change.
