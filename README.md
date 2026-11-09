@@ -69,6 +69,7 @@ Così i simboli vengono serviti in sviluppo da `http://127.0.0.1:4177/assets/img
 
 - [Ambito del catalogo e inventario](docs/ASSET_SCOPE.md)
 - [Diritti e approvazione](docs/RIGHTS_AND_REVIEW.md)
+- [Coordinamento dei tre repository e gate di rilascio](docs/ECOSYSTEM_COORDINATION.md)
 - [Migrazione verso una sola copia di build](docs/MIGRATION_PLAN.md)
 - [AGENTS.md](AGENTS.md) — regole per agenti e sviluppatori
 - [CONTRIBUTING.md](CONTRIBUTING.md) — contributi
@@ -91,3 +92,19 @@ npm run audit:catalog
 ```
 
 Le approvazioni pregresse vanno riesaminate se cambia l'hash Git di un file. L'inventario generato contiene soltanto metadati.
+
+## Preflight obbligatorio contro gli asset duplicati
+
+Quando il primo pacchetto approvato sarà realmente disponibile, questo comando **non modifica né copia nulla**; segnala se gli stessi path verranno importati sia dal vecchio `virgo-stars/public` sia dal repository asset:
+
+```powershell
+node scripts/check-web-asset-collisions.mjs `
+  --legacy ../virgo-stars/public/assets `
+  --pack ./public/assets `
+  --manifest ./manifests/approved-assets.json `
+  --out ./collision-report.local.json
+```
+
+Codici: `0` = disgiunto; `3` = copie identiche ancora presenti nel sorgente legacy, da **escludere** dalla futura build; `2` = file divergenti, mancanti o alterati, migrazione bloccata. Non interpretare un confronto superato come prova che Angular copi correttamente i file: prima di un deploy serve anche verificare l'output della build.
+
+La [scheda di revisione iniziale dei 78 simboli](catalog/reviews/simboli-bianchi.pending.json) contiene **solo voci pending**, senza alcuna autorizzazione implicita. Il manifest degli asset approvati non è ancora stato creato.
