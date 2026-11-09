@@ -60,7 +60,7 @@ npm test
 Una volta che gli asset autorizzati saranno presenti nel repository e i collaboratori saranno invitati, potranno clonare solo **`astrological-charts` e `astrological-assets`**. Il server locale di `astrological-charts` può usare questa cartella:
 
 ```powershell
-node scripts/serve-local-assets.mjs --root ../astrological-assets/public/assets
+node scripts/serve-local-assets.mjs --root ../astrological-assets/public/assets --manifest ../astrological-assets/manifests/approved-assets.json
 ```
 
 Così i simboli vengono serviti in sviluppo da `http://127.0.0.1:4177/assets/img/...`, senza accesso al backend, ai temi degli utenti o alle credenziali VirgoStars. Il renderer non include copie delle immagini.
@@ -125,3 +125,9 @@ powershell -NoProfile -File .\scripts\preflight-local.ps1 `
 ```
 
 Il preflight non carica file su GitHub, non approva immagini e non modifica il sito. Prima dell'importazione vera il manifest approvato non esiste e questa parte del test viene correttamente saltata.
+
+## Preview indipendente (prima e dopo l'importazione)
+
+Il repository [`astrological-charts`](https://github.com/Cesare-ml/astrological-charts) include un [branch di prova dedicato](https://github.com/Cesare-ml/astrological-charts/tree/feat/verified-asset-preview), che può generare **78 PNG fittizi e originali** sul PC del collaboratore e mostrarli in una galleria locale. Serve per testare i percorsi senza copiare artwork originale né accedere a VirgoStars. La galleria non è ancora un vero grafico natale Angular.
+
+Dopo l'importazione dei file autentici approvati, il server richiede obbligatoriamente sia `public/assets` sia `manifests/approved-assets.json`; verifica SHA-256 e limita ogni richiesta ai file presenti nel manifest. Per ora il manifest di produzione non esiste e **nessuna immagine originale è stata importata**.
