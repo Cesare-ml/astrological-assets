@@ -14,7 +14,15 @@ Archivio **privato** di risorse condivisibili per [Astrological Charts](https://
 
 Servono Node.js 20+ e un checkout autorizzato di `Cesare-ml/virgo-stars`, nella cartella adiacente a questo repository.
 
-1. Scegliere gli asset effettivamente utilizzati e documentarne i diritti in `catalog/approvals.json`.
+1. Selezionare una famiglia di asset e creare una scheda di revisione **ancora tutta in stato `pending`**:
+
+```powershell
+node scripts/prepare-review.mjs `
+  --family img/simboli-bianchi/segni/ `
+  --out ./segni-review.local.json
+```
+
+Dopo aver verificato personalmente i diritti, approvare i singoli file o la famiglia con prove pertinenti; trasferire le righe approvate in `catalog/approvals.json`. Il generatore non approva nulla da solo.
 2. Eseguire prima una **simulazione** (non copia nulla):
 
 ```powershell
@@ -70,3 +78,16 @@ Il progetto non ha una licenza open source, non esegue GitHub Actions e **non** 
 ### Nota sui permessi GitHub
 
 Il repository appartiene a un **account personale** (`Cesare-ml`): secondo la [documentazione ufficiale GitHub](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/repository-access-and-collaboration/permission-levels-for-a-personal-account-repository), nei repository privati gli invitati possono avere accesso di scrittura, non un ruolo read-only garantito. Prima di condividere asset riservati, verificare i permessi effettivi. Se è necessario un ruolo di sola lettura affidabile, valutare un'organizzazione GitHub con ruoli granulari oppure una distribuzione selettiva.
+
+## Aggiornare il catalogo dal monorepo locale
+
+Se cambia il commit di `virgo-stars`, è possibile rigenerare il catalogo senza copiare immagini e senza usare Actions:
+
+```powershell
+node scripts/refresh-source-catalog.mjs --repo ../virgo-stars
+node scripts/refresh-source-catalog.mjs `
+  --repo ../virgo-stars --out ./catalog/upstream-candidates.json --write
+npm run audit:catalog
+```
+
+Le approvazioni pregresse vanno riesaminate se cambia l'hash Git di un file. L'inventario generato contiene soltanto metadati.
