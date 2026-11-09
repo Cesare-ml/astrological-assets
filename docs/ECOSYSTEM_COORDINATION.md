@@ -94,7 +94,7 @@ For an invited renderer collaborator **after** a licensed/approved pack has been
 ```powershell
 npm install
 npm run test:assets
-node scripts/serve-local-assets.mjs --root ../astrological-assets/public/assets
+node scripts/serve-local-assets.mjs --root ../astrological-assets/public/assets --manifest ../astrological-assets/manifests/approved-assets.json
 ```
 
 A dedicated Angular demo remains to be developed. These commands do not imply current graphics build readiness.
@@ -108,3 +108,7 @@ A dedicated Angular demo remains to be developed. These commands do not imply cu
 ## One-command Windows maintainer preflight
 
 `scripts/preflight-local.ps1` executes Node unit tests and metadata catalog audit in a local checkout. If `manifests/approved-assets.json` exists, it also validates the physical pack; with the optional `-VirgoStarsAssets` path it performs a read-only duplicate-source check. Exit code 3 from collision check is surfaced as a warning, meaning same-byte files must be excluded from a *future* double-source Angular build. No copy, approval, upload, or deployment occurs.
+
+## Latest candidate: local manifest-gated preview
+
+A new [Charts preview candidate](https://github.com/Cesare-ml/astrological-charts/blob/feat/verified-asset-preview/docs/LOCAL_ASSET_PREVIEW.md) provides a SHA-256 gated localhost asset gallery, plus a locally generated synthetic fixture pack with the 78 exact preload paths. This permits a collaborator to check image paths/CORS without a VirgoStars repository checkout or real artwork. **It does not yet render an Angular natal chart, and no production asset rights were approved or PNG files transferred.**
