@@ -13,7 +13,8 @@ This is a **private resource repository**, intended to hold a carefully approved
 7. Retain relative paths under `public/assets/img` or `public/assets/fonts`, exact casing and file format. Do not silently rename references, including the unresolved `risuonatore-solare-bianco.png` candidate.
 8. Use PRs and targeted reviews. Do not merge, release, distribute, publish, deploy, or change repository visibility without owner approval.
 9. Do not create GitHub Actions or background jobs for this repository without express authorization.
-10. Once assets are approved, run import integrity and `npm test`, and document expected consumers and compatibility (Angular, Three.js, offline Astrolabio).
+10. Before any future web asset migration, run `scripts/check-web-asset-collisions.mjs`; never regard a matching legacy file as safe for double inclusion. The 78 starter review records remain pending until the owner approves each permitted family/file.
+11. Once assets are approved, run import integrity and `npm test`, and document expected consumers and compatibility (Angular, Three.js, offline Astrolabio).
 
 ## Architecture
 
