@@ -132,8 +132,8 @@ Per verificare anche i file effettivamente emessi da una futura build web, usare
 
 ## Preview indipendente (prima e dopo l'importazione)
 
-Il repository [`astrological-charts`](https://github.com/Cesare-ml/astrological-charts) include una [PR #13](https://github.com/Cesare-ml/astrological-charts/pull/13) con una galleria di 78 PNG sintetici e una distinta [demo Angular](https://github.com/Cesare-ml/astrological-charts/blob/feat/verified-asset-preview/docs/ANGULAR_DEMO.md). La demo usa ulteriori risorse generate localmente per visualizzare grafici con fixture sintetiche, senza copiare artwork originale né accedere a VirgoStars.
+Il repository [`astrological-charts`](https://github.com/Cesare-ml/astrological-charts) include, tramite la [PR #13 integrata](https://github.com/Cesare-ml/astrological-charts/pull/13), una galleria di 78 PNG sintetici e una distinta [demo Angular](https://github.com/Cesare-ml/astrological-charts/blob/main/docs/ANGULAR_DEMO.md). La demo usa ulteriori risorse generate localmente per visualizzare grafici con fixture sintetiche, senza copiare artwork originale né accedere a VirgoStars.
 
 Dopo l'importazione dei file autentici approvati, il server richiede obbligatoriamente sia `public/assets` sia `manifests/approved-assets.json`; verifica SHA-256 e limita ogni richiesta ai file presenti nel manifest. Per ora il manifest di produzione non esiste e **nessuna immagine originale è stata importata**.
 
-**Codice candidato:** la demo interattiva di Charts usa esclusivamente fixture sintetiche. Non contiene i PNG originali di VirgoStars e non dimostra fedeltà alle immagini autentiche; la PR Charts resta in bozza.
+**Limiti della demo:** la demo interattiva di Charts usa esclusivamente fixture sintetiche. Non contiene i PNG originali di VirgoStars e non dimostra fedeltà alle immagini autentiche o disponibilità per la produzione.
