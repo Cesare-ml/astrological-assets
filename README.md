@@ -1,40 +1,139 @@
 # Astrological Assets
 
-**Archivio privato dedicato alle risorse grafiche astrologiche condivise** tra [Astrological Charts](https://github.com/Cesare-ml/astrological-charts), il frontend VirgoStars e l'Astrolabio offline.
+Archivio **privato** di risorse condivisibili per [Astrological Charts](https://github.com/Cesare-ml/astrological-charts), VirgoStars e l'Astrolabio offline.
 
-> **Stato iniziale:** repository privato, **nessun asset originale ancora importato né approvato**. La sorgente attiva resta `Cesare-ml/virgo-stars/public/assets/`. Nessuna modifica alla produzione e nessun deploy automatico.
+**Stato:** repository e strumenti di importazione inizializzati; **nessun file immagine o font reale è stato ancora trasferito**. La produzione continua a utilizzare `Cesare-ml/virgo-stars/public/assets`.
 
-## Scopo
+## Inventario e diritti
 
-Chi collabora ai grafici può ottenere **codice e immagini senza accedere al repository privato `virgo-stars`**, una volta che gli asset condivisibili saranno stati trasferiti qui con i diritti verificati.
+- `catalog/upstream-candidates.json` contiene i metadati di **1.078 file candidati, circa 80.30 MiB** complessivi, recuperati dal repository originale al commit `9900c36acc309bc2a6e87009f554b2e4141e4864`: percorsi, dimensione e hash Git; **non sono file binari né un'autorizzazione a distribuirli**.
+- `catalog/approvals.json` è inizialmente **vuoto**: nessun elemento è implicitamente approvato.
+- Le istruzioni in [diritti e revisione](docs/RIGHTS_AND_REVIEW.md) indicano come autorizzare un asset in modo esplicito.
 
-La libreria Angular/Three.js non conterrà immagini duplicate. Questo repository manterrà invece l'albero canonico `public/assets/img/...` e, se indispensabile, `public/assets/fonts/...`.
+## Import selettivo dal PC del proprietario
 
-## Regole di sicurezza
+Servono Node.js 20+ e un checkout autorizzato di `Cesare-ml/virgo-stars`, nella cartella adiacente a questo repository.
 
-- Soltanto asset astrologici pertinenti, approvati e con provenienza e diritti registrati; niente backend, temi di utenti, token, password, contenuti personali o archivio generale del sito.
-- Non modificare i nomi, la capitalizzazione, le estensioni o la struttura delle cartelle senza una migrazione testata dei consumer.
-- Il passaggio da `virgo-stars/public/assets/` a questo repository **non è ancora avvenuto**; prima fare un audit e testare sito e Astrolabio.
-- Nessuna GitHub Action, pubblicazione npm, CDN, aggiornamento hardware o deploy automatico.
-- Collaborazione tramite branch e PR. Nessuna licenza open source concessa al momento; i diritti di ciascun asset devono essere documentati.
+1. Selezionare una famiglia di asset e creare una scheda di revisione **ancora tutta in stato `pending`**:
 
-## Documentazione
+```powershell
+node scripts/prepare-review.mjs `
+  --family img/simboli-bianchi/segni/ `
+  --out ./segni-review.local.json
+```
 
-L'implementazione di importazione e verifica sarà proposta tramite pull request prima di aggiungere i file reali.
+Dopo aver verificato personalmente i diritti, approvare i singoli file o la famiglia con prove pertinenti; trasferire le righe approvate in `catalog/approvals.json`. Il generatore non approva nulla da solo.
+2. Eseguire prima una **simulazione** (non copia nulla):
 
-- `docs/ASSET_SCOPE.md` — raccolte da condividere e cosa escludere
-- `docs/MIGRATION_PLAN.md` — passaggio sicuro a una sola copia nella build del sito
-- `docs/RIGHTS_AND_REVIEW.md` — licenze e procedura di approvazione
-- `scripts/` — import selettivo dal checkout locale e verifica checksum
+```powershell
+node scripts/import-approved-assets.mjs `
+  --source ../virgo-stars/public/assets `
+  --target ./public/assets `
+  --approvals ./catalog/approvals.json
+```
 
-## Compatibilità
+3. Solo dopo aver verificato i permessi e il piano di import, eseguire:
 
-**Percorso atteso dall'applicazione host:** `/assets/img/simboli-bianchi/segni/01.png`.
+```powershell
+node scripts/import-approved-assets.mjs `
+  --source ../virgo-stars/public/assets `
+  --target ./public/assets `
+  --approvals ./catalog/approvals.json `
+  --apply `
+  --manifest ./manifests/approved-assets.json
+```
 
-**Percorso corrispondente in questo repository:** `public/assets/img/simboli-bianchi/segni/01.png`.
+Prima della prima scrittura, l'importatore ricontrolla **tutti** i file selezionati e le destinazioni rispetto al piano, rifiuta junction/symlink negli antenati della destinazione e usa i byte appena verificati. La copia di più file non è una transazione: in caso di errore di scrittura o interruzione possono rimanere file parzialmente importati senza un manifest aggiornato. Operare in una cartella di lavoro dedicata, senza altri processi che modifichino sorgente o destinazione, e ispezionare o ripristinare la cartella prima di riprovare.
 
-Il solo codice del renderer sta in `astrological-charts`: questo repository conterrà esclusivamente asset e strumenti per conservarli/versionarli.
+4. Verificare gli hash dell'archivio appena creato:
 
-## Accesso dei collaboratori
+```powershell
+node scripts/verify-pack.mjs `
+  --root ./public/assets `
+  --manifest ./manifests/approved-assets.json
 
-Invitare a questo repository soltanto chi deve utilizzare gli asset effettivi. Chi contribuisce esclusivamente agli algoritmi grafici può usare fixture sintetiche e non necessita dell'archivio originale.
+npm test
+```
+
+**Nessuno script invia dati o file a GitHub, AWS o al sito.** Prima di committare i binari approvati, esaminare `git status`, il manifest e la relativa licenza.
+
+## Collaboratori senza accesso a VirgoStars
+
+Una volta che gli asset autorizzati saranno presenti nel repository e i collaboratori saranno invitati, potranno clonare solo **`astrological-charts` e `astrological-assets`**. Il server locale di `astrological-charts` può usare questa cartella:
+
+```powershell
+node scripts/serve-local-assets.mjs --root ../astrological-assets/public/assets --manifest ../astrological-assets/manifests/approved-assets.json
+```
+
+Così i simboli vengono serviti in sviluppo da `http://127.0.0.1:4177/assets/img/...`, senza accesso al backend, ai temi degli utenti o alle credenziali VirgoStars. Il renderer non include copie delle immagini.
+
+## Indice
+
+- [Ambito del catalogo e inventario](docs/ASSET_SCOPE.md)
+- [Diritti e approvazione](docs/RIGHTS_AND_REVIEW.md)
+- [Coordinamento dei tre repository e gate di rilascio](docs/ECOSYSTEM_COORDINATION.md)
+- [Migrazione verso una sola copia di build](docs/MIGRATION_PLAN.md)
+- [AGENTS.md](AGENTS.md) — regole per agenti e sviluppatori
+- [CONTRIBUTING.md](CONTRIBUTING.md) — contributi
+
+Il progetto non ha una licenza open source, non esegue GitHub Actions e **non** apporta modifiche al sito in produzione o agli Astrolabi.
+
+### Nota sui permessi GitHub
+
+Il repository appartiene a un **account personale** (`Cesare-ml`): secondo la [documentazione ufficiale GitHub](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/repository-access-and-collaboration/permission-levels-for-a-personal-account-repository), nei repository privati gli invitati possono avere accesso di scrittura, non un ruolo read-only garantito. Prima di condividere asset riservati, verificare i permessi effettivi. Se è necessario un ruolo di sola lettura affidabile, valutare un'organizzazione GitHub con ruoli granulari oppure una distribuzione selettiva.
+
+## Aggiornare il catalogo dal monorepo locale
+
+Se cambia il commit di `virgo-stars`, è possibile rigenerare il catalogo senza copiare immagini e senza usare Actions:
+
+```powershell
+node scripts/refresh-source-catalog.mjs --repo ../virgo-stars
+node scripts/refresh-source-catalog.mjs `
+  --repo ../virgo-stars --out ./catalog/upstream-candidates.json --write
+npm run audit:catalog
+```
+
+Le approvazioni pregresse vanno riesaminate se cambia l'hash Git di un file. L'inventario generato contiene soltanto metadati.
+
+## Preflight obbligatorio contro gli asset duplicati
+
+Quando il primo pacchetto approvato sarà realmente disponibile, questo comando **non modifica né copia nulla**; segnala se gli stessi path verranno importati sia dal vecchio `virgo-stars/public` sia dal repository asset:
+
+```powershell
+node scripts/check-web-asset-collisions.mjs `
+  --legacy ../virgo-stars/public/assets `
+  --pack ./public/assets `
+  --manifest ./manifests/approved-assets.json `
+  --out ./collision-report.local.json
+```
+
+Codici: `0` = disgiunto; `3` = copie identiche ancora presenti nel sorgente legacy, da **escludere** dalla futura build; `2` = file divergenti, mancanti o alterati, migrazione bloccata. Non interpretare un confronto superato come prova che Angular copi correttamente i file: prima di un deploy serve anche verificare l'output della build.
+
+La [scheda di revisione iniziale dei 78 simboli](catalog/reviews/simboli-bianchi.pending.json) contiene **solo voci pending**, senza alcuna autorizzazione implicita. Il manifest degli asset approvati non è ancora stato creato.
+
+## Verifica locale rapida su Windows
+
+Senza importare o modificare nulla, puoi eseguire test Node, audit del catalogo e — quando esiste un manifest autorizzato — verificare gli hash:
+
+```powershell
+powershell -NoProfile -File .\scripts\preflight-local.ps1
+```
+
+Per aggiungere il controllo delle doppie copie rispetto al tuo checkout locale di VirgoStars:
+
+```powershell
+powershell -NoProfile -File .\scripts\preflight-local.ps1 `
+  -VirgoStarsAssets ..\virgo-stars\public\assets
+```
+
+Il preflight non carica file su GitHub, non approva immagini e non modifica il sito. Prima dell'importazione vera il manifest approvato non esiste e questa parte del test viene correttamente saltata.
+
+Per verificare anche i file effettivamente emessi da una futura build web, usare `npm run check:build-output -- --build <cartella-output-web> --manifest ./manifests/approved-assets.json`. Il controllo e i suoi limiti sono descritti nel [piano di migrazione](docs/MIGRATION_PLAN.md); non è ancora stato eseguito su una build VirgoStars.
+
+## Preview indipendente (prima e dopo l'importazione)
+
+Il repository [`astrological-charts`](https://github.com/Cesare-ml/astrological-charts) include una [PR #13](https://github.com/Cesare-ml/astrological-charts/pull/13) con una galleria di 78 PNG sintetici e una distinta [demo Angular](https://github.com/Cesare-ml/astrological-charts/blob/feat/verified-asset-preview/docs/ANGULAR_DEMO.md). La demo usa ulteriori risorse generate localmente per visualizzare grafici con fixture sintetiche, senza copiare artwork originale né accedere a VirgoStars.
+
+Dopo l'importazione dei file autentici approvati, il server richiede obbligatoriamente sia `public/assets` sia `manifests/approved-assets.json`; verifica SHA-256 e limita ogni richiesta ai file presenti nel manifest. Per ora il manifest di produzione non esiste e **nessuna immagine originale è stata importata**.
+
+**Codice candidato:** la demo interattiva di Charts usa esclusivamente fixture sintetiche. Non contiene i PNG originali di VirgoStars e non dimostra fedeltà alle immagini autentiche; la PR Charts resta in bozza.
