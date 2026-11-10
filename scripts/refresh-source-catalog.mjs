@@ -14,6 +14,7 @@ const LEGACY=/(?:^|\/)(?:_old|old[^/]*|.*-old[^/]*)/i;
 
 function isCandidate(ref) {
   const family=/^img\/(?:simboli(?:-bianchi)?\/|grafici\/|textures\/|risuonatore-solare[^/]*\.(?:png|jpg|webp)$)/i.test(ref)
+    || /^img\/symbols\/planets\/(?:dark|light)\/_circle\//.test(ref)
     || /^fonts\//.test(ref);
   if(!family) return false;
   const ext=ref.slice(ref.lastIndexOf('.')).toLowerCase();
@@ -24,7 +25,7 @@ export function parseGitTreeOutput(content) {
   const entries=[];
   for(const record of content.split('\0')) {
     if(!record) continue;
-    const match=/^(\d+) blob ([a-f\d]{40}) (\d+)\t(.+)$/s.exec(record);
+    const match=/^(\d+) blob ([a-f\d]{40}) +(\d+)\t(.+)$/s.exec(record);
     if(!match) continue;
     const [,mode,sha,size,full]=match;
     if(!['100644','100755'].includes(mode) || !full.startsWith('public/assets/')) continue;
@@ -43,6 +44,7 @@ export function refreshCatalog(repoPath) {
     encoding:'utf8',maxBuffer:32*1024*1024
   });
   const files=parseGitTreeOutput(raw);
+  if(files.length===0) throw new Error('No chart asset candidates found in the source Git tree; refusing an empty catalog');
   return {
     schemaVersion:1,
     source:{repository:'Cesare-ml/virgo-stars',commit,assetRoot:'public/assets'},
@@ -66,7 +68,7 @@ function cli(args) {
   const total=catalog.files.reduce((sum,f)=>sum+f.bytes,0);
   console.log('Source commit:',catalog.source.commit);
   console.log('Candidate paths:',catalog.fileCount,'bytes:',total);
-  console.log('All image/font rights remain UNREVIEWED. No binary files copied.');
+  console.log('Catalog entries are metadata, not permissions; consult approvals separately. No binary files copied.');
   if(!write) return;
   if(!out) throw new Error('--write requires --out');
   writeFileSync(resolve(out),JSON.stringify(catalog,null,2)+'\n');

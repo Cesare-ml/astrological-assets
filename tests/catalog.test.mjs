@@ -19,6 +19,8 @@ test('Git tree parser preserves spaces and excludes unrelated images or symlinks
   const tree=[
     '100644 blob '+sha+' 9\tpublic/assets/img/simboli/elementi-celesti/dark/875x605/mean Node.png',
     '100644 blob '+sha+' 3\tpublic/assets/img/logo.png',
+    '100644 blob '+sha+'    4\tpublic/assets/img/symbols/planets/dark/_circle/Sun.png',
+    '100644 blob '+sha+' 4\tpublic/assets/img/symbols/planets/dark/Sun.png',
     '120000 blob '+sha+' 30\tpublic/assets/img/simboli-bianchi/segni/01.png',
     '100644 blob '+sha+' 5\tpublic/assets/fonts/Zodiac S_Regular.typeface.json',
   ].join('\0')+'\0';
@@ -26,6 +28,7 @@ test('Git tree parser preserves spaces and excludes unrelated images or symlinks
   assert.deepEqual(files.map(x=>x.path),[
     'fonts/Zodiac S_Regular.typeface.json',
     'img/simboli/elementi-celesti/dark/875x605/mean Node.png',
+    'img/symbols/planets/dark/_circle/Sun.png',
   ]);
 });
 test('catalog audit rejects unknown content hashes and case-colliding paths',()=>{

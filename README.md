@@ -2,12 +2,12 @@
 
 Archivio **privato** di risorse condivisibili per [Astrological Charts](https://github.com/Cesare-ml/astrological-charts), VirgoStars e l'Astrolabio offline.
 
-**Stato:** repository e strumenti di importazione inizializzati; **nessun file immagine o font reale è stato ancora trasferito**. La produzione continua a utilizzare `Cesare-ml/virgo-stars/public/assets`.
+**Stato:** 1.013 immagini astrologiche originali sono importate con autorizzazione del proprietario per la condivisione privata e sono verificabili tramite manifest SHA-256. Il pacchetto non contiene font; la produzione continua a utilizzare `Cesare-ml/virgo-stars/public/assets`.
 
 ## Inventario e diritti
 
-- `catalog/upstream-candidates.json` contiene i metadati di **1.078 file candidati, circa 80.30 MiB** complessivi, recuperati dal repository originale al commit `9900c36acc309bc2a6e87009f554b2e4141e4864`: percorsi, dimensione e hash Git; **non sono file binari né un'autorizzazione a distribuirli**.
-- `catalog/approvals.json` è inizialmente **vuoto**: nessun elemento è implicitamente approvato.
+- `catalog/upstream-candidates.json` contiene i metadati di **1.124 file candidati, circa 80,44 MiB** complessivi, recuperati dal repository originale al commit `9900c36acc309bc2a6e87009f554b2e4141e4864`: percorsi, dimensione e hash Git; **non sono file binari né un'autorizzazione a distribuirli**.
+- `catalog/approvals.json` registra le 1.013 immagini autorizzate dal proprietario per questo archivio privato. Il proprietario ha dichiarato di aver creato le immagini e di poter condividere anche quelle generate dal font dalla licenza sconosciuta; il font stesso non è incluso. Questa attestazione non equivale a una licenza pubblica.
 - Le istruzioni in [diritti e revisione](docs/RIGHTS_AND_REVIEW.md) indicano come autorizzare un asset in modo esplicito.
 
 ## Import selettivo dal PC del proprietario
@@ -59,7 +59,7 @@ npm test
 
 ## Collaboratori senza accesso a VirgoStars
 
-Una volta che gli asset autorizzati saranno presenti nel repository e i collaboratori saranno invitati, potranno clonare solo **`astrological-charts` e `astrological-assets`**. Il server locale di `astrological-charts` può usare questa cartella:
+I collaboratori invitati possono clonare solo **`astrological-charts` e `astrological-assets`**. Il server locale di `astrological-charts` può usare questa cartella:
 
 ```powershell
 node scripts/serve-local-assets.mjs --root ../astrological-assets/public/assets --manifest ../astrological-assets/manifests/approved-assets.json
@@ -97,7 +97,7 @@ Le approvazioni pregresse vanno riesaminate se cambia l'hash Git di un file. L'i
 
 ## Preflight obbligatorio contro gli asset duplicati
 
-Quando il primo pacchetto approvato sarà realmente disponibile, questo comando **non modifica né copia nulla**; segnala se gli stessi path verranno importati sia dal vecchio `virgo-stars/public` sia dal repository asset:
+Questo comando **non modifica né copia nulla**; segnala se gli stessi path verranno importati sia dal vecchio `virgo-stars/public` sia dal repository asset:
 
 ```powershell
 node scripts/check-web-asset-collisions.mjs `
@@ -109,7 +109,7 @@ node scripts/check-web-asset-collisions.mjs `
 
 Codici: `0` = disgiunto; `3` = copie identiche ancora presenti nel sorgente legacy, da **escludere** dalla futura build; `2` = file divergenti, mancanti o alterati, migrazione bloccata. Non interpretare un confronto superato come prova che Angular copi correttamente i file: prima di un deploy serve anche verificare l'output della build.
 
-La [scheda di revisione iniziale dei 78 simboli](catalog/reviews/simboli-bianchi.pending.json) contiene **solo voci pending**, senza alcuna autorizzazione implicita. Il manifest degli asset approvati non è ancora stato creato.
+La [scheda iniziale dei 78 simboli](catalog/reviews/simboli-bianchi.pending.json) è una fotografia storica preparata prima dell'autorizzazione. Per lo stato corrente fanno fede `catalog/approvals.json` e `manifests/approved-assets.json`.
 
 ## Verifica locale rapida su Windows
 
@@ -126,7 +126,7 @@ powershell -NoProfile -File .\scripts\preflight-local.ps1 `
   -VirgoStarsAssets ..\virgo-stars\public\assets
 ```
 
-Il preflight non carica file su GitHub, non approva immagini e non modifica il sito. Prima dell'importazione vera il manifest approvato non esiste e questa parte del test viene correttamente saltata.
+Il preflight non carica file su GitHub, non approva immagini e non modifica il sito.
 
 Per verificare anche i file effettivamente emessi da una futura build web, usare `npm run check:build-output -- --build <cartella-output-web> --manifest ./manifests/approved-assets.json`. Il controllo e i suoi limiti sono descritti nel [piano di migrazione](docs/MIGRATION_PLAN.md); non è ancora stato eseguito su una build VirgoStars.
 
@@ -134,6 +134,6 @@ Per verificare anche i file effettivamente emessi da una futura build web, usare
 
 Il repository [`astrological-charts`](https://github.com/Cesare-ml/astrological-charts) include, tramite la [PR #13 integrata](https://github.com/Cesare-ml/astrological-charts/pull/13), una galleria di 78 PNG sintetici e una distinta [demo Angular](https://github.com/Cesare-ml/astrological-charts/blob/main/docs/ANGULAR_DEMO.md). La demo usa ulteriori risorse generate localmente per visualizzare grafici con fixture sintetiche, senza copiare artwork originale né accedere a VirgoStars.
 
-Dopo l'importazione dei file autentici approvati, il server richiede obbligatoriamente sia `public/assets` sia `manifests/approved-assets.json`; verifica SHA-256 e limita ogni richiesta ai file presenti nel manifest. Per ora il manifest di produzione non esiste e **nessuna immagine originale è stata importata**.
+Il server richiede obbligatoriamente sia `public/assets` sia `manifests/approved-assets.json`; verifica SHA-256 e limita ogni richiesta ai file presenti nel manifest. La copertura è stata verificata sulla demo; opzioni avanzate, compatibilità visiva e dispositivi richiedono ulteriori prove.
 
-**Limiti della demo:** la demo interattiva di Charts usa esclusivamente fixture sintetiche. Non contiene i PNG originali di VirgoStars e non dimostra fedeltà alle immagini autentiche o disponibilità per la produzione.
+**Limiti della demo:** i dati delle carte sono sintetici. I precedenti test browser completi usavano immagini sintetiche; il pacchetto reale e la fedeltà visiva richiedono ulteriori verifiche e non sono pronti per la produzione.
