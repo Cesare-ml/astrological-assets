@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "sourceSnapshot": "9900c36acc309bc2a6e87009f554b2e4141e4864",
-  "reviewStatus": "pending",
-  "note": "Rights have NOT been verified. Entries are NOT approved for copying, sharing or publication.",
+  "reviewStatus": "historical-snapshot",
+  "note": "Historical review template before the owner attestation. Consult catalog/approvals.json for current private-sharing approvals and the manifest for imported files; no public redistribution is implied.",
   "groups": {
     "case": 12,
     "elementi-celesti": 50,

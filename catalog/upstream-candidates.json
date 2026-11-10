@@ -5,7 +5,7 @@
     "commit": "9900c36acc309bc2a6e87009f554b2e4141e4864",
     "assetRoot": "public/assets"
   },
-  "fileCount": 1078,
+  "fileCount": 1124,
   "rightsStatus": "unreviewed",
   "files": [
     {
@@ -6451,6 +6451,282 @@
       "bytes": 411,
       "gitBlobSha": "0081fb179ea5454e0fd2ab412225767d0cf2cc51",
       "legacy": true
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/AS.png",
+      "bytes": 3106,
+      "gitBlobSha": "a56b8ffdd4a394ea6f71e80a198b3d4cbd1bcd04",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/Chiron.png",
+      "bytes": 3108,
+      "gitBlobSha": "92ff744e5c9c6c96b1260cb850b495853bd08000",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/DS.png",
+      "bytes": 3104,
+      "gitBlobSha": "565106dcc89e22382d6db90a595be103d2450208",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/IC.png",
+      "bytes": 3113,
+      "gitBlobSha": "0329f073ccfd3f0effaa1c81f3260d9bc647ccde",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/Jupiter.png",
+      "bytes": 3100,
+      "gitBlobSha": "b47687cad546c8dc080a8213a8f32e0487d42a17",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/MC.png",
+      "bytes": 3108,
+      "gitBlobSha": "92ff744e5c9c6c96b1260cb850b495853bd08000",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/Mars.png",
+      "bytes": 3100,
+      "gitBlobSha": "88e4d22b01559d2ebed9ca1ec319ca881dc9cb7d",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/Mercury.png",
+      "bytes": 3101,
+      "gitBlobSha": "5fb5b59027b1ef91b3a7ef704390046e40903a14",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/Moon.png",
+      "bytes": 3104,
+      "gitBlobSha": "c6735346f3949922595c181dddd9c0ab57fe7968",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/Neptune.png",
+      "bytes": 3105,
+      "gitBlobSha": "bbaeb3915687075111e1a89d2d69ad0c0a624621",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/Pluto.png",
+      "bytes": 3105,
+      "gitBlobSha": "465dcc166b7905c8816bd8dbcef7bc70b56736d6",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/Saturn.png",
+      "bytes": 3099,
+      "gitBlobSha": "82def9a2a69e9ce0ac1320f80eb82433b12a4031",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/Sun.png",
+      "bytes": 3075,
+      "gitBlobSha": "4712f38038ac06371f52c6e2a3b0afe83aab5bed",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/Uranus.png",
+      "bytes": 3113,
+      "gitBlobSha": "ef61d3957ec9a904f8b00001af37c1018915b74c",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/Venus.png",
+      "bytes": 3108,
+      "gitBlobSha": "eb9b50716e500024866c7407e5aae3cacdc0dbae",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/mean Apogee.png",
+      "bytes": 3113,
+      "gitBlobSha": "064ab576c73169b7653dd181dc3da6b428bfd911",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/mean Node Sud.png",
+      "bytes": 3106,
+      "gitBlobSha": "f9e848cb0a708f4fade64abd0363edb63febb9fd",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/mean Node.png",
+      "bytes": 3107,
+      "gitBlobSha": "5dbfcc303510275171e5b7086a16d4d8b3074dc6",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/mean Perigee.png",
+      "bytes": 3112,
+      "gitBlobSha": "4457193fcfc49ad11240cb1b7f864031e5b4e8b6",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/osc. Apogee.png",
+      "bytes": 3113,
+      "gitBlobSha": "064ab576c73169b7653dd181dc3da6b428bfd911",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/osc. Perigee.png",
+      "bytes": 3112,
+      "gitBlobSha": "4457193fcfc49ad11240cb1b7f864031e5b4e8b6",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/true Node Sud.png",
+      "bytes": 3106,
+      "gitBlobSha": "f9e848cb0a708f4fade64abd0363edb63febb9fd",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/dark/_circle/true node.png",
+      "bytes": 3107,
+      "gitBlobSha": "5dbfcc303510275171e5b7086a16d4d8b3074dc6",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/AS.png",
+      "bytes": 3106,
+      "gitBlobSha": "a56b8ffdd4a394ea6f71e80a198b3d4cbd1bcd04",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/Chiron.png",
+      "bytes": 3108,
+      "gitBlobSha": "92ff744e5c9c6c96b1260cb850b495853bd08000",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/DS.png",
+      "bytes": 3104,
+      "gitBlobSha": "565106dcc89e22382d6db90a595be103d2450208",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/IC.png",
+      "bytes": 3113,
+      "gitBlobSha": "0329f073ccfd3f0effaa1c81f3260d9bc647ccde",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/Jupiter.png",
+      "bytes": 3100,
+      "gitBlobSha": "b47687cad546c8dc080a8213a8f32e0487d42a17",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/MC.png",
+      "bytes": 3108,
+      "gitBlobSha": "92ff744e5c9c6c96b1260cb850b495853bd08000",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/Mars.png",
+      "bytes": 3100,
+      "gitBlobSha": "88e4d22b01559d2ebed9ca1ec319ca881dc9cb7d",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/Mercury.png",
+      "bytes": 3090,
+      "gitBlobSha": "cda0f3a2e911fbd2fb0a684437015e95891aa50a",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/Moon.png",
+      "bytes": 3114,
+      "gitBlobSha": "7e8e4c176c866c749a7522159de79390ec92feca",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/Neptune.png",
+      "bytes": 3105,
+      "gitBlobSha": "bbaeb3915687075111e1a89d2d69ad0c0a624621",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/Pluto.png",
+      "bytes": 3105,
+      "gitBlobSha": "465dcc166b7905c8816bd8dbcef7bc70b56736d6",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/Saturn.png",
+      "bytes": 3099,
+      "gitBlobSha": "82def9a2a69e9ce0ac1320f80eb82433b12a4031",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/Sun.png",
+      "bytes": 3075,
+      "gitBlobSha": "4712f38038ac06371f52c6e2a3b0afe83aab5bed",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/Uranus.png",
+      "bytes": 3113,
+      "gitBlobSha": "ef61d3957ec9a904f8b00001af37c1018915b74c",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/Venus.png",
+      "bytes": 3108,
+      "gitBlobSha": "eb9b50716e500024866c7407e5aae3cacdc0dbae",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/mean Apogee.png",
+      "bytes": 3113,
+      "gitBlobSha": "064ab576c73169b7653dd181dc3da6b428bfd911",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/mean Node Sud.png",
+      "bytes": 3106,
+      "gitBlobSha": "f9e848cb0a708f4fade64abd0363edb63febb9fd",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/mean Node.png",
+      "bytes": 3107,
+      "gitBlobSha": "5dbfcc303510275171e5b7086a16d4d8b3074dc6",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/mean Perigee.png",
+      "bytes": 3112,
+      "gitBlobSha": "4457193fcfc49ad11240cb1b7f864031e5b4e8b6",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/osc. Apogee.png",
+      "bytes": 3113,
+      "gitBlobSha": "064ab576c73169b7653dd181dc3da6b428bfd911",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/osc. Perigee.png",
+      "bytes": 3112,
+      "gitBlobSha": "4457193fcfc49ad11240cb1b7f864031e5b4e8b6",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/true Node Sud.png",
+      "bytes": 3106,
+      "gitBlobSha": "f9e848cb0a708f4fade64abd0363edb63febb9fd",
+      "legacy": false
+    },
+    {
+      "path": "img/symbols/planets/light/_circle/true node.png",
+      "bytes": 3107,
+      "gitBlobSha": "5dbfcc303510275171e5b7086a16d4d8b3074dc6",
+      "legacy": false
     },
     {
       "path": "img/textures/texture-cielo-1.jpg",

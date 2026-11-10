@@ -14,7 +14,7 @@ The independent renderer can *compile* without graphics. To visually render the 
 
 ## 2. Source-of-truth and delivery
 
-**Current, deployed:** `virgo-stars/public/assets` is authoritative. `astrological-charts` contains no production images. This repository currently contains **no copied production binary images**.
+**Current, deployed:** `virgo-stars/public/assets` is authoritative. `astrological-charts` contains no production images. This repository contains 1,013 owner-authorized images for private collaboration and a SHA-256 manifest; it is not yet the deployed source.
 
 **Target, subject to approvals:** `astrological-assets/public/assets/{img,fonts}` becomes authoritative for the curated chart asset subset. A VirgoStars build pins an *exact approved commit* of this repository, for example as a Git submodule or a verified vendored checkout.
 
@@ -36,21 +36,19 @@ The Charts stack was integrated oldest-first, updating the base and verifying th
 
 ## 4. Inventory, provenance and rights
 
-Source catalog: `catalog/upstream-candidates.json`, pinned to `virgo-stars` commit `9900c36acc309bc2a6e87009f554b2e4141e4864`, 1,078 candidate paths, 80.30 MiB summed sizes, 550 distinct Git blobs. The file contains **metadata only**, not bytes, and may include old graphics or fonts not needed in production. The 78 `simboli-bianchi` files are the first proposed review group, **not yet licensed/approved**.
+Source catalog: `catalog/upstream-candidates.json`, pinned to `virgo-stars` commit `9900c36acc309bc2a6e87009f554b2e4141e4864`, 1,124 candidate paths, 80.44 MiB summed sizes, 552 distinct Git blobs. The catalog contains **metadata only** and may include old graphics or fonts not needed in production. The separate pack contains 1,013 imported image files, including 78 `simboli-bianchi` and 46 `_circle` files; obsolete catalog entries and all font files were excluded.
 
-`catalog/approvals.json` initially has an empty `assets` array. Only the owner/rightsholder's explicit review may set `status: approved` with verifiable `rightsHolder`, `permissionBasis`, and `approvalEvidence`. Inviting a collaborator does not convey a right to redistribute publicly. Public open-source release requires a separate asset-by-asset or defensible-family licensing decision.
+`catalog/approvals.json` records the owner's 2026-11-10 declaration that the images were created by the owner and that private sharing is authorized, including images derived from a font of unknown license. The font itself is excluded; the declaration does not establish a license for the font or public redistribution. Only the owner/rightsholder's explicit review may approve additional assets. Public open-source release requires a separate licensing decision.
 
-Known unresolved path: the skins reference `risuonatore-solare-bianco.png` whereas the inspected `public/assets/img` tree includes `risuonatore-solare-bn.png`. No automatic alias/rename without checking the intended appearance.
+The source originally referenced the absent `risuonatore-solare-bianco.png` in two skins; the owner authorized using the included `risuonatore-solare-bn.png` instead. Verify its visual appearance separately. The independent Charts renderer uses the same house symbols as the base chart and the `_circle` planet artwork for latitudes; advanced options require separate testing.
 
 ## 5. Release gates
 
 ### Gate A — private asset review and transfer
 - [x] `npm test` and `npm run audit:catalog` on a clean checkout on Windows/Node 22.18.0; 30 tests passed on 2026-11-10. This verifies tooling only and does not approve artwork.
-- [ ] Review the 78 records in `catalog/reviews/simboli-bianchi.pending.json`; every entry starts as `pending` and conveys no rights.
-- [ ] Rights and provenance verified, approved paths explicitly recorded.
-- [ ] `scripts/import-approved-assets.mjs` dry-run succeeds against pinned local clone, then the approved-only import is reviewed.
-- [ ] `scripts/verify-pack.mjs` validates every imported file; binaries arrive via a reviewed PR (not pasted or auto-downloaded).
-- [ ] Actual dependency resolution for all active skin/preload references is checked; investigate the Risuonatore filename mismatch.
+- [x] The owner explicitly authorized private sharing of the imported images, including font-derived images; current approvals are recorded. The 78-record review file remains a historical snapshot.
+- [x] `scripts/import-approved-assets.mjs` dry-run and approved-only import succeeded against the pinned catalog; `scripts/verify-pack.mjs` verifies 1,013 imported images.
+- [ ] Validate advanced dynamic asset references. Original font files and public redistribution remain outside the authorization.
 
 ### Gate B — independent graphics development
 - [x] `astrological-charts` clean `npm ci`, TypeScript and standalone Angular builds, and local tests succeeded on Windows with Node 22.18.0.
@@ -114,10 +112,10 @@ The [Angular demo guide](https://github.com/Cesare-ml/astrological-charts/blob/m
 
 ## Local manifest-gated preview
 
-A [Charts preview](https://github.com/Cesare-ml/astrological-charts/blob/main/docs/LOCAL_ASSET_PREVIEW.md) provides a SHA-256 gated localhost asset gallery, plus a locally generated synthetic fixture pack with the 78 exact preload paths. This permits a collaborator to check image paths/CORS without a VirgoStars repository checkout or real artwork. The gallery itself does not render a chart; the separate Angular demo does. **No production asset rights were approved or PNG files transferred.**
+A [Charts preview](https://github.com/Cesare-ml/astrological-charts/blob/main/docs/LOCAL_ASSET_PREVIEW.md) provides a SHA-256 gated localhost asset gallery, plus a locally generated synthetic fixture pack with the 78 exact preload paths. This permits a collaborator to check image paths/CORS without a VirgoStars repository checkout. The gallery itself does not render a chart; the separate Angular demo does.
 
 Integrated [Charts #13](https://github.com/Cesare-ml/astrological-charts/pull/13) added local synthetic PNG generation, strict manifest-gated serving and a web gallery. Do not treat synthetic success as visual compatibility with the seven skins or as production readiness.
 
-Charts #13 also contains the separate Angular renderer demo and a browser smoke test. The gallery remains an asset-only preview. All real-image approvals and imports remain pending.
+Charts #13 also contains the separate Angular renderer demo and a browser smoke test. The gallery remains an asset-only preview. Owner-authorized images have since been imported for private collaboration; coverage and visual validation remain incomplete.
 
-The asset-pack verifier now rejects empty manifests and records missing rights metadata, matching the Charts development server's structural checks. This validates recorded evidence fields and hashes; it does not establish whether the legal evidence is genuine or sufficient. All 78 white-symbol review records remain pending.
+The asset-pack verifier rejects empty manifests and records missing rights metadata, matching the Charts development server's structural checks. This validates recorded evidence fields and hashes; it does not independently authenticate the owner's attestation. The original pending white-symbol review is historical; current approvals are in `catalog/approvals.json`.

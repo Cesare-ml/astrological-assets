@@ -1,6 +1,6 @@
 # Asset rights and review protocol
 
-**No assets in the initial catalog are presumed licensed or approved.** A private GitHub repository is not a blanket redistribution permission, even if the images are visible on the VirgoStars site.
+**Assets in the initial catalog are not presumed licensed or approved.** A private GitHub repository is not a blanket redistribution permission, even if the images are visible on the VirgoStars site. The separate approvals file records explicit owner attestations; it does not authorize public redistribution.
 
 ## Before marking any asset as approved
 
@@ -55,4 +55,4 @@ Tutte le voci escono con `status: "pending"`, insieme a hash Git e dimensione pe
 
 ## Prima scheda pronta alla verifica umana
 
-Il file [`catalog/reviews/simboli-bianchi.pending.json`](../catalog/reviews/simboli-bianchi.pending.json) censisce **78** immagini: 12 segni, 12 case, 50 elementi celesti e 4 elementi. L'elenco è stato generato dal catalogo del commit upstream pin-nato, ma **nessun diritto è stato verificato, non è stato copiato alcun PNG e nessun record contiene `approved`**. Il titolare può usarlo per la verifica per famiglie; solo dopo evidenze positive e approvazione esplicita i path potranno essere ricopiati in `catalog/approvals.json`.
+Il file [`catalog/reviews/simboli-bianchi.pending.json`](../catalog/reviews/simboli-bianchi.pending.json) è la scheda storica iniziale delle **78** immagini. Il 10 novembre 2026 il proprietario ha dichiarato di aver creato le immagini e di poter condividere privatamente anche quelle derivate dal font dalla licenza sconosciuta. Le autorizzazioni correnti, con il riferimento a tale attestazione, sono in `catalog/approvals.json`; gli hash delle immagini importate sono nel manifest. I file del font non sono inclusi e non è stata affermata alcuna autorizzazione alla distribuzione pubblica.
