@@ -44,7 +44,7 @@ Known unresolved path: the skins reference `risuonatore-solare-bianco.png` where
 ## 5. Release gates
 
 ### Gate A — private asset review and transfer
-- [x] `npm test`, `npm run audit:catalog` on a clean export of the branch on Windows/Node 22.18.0 (2026-11-09); after verifier hardening, 17 tests passed.
+- [x] `npm test` and `npm run audit:catalog` on a clean checkout on Windows/Node 22.18.0; 30 tests passed on 2026-11-10. This verifies tooling only and does not approve artwork.
 - [ ] Review the 78 records in `catalog/reviews/simboli-bianchi.pending.json`; every entry starts as `pending` and conveys no rights.
 - [ ] Rights and provenance verified, approved paths explicitly recorded.
 - [ ] `scripts/import-approved-assets.mjs` dry-run succeeds against pinned local clone, then the approved-only import is reviewed.

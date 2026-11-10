@@ -136,4 +136,4 @@ Il repository [`astrological-charts`](https://github.com/Cesare-ml/astrological-
 
 Dopo l'importazione dei file autentici approvati, il server richiede obbligatoriamente sia `public/assets` sia `manifests/approved-assets.json`; verifica SHA-256 e limita ogni richiesta ai file presenti nel manifest. Per ora il manifest di produzione non esiste e **nessuna immagine originale è stata importata**.
 
-**Codice candidato:** la demo interattiva di Charts usa esclusivamente fixture sintetiche. Non contiene i PNG originali di VirgoStars e non dimostra fedeltà alle immagini autentiche. Entrambe le PR rimangono in bozza.
+**Codice candidato:** la demo interattiva di Charts usa esclusivamente fixture sintetiche. Non contiene i PNG originali di VirgoStars e non dimostra fedeltà alle immagini autentiche; la PR Charts resta in bozza.
