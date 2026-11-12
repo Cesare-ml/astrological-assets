@@ -42,4 +42,4 @@ The generated entries are **pending**; humans must evaluate them. The generator 
 
 `scripts/check-public-release.mjs` checks for explicit public-permission records that match **exact current-pack SHA-256s** and reports missing or inconsistent entries. It also detects unlisted files in the asset tree. A passing check is a necessary technical gate but cannot establish legal rights by itself.
 
-**Crucial:** GitHub's public visibility exposes repository history; even removing a questionable image from the latest tree does not make past commits safe to publish. Use a fresh, audited public history when necessary.
+**Crucial:** The repository is already public as of 2026-11-12. Its reachable history and images may already have been copied. Deleting or replacing an image now does not undo earlier exposure. Promptly escalate any identified third-party or sensitive material to the owner; a fresh history may reduce future exposure but cannot undo existing clones or caches.

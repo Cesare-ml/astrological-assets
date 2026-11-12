@@ -26,6 +26,6 @@ For a new public record, identify the exact asset path and SHA-256, author/right
 
 ## Why this distinction matters
 
-Making a private GitHub repository public makes its accessible **history** public as well. Deleting an asset in a new commit is not enough to withhold an old binary. Do not change visibility unless all historical objects are cleared, or create a new public repository with a clean, verified history.
+**This repository was made public on 2026-11-12.** Its accessible Git history may already have been cloned or cached. Deleting an asset in a later commit does not revoke previously available copies or settle any pre-existing rights issue. Continue the historical content audit and per-file clearance, and escalate any questionable material promptly.
 
 Read [the release checklist](PUBLIC_RELEASE_CHECKLIST.md) and [rights review](RIGHTS_AND_REVIEW.md) before distribution. This guide is informational; the exact license and the actual rights documentation govern.

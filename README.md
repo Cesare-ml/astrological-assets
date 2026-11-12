@@ -2,7 +2,7 @@
 
 **Curated graphics and integrity tooling for the [VirgoStars](https://www.virgostars.it/) ecosystem.**
 
-**Status: PRIVATE — preparing for a future public release. Do not change the repository visibility yet.** Original project tooling is offered under the [Common Public Attribution License 1.0 (CPAL-1.0)](LICENSE), with the same **Powered by VirgoStars** attribution as [VirgoStars-Ephemeris](https://github.com/Cesare-ml/VirgoStars-Ephemeris). **The image files are not automatically licensed under CPAL.** The owner selected **CC BY 4.0** for original artwork, but each complete image still requires review of any third-party rights before public distribution.
+**Status: PUBLIC since 2026-11-12 — artwork clearance incomplete.** Original project tooling is offered under the [Common Public Attribution License 1.0 (CPAL-1.0)](LICENSE), with the same **Powered by VirgoStars** attribution as [VirgoStars-Ephemeris](https://github.com/Cesare-ml/VirgoStars-Ephemeris). **The image files are not automatically licensed under CPAL.** The owner selected **CC BY 4.0** for original artwork, but each complete image still requires review of any third-party rights before public distribution.
 
 ## What is here?
 
@@ -59,13 +59,13 @@ node scripts/serve-local-assets.mjs --root ../astrological-assets/public/assets 
 
 The development server serves only manifest-listed assets and checks file hashes. Original browser paths such as `/assets/img/...` are preserved. The independent Charts demo can also use synthetic fixtures without requiring private artwork or a VirgoStars backend.
 
-## Before publishing
+## Post-publication rights and quality checklist
 
-1. Read the [public release checklist](docs/PUBLIC_RELEASE_CHECKLIST.md), especially the **Git history** risk: making an existing private repository public exposes historical objects, not just the latest tree.
+1. Read the [public release checklist](docs/PUBLIC_RELEASE_CHECKLIST.md). This repository is already public: its files and accessible Git history can be copied or cloned, including earlier commits.
 2. Have the actual rights holder review every included binary, including any symbols generated from fonts with unclear license terms. Record a real, explicit public license and evidence in `catalog/publication-approvals.json`. This must be done manually; scripts and AI agents cannot grant rights.
 3. Run `npm test`, `npm run audit:catalog`, `npm run verify:pack`, and `npm run check:public-release`; investigate every failure.
 4. Independently review the entire Git history and all publication-bound files for private data, artwork and licenses. Use a **clean-history public export** if previous private objects cannot be cleared.
-5. Publish or switch visibility **only on explicit owner sign-off**. No automatic merge, GitHub Actions, or production deployment.
+5. Confirm any future software releases, licensing changes, merges or production migrations separately. Do not run GitHub Actions or deploy automatically.
 
 ## Documentation
 
@@ -81,4 +81,4 @@ The development server serves only manifest-listed assets and checks file hashes
 - [Ecosystem coordination](docs/ECOSYSTEM_COORDINATION.md)
 - [Contributing](CONTRIBUTING.md) and [agent instructions](AGENTS.md)
 
-The repository's purpose is to make original astrological graphics verifiable, consistently versioned, and eventually shareable **where the necessary rights exist**.
+The repository is publicly visible; code is licensed under CPAL-1.0 and owner-created original artistic contributions are subject to the selected CC BY 4.0 policy. Complete-file artwork rights and third-party dependencies still need per-file review before the repository can describe the entire asset pack as cleared.

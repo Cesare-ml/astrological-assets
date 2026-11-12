@@ -1,6 +1,6 @@
 # Astrological Assets — instructions for human and AI contributors
 
-**Current state: private repository under preparation for an open-source release.** The original code/tooling uses CPAL-1.0. Images have only private-sharing permission; public release is blocked pending independent rights review.
+**Current state: public repository; original asset rights review remains incomplete.** The original code/tooling uses CPAL-1.0. Images have only private-sharing permission; public release is blocked pending independent rights review.
 
 ## Non-negotiable rules
 
@@ -8,7 +8,7 @@
 2. Read `README.md`, `docs/RIGHTS_AND_REVIEW.md`, `docs/PUBLIC_RELEASE_CHECKLIST.md`, `docs/ASSET_SCOPE.md` and `docs/MIGRATION_PLAN.md` before changes.
 3. Preserve the **original developer attribution** in `LICENSE` Exhibits A/B and `NOTICE`: `Powered by VirgoStars` and `https://www.virgostars.it/`. Respect CPAL Sections 14 and 15 when applicable.
 4. **Do not assume that CPAL licenses images.** The owner has selected CC BY 4.0 for their original artwork in `catalog/artwork-license-decision.json`, but any third-party source rights remain subject to human review. Private permissions in `catalog/approvals.json` are not public permissions. Never manufacture, infer, or sign `catalog/publication-approvals.json` entries on behalf of the rights holder. A human rights holder must supply explicit public redistribution evidence and a suitable asset license.
-5. Before recommending any GitHub visibility change, check **all Git history**, as well as the current assets. If any historical files have unverified rights, use a clean-history public export rather than changing this repository's visibility.
+5. The repository is already public. Audit **all historical content and Git references** for unlicensed or confidential material, remembering that removing files now does not revoke copies or public Git history already fetched. Avoid reintroducing unreviewed material. If material must be withdrawn, escalate promptly to the owner and follow repository-host guidance; a new clean history alone will not undo past exposure.
 6. Never automatically copy the entire `virgo-stars` asset tree. Candidate metadata is not permission; verify source Git blob SHA, size, exact path and approval.
 7. Keep the importer dry-run by default. Require explicit approval for `--apply`. Preserve existing paths, casing, hashes and file formats. Do not silently rewrite missing `risuonatore-solare-bianco.png` references.
 8. Never add user natal charts, account data, credentials, AWS configuration, secret keys, web-only media, unlicensed graphics, or font binaries without full license review.
