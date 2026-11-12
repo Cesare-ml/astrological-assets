@@ -53,4 +53,6 @@ These identify only the final privately delivered **v0.1** binaries, also record
 
 The **F1 original glyph design milestone is not complete**: although a functioning private prototype exists, it still requires visual signoff, possible redesign, final authorship/licensing approval and real downstream validation. The presence of a private prototype is **not a reason to mark F1 done** or to publish unreviewed proprietary font binaries.
 
+**Later development (2026-11-12):** The user subsequently approved *new generated image artwork* for 22 glyphs and authorized its use. This is tracked separately in [the v0.2 approved-images report](APPROVED_GLYPH_IMAGES_V02.md). **The v0.1 design remains rejected**; its failed art direction is not reused.
+
 See [roadmap](ROADMAP.md), [font plan](VIRGOSTARS_ASTRO_FONT_PLAN.md), [private font validation](PRIVATE_FONT_VALIDATION.md) and [issue #8](https://github.com/Cesare-ml/astrological-assets/issues/8).
