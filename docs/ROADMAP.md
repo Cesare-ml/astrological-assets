@@ -36,7 +36,7 @@ The owner specifically wants the **traditional iconographic symbol variants appe
 
 ### Milestone F1 — 22 original glyphs and font generation
 
-**Private MVP checkpoint (2026-11-12):** An independently constructed 22-glyph geometric prototype exists **outside GitHub**, with TTF/WOFF2 generated and validated (22/22; seven synthetic QA regression tests passed). See [private prototype QA](PRIVATE_PROTOTYPE_QA.md). **Original glyphs are not approved or production-ready; F1 remains open.**
+**Private MVP checkpoint (2026-11-12):** The independent 22-glyph geometric prototype passed TTF/WOFF2 technical checks but **was explicitly rejected by the owner for inadequate visual quality**. Its outlines are not an approved master, and F1 remains blocked. See [the rejection and redesigned process](PROTO_V01_VISUAL_REJECTION.md) and [technical QA history](PRIVATE_PROTOTYPE_QA.md).
 
 - [x] Provide a **read-only TTF/WOFF2 QA tool** for future independently authored font files (`scripts/validate-private-font.py`) with synthetic-only regression tests; no glyph outlines or font binaries are released. See [private font validation](PRIVATE_FONT_VALIDATION.md).
 
