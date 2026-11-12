@@ -6,7 +6,7 @@ The initial inventory and approved image pack are **not automatically public-dom
 
 On 2026-11-12, the project owner also explicitly affirmed personal authorship of the images; see [owner-authored artwork declaration](OWNER_AUTHORSHIP_AND_ARTWORK.md). This resolves the authorship claim at the attestation level, but it does not license third-party font glyphs or itself select a public artwork license.
 
-The separate `catalog/publication-approvals.json` starts empty and is the only public authorization input for the release preflight. It is not populated by import scripts or by a coding assistant.
+The owner selected **CC BY 4.0** for their own creative contributions on 2026-11-12; see [artwork licensing policy](ARTWORK_LICENSING_POLICY.md). This choice does not clear underlying font or other third-party rights. The separate `catalog/publication-approvals.json` starts empty and is the only public authorization input for the release preflight. It is not populated by import scripts or by a coding assistant.
 
 ## Human rights check for each file or defensible family
 
