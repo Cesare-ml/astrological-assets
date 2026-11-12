@@ -1,139 +1,79 @@
 # Astrological Assets
 
-Archivio **privato** di risorse condivisibili per [Astrological Charts](https://github.com/Cesare-ml/astrological-charts), VirgoStars e l'Astrolabio offline.
+**Curated graphics and integrity tooling for the [VirgoStars](https://www.virgostars.it/) ecosystem.**
 
-**Stato:** 1.013 immagini astrologiche originali sono importate con autorizzazione del proprietario per la condivisione privata e sono verificabili tramite manifest SHA-256. Il pacchetto non contiene font; la produzione continua a utilizzare `Cesare-ml/virgo-stars/public/assets`.
+**Status: PRIVATE — preparing for a future public release. Do not change the repository visibility yet.** Original project tooling is offered under the [Common Public Attribution License 1.0 (CPAL-1.0)](LICENSE), with the same **Powered by VirgoStars** attribution as [VirgoStars-Ephemeris](https://github.com/Cesare-ml/VirgoStars-Ephemeris). **The image files are not automatically licensed under CPAL.** Their current authorization covers private collaboration only; a separate rights check is required before any public distribution.
 
-## Inventario e diritti
+## What is here?
 
-- `catalog/upstream-candidates.json` contiene i metadati di **1.124 file candidati, circa 80,44 MiB** complessivi, recuperati dal repository originale al commit `9900c36acc309bc2a6e87009f554b2e4141e4864`: percorsi, dimensione e hash Git; **non sono file binari né un'autorizzazione a distribuirli**.
-- `catalog/approvals.json` registra le 1.013 immagini autorizzate dal proprietario per questo archivio privato. Il proprietario ha dichiarato di aver creato le immagini e di poter condividere anche quelle generate dal font dalla licenza sconosciuta; il font stesso non è incluso. Questa attestazione non equivale a una licenza pubblica.
-- Le istruzioni in [diritti e revisione](docs/RIGHTS_AND_REVIEW.md) indicano come autorizzare un asset in modo esplicito.
+- **1,013 privately approved image files** under `public/assets/img/`, with a SHA-256 integrity manifest at `manifests/approved-assets.json`.
+- **1,124 upstream candidate records** in `catalog/upstream-candidates.json` (about 80.44 MiB, metadata only; this is not a publication approval).
+- Reviewed private-use permissions in `catalog/approvals.json`, distinct from the **not-yet-granted** public permissions in `catalog/publication-approvals.json`.
+- Node.js tools for selective import, catalog auditing, manifest validation, migration collision checks, and a *fail-closed* public-release gate.
+- **No fonts**, user chart data, backend code, credentials, or production deployment tools.
 
-## Import selettivo dal PC del proprietario
+The source-of-truth for currently deployed website images remains the private `Cesare-ml/virgo-stars/public/assets` checkout. This repository is not a deployment mechanism.
 
-Servono Node.js 20+ e un checkout autorizzato di `Cesare-ml/virgo-stars`, nella cartella adiacente a questo repository.
+## License and attribution
 
-1. Selezionare una famiglia di asset e creare una scheda di revisione **ancora tutta in stato `pending`**:
+The original **software tooling and supporting source documentation** are licensed under [CPAL-1.0](LICENSE) (Exhibits A and B), with attribution:
 
-```powershell
-node scripts/prepare-review.mjs `
-  --family img/simboli-bianchi/segni/ `
-  --out ./segni-review.local.json
-```
+> Copyright (c) 2026 Cesare-ml (VirgoStars project)  
+> Powered by VirgoStars  
+> https://www.virgostars.it/
 
-Dopo aver verificato personalmente i diritti, approvare i singoli file o la famiglia con prove pertinenti; trasferire le righe approvate in `catalog/approvals.json`. Il generatore non approva nulla da solo.
-2. Eseguire prima una **simulazione** (non copia nulla):
+CPAL can require a prominent notice on launch/session start of a covered graphical application, and covered-source availability for certain network deployments. A Credits/About screen is encouraged, but is not by itself a guarantee of full Section 14 compliance. See [licensing and credits](docs/LICENSING_AND_CREDITS.md).
 
-```powershell
-node scripts/import-approved-assets.mjs `
-  --source ../virgo-stars/public/assets `
-  --target ./public/assets `
-  --approvals ./catalog/approvals.json
-```
+**Image binaries:** no public license is asserted by the presence of this `LICENSE` file. Each asset needs a rights-holder-approved public license and a record at a pinned SHA-256. Do not treat screenshots, font-derived glyphs, branded artwork, textures, or metadata as freely reusable without that review.
 
-3. Solo dopo aver verificato i permessi e il piano di import, eseguire:
+## Quick start
 
-```powershell
-node scripts/import-approved-assets.mjs `
-  --source ../virgo-stars/public/assets `
-  --target ./public/assets `
-  --approvals ./catalog/approvals.json `
-  --apply `
-  --manifest ./manifests/approved-assets.json
-```
+Requirements: Node.js **20.19+**. No remote calls or GitHub Actions are required for the local checks.
 
-Prima della prima scrittura, l'importatore ricontrolla **tutti** i file selezionati e le destinazioni rispetto al piano, rifiuta junction/symlink negli antenati della destinazione e usa i byte appena verificati. La copia di più file non è una transazione: in caso di errore di scrittura o interruzione possono rimanere file parzialmente importati senza un manifest aggiornato. Operare in una cartella di lavoro dedicata, senza altri processi che modifichino sorgente o destinazione, e ispezionare o ripristinare la cartella prima di riprovare.
-
-4. Verificare gli hash dell'archivio appena creato:
-
-```powershell
-node scripts/verify-pack.mjs `
-  --root ./public/assets `
-  --manifest ./manifests/approved-assets.json
-
+```sh
 npm test
+npm run audit:catalog
+npm run verify:pack
+npm run check:public-release
 ```
 
-**Nessuno script invia dati o file a GitHub, AWS o al sito.** Prima di committare i binari approvati, esaminare `git status`, il manifest e la relativa licenza.
+`check:public-release` currently **must fail with exit code 2**: existing private sharing permission is not public redistribution permission. This is the expected safe result, not a broken test. A passing `npm test` verifies tooling, not legal authorship or release approval.
 
-## Collaboratori senza accesso a VirgoStars
+For a local copy with the authorized upstream repository checked out as a sibling, preview an import without copying anything:
 
-I collaboratori invitati possono clonare solo **`astrological-charts` e `astrological-assets`**. Il server locale di `astrological-charts` può usare questa cartella:
+```sh
+node scripts/import-approved-assets.mjs --source ../virgo-stars/public/assets --target ./public/assets --approvals ./catalog/approvals.json
+```
 
-```powershell
+Only after explicit owner approval and path/hash review, use the importer with `--apply` and `--manifest ./manifests/approved-assets.json`. It verifies bytes and rejects unsafe paths; a batch import is not an atomic filesystem transaction.
+
+## Using these graphics in Astrological Charts
+
+The renderer source belongs to [astrological-charts](https://github.com/Cesare-ml/astrological-charts), not this repo. With the two repositories checked out side by side, a developer with **authorized asset access** may run the renderer's local read-only asset server:
+
+```sh
+cd ../astrological-charts
 node scripts/serve-local-assets.mjs --root ../astrological-assets/public/assets --manifest ../astrological-assets/manifests/approved-assets.json
 ```
 
-Così i simboli vengono serviti in sviluppo da `http://127.0.0.1:4177/assets/img/...`, senza accesso al backend, ai temi degli utenti o alle credenziali VirgoStars. Il renderer non include copie delle immagini.
+The development server serves only manifest-listed assets and checks file hashes. Original browser paths such as `/assets/img/...` are preserved. The independent Charts demo can also use synthetic fixtures without requiring private artwork or a VirgoStars backend.
 
-## Indice
+## Before publishing
 
-- [Ambito del catalogo e inventario](docs/ASSET_SCOPE.md)
-- [Diritti e approvazione](docs/RIGHTS_AND_REVIEW.md)
-- [Coordinamento dei tre repository e gate di rilascio](docs/ECOSYSTEM_COORDINATION.md)
-- [Migrazione verso una sola copia di build](docs/MIGRATION_PLAN.md)
-- [AGENTS.md](AGENTS.md) — regole per agenti e sviluppatori
-- [CONTRIBUTING.md](CONTRIBUTING.md) — contributi
+1. Read the [public release checklist](docs/PUBLIC_RELEASE_CHECKLIST.md), especially the **Git history** risk: making an existing private repository public exposes historical objects, not just the latest tree.
+2. Have the actual rights holder review every included binary, including any symbols generated from fonts with unclear license terms. Record a real, explicit public license and evidence in `catalog/publication-approvals.json`. This must be done manually; scripts and AI agents cannot grant rights.
+3. Run `npm test`, `npm run audit:catalog`, `npm run verify:pack`, and `npm run check:public-release`; investigate every failure.
+4. Independently review the entire Git history and all publication-bound files for private data, artwork and licenses. Use a **clean-history public export** if previous private objects cannot be cleared.
+5. Publish or switch visibility **only on explicit owner sign-off**. No automatic merge, GitHub Actions, or production deployment.
 
-Il progetto non ha una licenza open source, non esegue GitHub Actions e **non** apporta modifiche al sito in produzione o agli Astrolabi.
+## Documentation
 
-### Nota sui permessi GitHub
+- [Rights, artwork and review](docs/RIGHTS_AND_REVIEW.md)
+- [Public release checklist](docs/PUBLIC_RELEASE_CHECKLIST.md)
+- [Licensing and required credits](docs/LICENSING_AND_CREDITS.md)
+- [Asset scope and upstream inventory](docs/ASSET_SCOPE.md)
+- [Migration without duplicated assets](docs/MIGRATION_PLAN.md)
+- [Ecosystem coordination](docs/ECOSYSTEM_COORDINATION.md)
+- [Contributing](CONTRIBUTING.md) and [agent instructions](AGENTS.md)
 
-Il repository appartiene a un **account personale** (`Cesare-ml`): secondo la [documentazione ufficiale GitHub](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/repository-access-and-collaboration/permission-levels-for-a-personal-account-repository), nei repository privati gli invitati possono avere accesso di scrittura, non un ruolo read-only garantito. Prima di condividere asset riservati, verificare i permessi effettivi. Se è necessario un ruolo di sola lettura affidabile, valutare un'organizzazione GitHub con ruoli granulari oppure una distribuzione selettiva.
-
-## Aggiornare il catalogo dal monorepo locale
-
-Se cambia il commit di `virgo-stars`, è possibile rigenerare il catalogo senza copiare immagini e senza usare Actions:
-
-```powershell
-node scripts/refresh-source-catalog.mjs --repo ../virgo-stars
-node scripts/refresh-source-catalog.mjs `
-  --repo ../virgo-stars --out ./catalog/upstream-candidates.json --write
-npm run audit:catalog
-```
-
-Le approvazioni pregresse vanno riesaminate se cambia l'hash Git di un file. L'inventario generato contiene soltanto metadati.
-
-## Preflight obbligatorio contro gli asset duplicati
-
-Questo comando **non modifica né copia nulla**; segnala se gli stessi path verranno importati sia dal vecchio `virgo-stars/public` sia dal repository asset:
-
-```powershell
-node scripts/check-web-asset-collisions.mjs `
-  --legacy ../virgo-stars/public/assets `
-  --pack ./public/assets `
-  --manifest ./manifests/approved-assets.json `
-  --out ./collision-report.local.json
-```
-
-Codici: `0` = disgiunto; `3` = copie identiche ancora presenti nel sorgente legacy, da **escludere** dalla futura build; `2` = file divergenti, mancanti o alterati, migrazione bloccata. Non interpretare un confronto superato come prova che Angular copi correttamente i file: prima di un deploy serve anche verificare l'output della build.
-
-La [scheda iniziale dei 78 simboli](catalog/reviews/simboli-bianchi.pending.json) è una fotografia storica preparata prima dell'autorizzazione. Per lo stato corrente fanno fede `catalog/approvals.json` e `manifests/approved-assets.json`.
-
-## Verifica locale rapida su Windows
-
-Senza importare o modificare nulla, puoi eseguire test Node, audit del catalogo e — quando esiste un manifest autorizzato — verificare gli hash:
-
-```powershell
-powershell -NoProfile -File .\scripts\preflight-local.ps1
-```
-
-Per aggiungere il controllo delle doppie copie rispetto al tuo checkout locale di VirgoStars:
-
-```powershell
-powershell -NoProfile -File .\scripts\preflight-local.ps1 `
-  -VirgoStarsAssets ..\virgo-stars\public\assets
-```
-
-Il preflight non carica file su GitHub, non approva immagini e non modifica il sito.
-
-Per verificare anche i file effettivamente emessi da una futura build web, usare `npm run check:build-output -- --build <cartella-output-web> --manifest ./manifests/approved-assets.json`. Il controllo e i suoi limiti sono descritti nel [piano di migrazione](docs/MIGRATION_PLAN.md); non è ancora stato eseguito su una build VirgoStars.
-
-## Preview indipendente (prima e dopo l'importazione)
-
-Il repository [`astrological-charts`](https://github.com/Cesare-ml/astrological-charts) include, tramite la [PR #13 integrata](https://github.com/Cesare-ml/astrological-charts/pull/13), una galleria di 78 PNG sintetici e una distinta [demo Angular](https://github.com/Cesare-ml/astrological-charts/blob/main/docs/ANGULAR_DEMO.md). La demo usa ulteriori risorse generate localmente per visualizzare grafici con fixture sintetiche, senza copiare artwork originale né accedere a VirgoStars.
-
-Il server richiede obbligatoriamente sia `public/assets` sia `manifests/approved-assets.json`; verifica SHA-256 e limita ogni richiesta ai file presenti nel manifest. La copertura è stata verificata sulla demo; opzioni avanzate, compatibilità visiva e dispositivi richiedono ulteriori prove.
-
-**Limiti della demo:** i dati delle carte sono sintetici. I precedenti test browser completi usavano immagini sintetiche; il pacchetto reale e la fedeltà visiva richiedono ulteriori verifiche e non sono pronti per la produzione.
+The repository's purpose is to make original astrological graphics verifiable, consistently versioned, and eventually shareable **where the necessary rights exist**.

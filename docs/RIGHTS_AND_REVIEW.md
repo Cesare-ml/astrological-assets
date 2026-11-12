@@ -1,58 +1,43 @@
-# Asset rights and review protocol
+# Asset rights and human review protocol
 
-**Assets in the initial catalog are not presumed licensed or approved.** A private GitHub repository is not a blanket redistribution permission, even if the images are visible on the VirgoStars site. The separate approvals file records explicit owner attestations; it does not authorize public redistribution.
+## Private approval is not public distribution permission
 
-## Before marking any asset as approved
+The initial inventory and approved image pack are **not automatically public-domain or open-source artwork**. `catalog/approvals.json` contains a project-owner attestation dated 2026-11-10 authorizing the existing 1,013 images for private collaborators only. That attestation includes images generated with a font whose licensing is unknown. The font files themselves are not in the pack. This does **not** establish public redistribution rights for the images or rights in the font.
 
-Establish who created/owns the artwork, whether the permission covers sharing with invited contractors, commercial VirgoStars use, modification, hosting, and potential future open-source/public redistribution. Preserve any required attribution and the evidence in records controlled by the owner (avoid placing personal contacts or contract scans in the repository).
+The separate `catalog/publication-approvals.json` starts empty and is the only public authorization input for the release preflight. It is not populated by import scripts or by a coding assistant.
 
-- **Original graphics:** verify authorship and original source files.
-- **Third-party artwork/textures:** check the actual license and redistribution restrictions.
-- **Fonts:** check embedding, modification and redistribution permissions separately.
-- **Risuonatore Solare branded designs:** treat as a distinct category requiring explicit rights review.
-- **Old asset variants:** generally omit unless the active renderer or rollback explicitly needs them.
+## Human rights check for each file or defensible family
 
-## Approvals file
+Before issuing a public authorization:
 
-Edit `catalog/approvals.json` only after review:
+1. Verify the origin and owner of the actual image, including source files and any commissioned work.
+2. Check underlying fonts/glyphs, maps, textures, external images, AI-generated content and trademarked/branded designs. In particular, do not assume that excluding a font file resolves the licensing of images made from its glyphs.
+3. Confirm that the rights holder can explicitly authorize public copying, distribution, modification and downstream use, and select a precise license suitable for the artwork.
+4. Record the actual filename, SHA-256, rights holder and public approval evidence. Keep signed agreements or sensitive documents in secure storage, not in Git.
+5. Have the project owner or an independently authorized human reviewer approve the record. Automated scripts and AI agents **must not** declare assets approved.
 
-```json
-{
-  "schemaVersion": 1,
-  "assets": [
-    {
-      "path": "img/simboli-bianchi/segni/01.png",
-      "status": "pending",
-      "rightsHolder": "",
-      "permissionBasis": "",
-      "approvalEvidence": ""
-    }
-  ]
-}
-```
+For public authorization record format and release commands, see [PUBLIC_RELEASE_CHECKLIST.md](PUBLIC_RELEASE_CHECKLIST.md).
 
-This example is intentionally **pending**. When the rights holder authorizes a given file, set `status` to `approved` and fill all three textual fields with a genuine reference. Other statuses must not trigger import.
+## Existing private approvals
 
-The importer checks that the approved bytes still match the source catalog's Git blob ID and size; it then records SHA-256 in `manifests/approved-assets.json`.
+`catalog/approvals.json` is used by the selective private importer. Records in this file have `status: "approved"` and fields `rightsHolder`, `permissionBasis` and `approvalEvidence`. That status means **approved for the currently recorded private purpose**, not publicly licensed. The importer verifies the source Git blob hash, size and paths, and writes a SHA-256 manifest.
 
-At apply time the importer rechecks every selected source and destination against the plan before the first write, rejects symlink/junction ancestors of the target, and writes the bytes it just verified. A changed input or destination blocks the import. This is not a filesystem transaction or a defence against a concurrently hostile process changing paths during the operation: an I/O error can leave a partial import and the previous manifest. Work in an isolated directory, inspect any partial result and restore it before retrying.
+`catalog/reviews/simboli-bianchi.pending.json` is an older, historical 78-image review worksheet, not authoritative evidence of current or public rights.
 
-**Do not enter personal data, private contract text, credentials or other secrets in the public-facing evidence field.** Use short opaque references to material stored securely elsewhere.
+To prepare a new private rights worksheet without approving anything:
 
-Only the project owner or a reviewer explicitly authorized by the owner should sign off; an automated coding assistant cannot perform legal rights approval.
-
-An approved-pack record with an explicit `status` other than `approved` is rejected by the pack verifier and build gates, even if its textual fields are filled. Existing importer-generated manifests omit `status` and remain supported; their evidence fields still require human review and are not independently authenticated by these scripts.
-
-## Revisione rapida per famiglia, senza approvare automaticamente
-
-Per preparare 12 schede dei segni senza compilarle manualmente una a una:
-
-```powershell
+```sh
 node scripts/prepare-review.mjs --family img/simboli-bianchi/segni/ --out ./segni-review.local.json
 ```
 
-Tutte le voci escono con `status: "pending"`, insieme a hash Git e dimensione per controllo. Solo il titolare dei diritti può confermare le autorizzazioni con documentazione verificabile. Il file locale non viene caricato automaticamente su GitHub e non copia nessuna immagine.
+The generated entries are **pending**; humans must evaluate them. The generator neither copies files nor sends data anywhere.
 
-## Prima scheda pronta alla verifica umana
+## Import safety and integrity
 
-Il file [`catalog/reviews/simboli-bianchi.pending.json`](../catalog/reviews/simboli-bianchi.pending.json) è la scheda storica iniziale delle **78** immagini. Il 10 novembre 2026 il proprietario ha dichiarato di aver creato le immagini e di poter condividere privatamente anche quelle derivate dal font dalla licenza sconosciuta. Le autorizzazioni correnti, con il riferimento a tale attestazione, sono in `catalog/approvals.json`; gli hash delle immagini importate sono nel manifest. I file del font non sono inclusi e non è stata affermata alcuna autorizzazione alla distribuzione pubblica.
+`scripts/import-approved-assets.mjs` operates in dry-run mode unless explicitly passed `--apply`. Before writing, it rechecks reviewed source assets and destinations, rejects unsafe paths and symlink/junction ancestors, and uses verified bytes. A batch import is **not atomic**: an I/O error may leave partial files without an updated manifest. Use an isolated folder, inspect partial results and restore a known state before retrying.
+
+`scripts/verify-pack.mjs` confirms paths, recorded approval metadata, sizes and SHA-256 of the checked-out pack. It does **not** prove authorship or public licensing.
+
+`scripts/check-public-release.mjs` checks for explicit public-permission records that match **exact current-pack SHA-256s** and reports missing or inconsistent entries. It also detects unlisted files in the asset tree. A passing check is a necessary technical gate but cannot establish legal rights by itself.
+
+**Crucial:** GitHub's public visibility exposes repository history; even removing a questionable image from the latest tree does not make past commits safe to publish. Use a fresh, audited public history when necessary.

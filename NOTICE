@@ -1,0 +1,29 @@
+Astrological Assets
+===================
+
+Original project: VirgoStars
+Source repository: https://github.com/Cesare-ml/astrological-assets
+Project website: https://www.virgostars.it/
+
+Original Developer and Initial Developer: Cesare-ml (VirgoStars project)
+Copyright (c) 2026 Cesare-ml. Contributors retain their own applicable copyrights.
+
+Original software and supporting source documentation: Common Public
+Attribution License Version 1.0 (CPAL-1.0). See LICENSE, Exhibits A and B.
+
+EXHIBIT B — attribution to the Original Developer:
+Copyright (c) 2026 Cesare-ml (VirgoStars project)
+Powered by VirgoStars
+https://www.virgostars.it/
+The display obligation for Larger Works is specified by LICENSE.
+CPAL Section 14 covers display on launch/session start when applicable;
+Section 15 covers External Deployment. This NOTICE adds no new restrictions.
+
+IMPORTANT: The CPAL software license does not automatically license
+public/assets/** (images), external fonts, third-party artwork or data.
+Current images were approved for PRIVATE collaboration only, not public
+redistribution. A separate, explicit, rights-cleared license decision for
+EVERY image is required before making repository history or a release public.
+See docs/PUBLIC_RELEASE_CHECKLIST.md and docs/RIGHTS_AND_REVIEW.md.
+
+No affiliation with or endorsement of downstream software is implied.
