@@ -27,8 +27,10 @@ The owner received the prototype files privately in the conversation, not from G
 
 These hashes are reference identifiers only and **do not authorize distribution** of the corresponding font files:
 
-- `VirgoStarsAstro-Prototype.ttf` SHA-256: `c99a08240d728287f49ebd6499cb4e54ba6c745eb27fc5581d79d2c8016c8502` **(earlier intermediate draft; superseded)**
-- **Current local prototype v0.1**: use the SHA-256 values from the owner's private package `build/build-report.json`. Do **not** assume the intermediate hash above identifies the final private artifact.
+- `VirgoStarsAstro-Prototype.ttf` SHA-256: `7de2dce9b8b8a492a8e825b876db240a4ca8eddb9760d031367ea265e252fd7c`
+- `VirgoStarsAstro-Prototype.woff2` SHA-256: `87dd721ef546923fdf64ec722bc47b30c44507e45b0447eb4a20951a35a99ac7`
+
+These identify only the final privately delivered **v0.1** binaries, also recorded in the owner's private package `build/build-report.json`.
 
 ## Actual technical validation
 
