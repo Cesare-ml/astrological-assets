@@ -9,6 +9,7 @@ test('publication review emits only pending, empty public licenses',()=>{
   assert.equal(r.assets[0].status,'pending');
   assert.equal(r.assets[0].permissionScope,'not-yet-granted');
   assert.equal(r.assets[0].licenseId,'');
+  assert.equal(r.assets[0].thirdPartyStatus,'pending');
   assert.equal(r.assets[0].publicApprovalEvidence,'');
   assert.equal(r.assets[0].authorClaimReference,'catalog/owner-authorship.json');
 });
