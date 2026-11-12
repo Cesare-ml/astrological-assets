@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "declaredOn": "2026-11-12",
+  "evidenceReference": "Owner statement in project conversation on 2026-11-12",
+  "statement": "The project owner states that they personally created the images included in the Astrological Assets repository.",
+  "scope": {
+    "manifest": "manifests/approved-assets.json",
+    "gitBlobSha": "6ff2198405354c865a7dcbc908753d5df9cfd096",
+    "expectedImageCount": 1013
+  },
+  "limitations": [
+    "This is an authorship claim supplied by the project owner, not independent provenance verification.",
+    "This does not determine licensing of fonts, glyphs, textures or other underlying third-party materials.",
+    "No specific public artwork license was selected by this statement.",
+    "This record alone cannot authorize publication or bypass the public-release gate."
+  ]
+}

@@ -18,7 +18,7 @@ CPAL permits commercial use of the original covered code subject to its terms; t
 
 ## Images and other non-code resources
 
-**The software license is not blanket permission for images.** The existing `public/assets/` image files are approved for private collaborators under `catalog/approvals.json`, not for public redistribution. `catalog/publication-approvals.json` is an intentionally empty, separate public rights register until the rights holder reviews each image.
+**The software license is not blanket permission for images.** The project owner has affirmed personal authorship of the 1,013 images (see [owner-authored artwork](OWNER_AUTHORSHIP_AND_ARTWORK.md)). The existing `public/assets/` image files are approved for private collaborators under `catalog/approvals.json`, not for public redistribution. `catalog/publication-approvals.json` is an intentionally empty, separate public rights register until the rights holder reviews each image.
 
 Public artwork may require an explicit **separate license**, for example an appropriate Creative Commons license, or another license selected by the actual rights holder. Do not apply any specific artwork license automatically. Original composition and lawful rights in underlying fonts, glyphs, textures, maps and other sources require separate scrutiny. Third-party material keeps its own license; no right can be granted here if the rights holder does not possess it.
 

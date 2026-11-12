@@ -7,10 +7,12 @@
 - [x] Repository content and contributor instructions use English.
 - [x] CPAL-1.0 for the original software, with completed Exhibits A/B and VirgoStars attribution in `LICENSE` and `NOTICE`.
 - [x] Public rights recorded separately from private approvals, with an independent, fail-closed preflight.
+- [x] **Project owner asserts direct authorship of the images** — owner declaration recorded 2026-11-12; see [owner-authored artwork](OWNER_AUTHORSHIP_AND_ARTWORK.md).
+- [x] **Git tree filename audit** of 51 main-branch commit snapshots (not a complete secret or legal audit); see [audit record](HISTORY_FILE_AUDIT_2026-11-12.md).
 - [ ] **Rights holder approves each image for public redistribution**, including derivative use, and selects a legally appropriate license. Check any third-party fonts, glyphs, maps, textures, marks, and generated images for source restrictions.
 - [ ] Populate `catalog/publication-approvals.json` with the real image path, SHA-256, license, rights holder, evidence and third-party review. No automatic approval.
 - [ ] Verify every current binary: `npm run verify:pack` and `npm run check:public-release` both succeed (exit 0). Review unexpected/unlisted files manually.
-- [ ] Audit ALL historical Git blobs and earlier commits for non-public asset files, personal information, credentials, third-party content, restricted materials, and other unpublished work. A clean HEAD does **not** mean safe history.
+- [ ] Audit contents and metadata of ALL historical Git blobs and earlier commits for non-public asset files, personal information, credentials, third-party content, restricted materials, and other unpublished work. A clean HEAD does **not** mean safe history.
 - [ ] If some historical material cannot be published, **do not switch this repository to public**. Prepare a fresh public repo/export from a rights-cleared tree, with a **new root commit and no connection to private Git history**, then review that export.
 - [ ] Run `npm test` and `npm run audit:catalog`. Run renderer integration and compatibility tests where meaningful.
 - [ ] Check downstream paths and attribution in actual Angular/Three.js applications, websites and offline artifacts; keep the canonical `/assets/img/` URLs.
@@ -24,6 +26,7 @@ npm test
 npm run audit:catalog
 npm run verify:pack
 npm run check:public-release
+npm run review:public -- --out ./artwork-review.local.json
 ```
 
 The last command returns **exit code 2** when any image is missing explicit public approval, a record is inconsistent, or the current pack includes an unlisted binary; it returns **exit code 0** only if the *current pack* meets the recorded metadata checks. The script does **not** authenticate legal ownership, discover unknown third-party rights, or scan historical Git objects. This is a technical guardrail, **not legal certification**.

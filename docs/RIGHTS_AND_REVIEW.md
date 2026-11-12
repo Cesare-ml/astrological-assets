@@ -4,6 +4,8 @@
 
 The initial inventory and approved image pack are **not automatically public-domain or open-source artwork**. `catalog/approvals.json` contains a project-owner attestation dated 2026-11-10 authorizing the existing 1,013 images for private collaborators only. That attestation includes images generated with a font whose licensing is unknown. The font files themselves are not in the pack. This does **not** establish public redistribution rights for the images or rights in the font.
 
+On 2026-11-12, the project owner also explicitly affirmed personal authorship of the images; see [owner-authored artwork declaration](OWNER_AUTHORSHIP_AND_ARTWORK.md). This resolves the authorship claim at the attestation level, but it does not license third-party font glyphs or itself select a public artwork license.
+
 The separate `catalog/publication-approvals.json` starts empty and is the only public authorization input for the release preflight. It is not populated by import scripts or by a coding assistant.
 
 ## Human rights check for each file or defensible family

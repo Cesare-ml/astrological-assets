@@ -6,7 +6,7 @@
 
 ## What is here?
 
-- **1,013 privately approved image files** under `public/assets/img/`, with a SHA-256 integrity manifest at `manifests/approved-assets.json`.
+- **1,013 owner-created image files (owner attestation recorded 2026-11-12)**, with private sharing approval under `public/assets/img/`, and a SHA-256 integrity manifest at `manifests/approved-assets.json`.
 - **1,124 upstream candidate records** in `catalog/upstream-candidates.json` (about 80.44 MiB, metadata only; this is not a publication approval).
 - Reviewed private-use permissions in `catalog/approvals.json`, distinct from the **not-yet-granted** public permissions in `catalog/publication-approvals.json`.
 - Node.js tools for selective import, catalog auditing, manifest validation, migration collision checks, and a *fail-closed* public-release gate.
@@ -35,6 +35,7 @@ npm test
 npm run audit:catalog
 npm run verify:pack
 npm run check:public-release
+npm run review:public -- --out ./artwork-review.local.json
 ```
 
 `check:public-release` currently **must fail with exit code 2**: existing private sharing permission is not public redistribution permission. This is the expected safe result, not a broken test. A passing `npm test` verifies tooling, not legal authorship or release approval.
@@ -68,6 +69,8 @@ The development server serves only manifest-listed assets and checks file hashes
 
 ## Documentation
 
+- [Owner authorship statement and artwork licensing](docs/OWNER_AUTHORSHIP_AND_ARTWORK.md)
+- [Git history file-inventory audit](docs/HISTORY_FILE_AUDIT_2026-11-12.md)
 - [Rights, artwork and review](docs/RIGHTS_AND_REVIEW.md)
 - [Public release checklist](docs/PUBLIC_RELEASE_CHECKLIST.md)
 - [Licensing and required credits](docs/LICENSING_AND_CREDITS.md)
