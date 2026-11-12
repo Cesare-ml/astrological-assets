@@ -109,6 +109,12 @@ CC BY 4.0 permits sharing and adaptations, including commercial use, **of materi
 
 Read the [artwork licensing policy](docs/ARTWORK_LICENSING_POLICY.md), [rights review protocol](docs/RIGHTS_AND_REVIEW.md), and [open rights audit issue #2](https://github.com/Cesare-ml/astrological-assets/issues/2) before redistributing the image pack. Note that publicly accessible Git history can already have been cloned; deleting a file in a later commit does not retract earlier copies.
 
+## Development roadmap
+
+The next planned design milestone is **VirgoStars Astro**, a fully new symbol font owned by VirgoStars. Its first release is scoped to the traditional **12 zodiac signs and 10 celestial bodies** documented in the [font specification](docs/VIRGOSTARS_ASTRO_FONT_PLAN.md). The shapes follow the *traditional iconographic variants* chosen from the owner's reference, but the vector contours will be drawn independently. **No font is released yet.**
+
+Follow the [prioritized roadmap and milestone checklists](docs/ROADMAP.md) and [development issue #8](https://github.com/Cesare-ml/astrological-assets/issues/8). The historical artwork/font rights review remains tracked independently in [issue #2](https://github.com/Cesare-ml/astrological-assets/issues/2).
+
 ## Contributing
 
 Contributions to the tools, tests, documentation, and compatible original assets are welcome via issues and pull requests. Please:
@@ -120,6 +126,7 @@ Contributions to the tools, tests, documentation, and compatible original assets
 
 ## Documentation
 
+- [Development roadmap and backlog](docs/ROADMAP.md)
 - [VirgoStars Astro — proposed original zodiac and planetary font](docs/VIRGOSTARS_ASTRO_FONT_PLAN.md)
 - [VirgoStars Astro — traditional symbol variants and Unicode mapping](docs/VIRGOSTARS_ASTRO_ICONOGRAPHY.md)
 - [Asset scope and upstream inventory](docs/ASSET_SCOPE.md)
