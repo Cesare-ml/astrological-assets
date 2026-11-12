@@ -8,6 +8,8 @@ Create a coherent and legible display font for the **twelve zodiac signs** and *
 
 **Clean-room rule:** never import, extract, trace, vectorize, reprocess, distort, adapt, convert or copy an Astro-SemiBold outline, glyph bitmap, control point or font file. Do not use that font as a starting template, training sample or source in any generated assets. Define new glyphs from traditional astrological *concepts* and the publicly specified Unicode characters, using a uniform original design system. Do not claim changing a few points would create a legally independent font.
 
+**Technical checkpoint:** The 22 identifiers below now have a machine-readable, planning-only representation in [specs/virgostars-astro.v0.json](../specs/virgostars-astro.v0.json). Run `npm run check:astro-spec` (also covered by `npm test`) to detect altered Unicode values, missing or duplicate entries, unexpected traditional variants, invalid proposed metrics and accidental addition of geometry. The validator does not generate a font or establish distribution rights.
+
 ## Initial Unicode character coverage
 
 Unicode characters are the primary identifiers, not private custom ASCII substitutions.
