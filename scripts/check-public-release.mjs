@@ -2,6 +2,7 @@
 // Fail-closed, read-only preflight for a future public image release.
 // Private-use approvals do not count. Metadata checks do not certify legal rights.
 import { readFileSync, readdirSync, lstatSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateAssetPath } from './import-approved-assets.mjs';
@@ -13,7 +14,7 @@ function checkedPath(value) {
   return value.normalize('NFC').toLowerCase();
 }
 
-export function assessPublicRelease(manifest, publication, assetPaths = []) {
+export function assessPublicRelease(manifest, publication, assetPaths = [], licenseDecision, manifestGitBlobSha) {
   if (manifest?.schemaVersion !== 1 || !Array.isArray(manifest.assets) || !manifest.assets.length) {
     throw new Error('Expected a nonempty version 1 asset manifest');
   }
@@ -21,6 +22,19 @@ export function assessPublicRelease(manifest, publication, assetPaths = []) {
     throw new Error('Expected a version 1 public publication approvals file');
   }
   if (!Array.isArray(assetPaths)) throw new Error('Expected a list of pack file paths');
+  // Owner-level license choice is necessary, but cannot by itself clear a complete image.
+  if (licenseDecision?.schemaVersion !== 1 ||
+      licenseDecision.decisionStatus !== 'owner-selected-policy' ||
+      licenseDecision.licenseId !== 'CC-BY-4.0' ||
+      licenseDecision.requiresPerFileClearance !== true ||
+      licenseDecision.scope?.manifest !== 'manifests/approved-assets.json') {
+    throw new Error('Missing or inconsistent owner-selected artwork license policy');
+  }
+  if (!/^[a-f0-9]{40}$/.test(manifestGitBlobSha || '') ||
+      licenseDecision.scope.manifestGitBlobSha !== manifestGitBlobSha ||
+      licenseDecision.scope.expectedAssetCount !== manifest.assets.length) {
+    throw new Error('Owner artwork license policy is not pinned to the current manifest');
+  }
 
   const manifestByPath = new Map();
   for (const asset of manifest.assets) {
@@ -50,6 +64,8 @@ export function assessPublicRelease(manifest, publication, assetPaths = []) {
       record.sha256 === item.sha256 &&
       record.status === 'approved' &&
       record.permissionScope === 'public-redistribution' &&
+      record.licenseId === licenseDecision.licenseId &&
+      record.thirdPartyStatus === 'cleared' &&
       requiredText.every(field => typeof record[field] === 'string' && record[field].trim() !== '') &&
       /^[a-zA-Z0-9.+-]+$/.test(record.licenseId || '');
     if (!valid) {
@@ -105,9 +121,14 @@ function main() {
   const root = resolve(process.cwd(), 'public/assets');
   const manifestPath = resolve(process.cwd(), 'manifests/approved-assets.json');
   const publicPath = resolve(process.cwd(), 'catalog/publication-approvals.json');
-  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+  const rawManifest = readFileSync(manifestPath);
+  const manifest = JSON.parse(rawManifest.toString('utf8'));
+  // Git's blob SHA anchors the owner's decision to exact checked manifest bytes.
+  const manifestGitBlobSha = createHash('sha1')
+    .update('blob ' + rawManifest.length + '\0').update(rawManifest).digest('hex');
   const publicApprovals = JSON.parse(readFileSync(publicPath, 'utf8'));
-  const result = assessPublicRelease(manifest, publicApprovals, listPackFiles(root));
+  const licenseDecision = JSON.parse(readFileSync(resolve(process.cwd(), 'catalog/artwork-license-decision.json'), 'utf8'));
+  const result = assessPublicRelease(manifest, publicApprovals, listPackFiles(root), licenseDecision, manifestGitBlobSha);
   // Integrity is necessary but not sufficient: does not certify license ownership.
   const pack = verifyPack(root, manifest);
   console.log(JSON.stringify({
@@ -118,6 +139,7 @@ function main() {
     issueCount: result.totalIssues,
     firstIssues: result.issues.slice(0, 12),
     verifiedPackFiles: pack.verified,
+    artworkLicense: licenseDecision.licenseId,
     note: 'Current files only. Review historical Git objects and actual legal evidence separately.',
   }, null, 2));
   if (!result.ready) process.exitCode = 2;
