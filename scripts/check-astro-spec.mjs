@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Validate only the Unicode/design contract. No Astro-SemiBold font data is loaded.
 import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const EXPECTED = Object.freeze([
@@ -114,7 +115,7 @@ function main() {
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) ===
-    (await import('node:path')).resolve(process.argv[1])) {
+    resolve(process.argv[1])) {
   try {
     main();
   } catch (error) {
