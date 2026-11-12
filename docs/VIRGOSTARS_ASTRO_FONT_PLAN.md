@@ -1,6 +1,6 @@
 # VirgoStars Astro — original symbol font proposal
 
-**Status: design proposal / not a released font.** Target: 22 original astrological glyphs for VirgoStars charts, authored independently and controlled by the VirgoStars project. This proposal creates **no font files**, licenses, third-party glyph reproductions, or replacements of existing assets.
+**Status: planned P1 workstream / not a released font.** **Tracked by [issue #8](https://github.com/Cesare-ml/astrological-assets/issues/8) and [milestone roadmap](ROADMAP.md).** Target: 22 original astrological glyphs for VirgoStars charts, authored independently and controlled by the VirgoStars project. This proposal creates **no font files**, licenses, third-party glyph reproductions, or replacements of existing assets.
 
 ## Goal and boundaries
 
