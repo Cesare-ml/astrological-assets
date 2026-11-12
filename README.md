@@ -1,84 +1,134 @@
 # Astrological Assets
 
-**Curated graphics and integrity tooling for the [VirgoStars](https://www.virgostars.it/) ecosystem.**
+**Open-source tooling and a curated image library for [VirgoStars](https://www.virgostars.it/) astrological interfaces.**
 
-**Status: PUBLIC since 2026-11-12 — artwork clearance incomplete.** Original project tooling is offered under the [Common Public Attribution License 1.0 (CPAL-1.0)](LICENSE), with the same **Powered by VirgoStars** attribution as [VirgoStars-Ephemeris](https://github.com/Cesare-ml/VirgoStars-Ephemeris). **The image files are not automatically licensed under CPAL.** The owner selected **CC BY 4.0** for original artwork, but each complete image still requires review of any third-party rights before public distribution.
+This public repository contains the visual assets used by VirgoStars chart interfaces, together with manifests, integrity checks, and tools for managing a shared asset collection. It is designed to work alongside [Astrological Charts](https://github.com/Cesare-ml/astrological-charts) and the wider VirgoStars ecosystem.
 
-## What is here?
+**1,013 raster images** · **Light and dark chart graphics** · **SHA-256 manifest** · **Node.js tooling**
 
-- **1,013 owner-created image files (owner attestation recorded 2026-11-12)**, with private sharing approval under `public/assets/img/`, and a SHA-256 integrity manifest at `manifests/approved-assets.json`.
-- **1,124 upstream candidate records** in `catalog/upstream-candidates.json` (about 80.44 MiB, metadata only; this is not a publication approval).
-- Owner-selected CC BY 4.0 artwork policy in `catalog/artwork-license-decision.json`, separate from private-use permissions and the still **pending** file-level public clearances.
-- Node.js tools for selective import, catalog auditing, manifest validation, migration collision checks, and a *fail-closed* public-release gate.
-- **No fonts**, user chart data, backend code, credentials, or production deployment tools.
+> **Artwork rights notice:** This repository is public, but not every image has completed a file-specific third-party rights review. The project owner has selected **CC BY 4.0** for their original creative contributions. The separate CPAL-1.0 software license does **not** automatically cover all image content. See [Licensing and attribution](#licensing-and-attribution).
 
-The source-of-truth for currently deployed website images remains the private `Cesare-ml/virgo-stars/public/assets` checkout. This repository is not a deployment mechanism.
+## Preview
 
-## License and attribution
+These are individual assets from the repository, not complete rendered natal charts.
 
-The original **software tooling and supporting source documentation** are licensed under [CPAL-1.0](LICENSE) (Exhibits A and B), with attribution:
+| Light chart graphics | Dark chart graphics | Solar Resonator |
+| :---: | :---: | :---: |
+| ![Light zodiac chart overlay](public/assets/img/grafici/light/cartaastrale-segni.png) | ![Dark zodiac chart overlay](public/assets/img/grafici/dark/cartaastrale-segni.png) | ![Solar Resonator artwork](public/assets/img/risuonatore-solare.png) |
 
-> Copyright (c) 2026 Cesare-ml (VirgoStars project)  
-> Powered by VirgoStars  
-> https://www.virgostars.it/
+## What's included
 
-CPAL can require a prominent notice on launch/session start of a covered graphical application, and covered-source availability for certain network deployments. A Credits/About screen is encouraged, but is not by itself a guarantee of full Section 14 compliance. See [licensing and credits](docs/LICENSING_AND_CREDITS.md).
+| Location | Contents |
+| --- | --- |
+| [`public/assets/img/grafici/`](public/assets/img/grafici/) | Chart backgrounds, overlays, axes, synastry elements, planetary hours, and light/dark variants |
+| [`public/assets/img/simboli/`](public/assets/img/simboli/) | Zodiac signs, celestial bodies, houses, elements, and skin/size variants |
+| [`public/assets/img/simboli-bianchi/`](public/assets/img/simboli-bianchi/) | White symbol variants |
+| [`public/assets/img/symbols/planets/`](public/assets/img/symbols/planets/) | Circular planetary symbols and variants |
+| [`public/assets/img/textures/`](public/assets/img/textures/) | Background textures |
+| [`public/assets/img/risuonatore-solare.png`](public/assets/img/risuonatore-solare.png) | Solar Resonator artwork, with additional variants nearby |
+| [`manifests/approved-assets.json`](manifests/approved-assets.json) | Exact asset paths, file sizes, SHA-256 hashes, and provenance metadata |
+| [`scripts/`](scripts/) and [`tests/`](tests/) | Read-only verification, catalog review, selective import, and release-safety checks |
 
-**Image binaries:** the owner selected CC BY 4.0 for their own creative contributions. The software's CPAL license does not itself cover the images; exact-file public rights records and third-party clearance are still required. Do not treat screenshots, font-derived glyphs, branded artwork, textures, or metadata as freely reusable without that review.
+The committed image pack contains **1,013 PNG, JPG, and WebP files**. The separate [upstream candidate catalog](catalog/upstream-candidates.json) lists **1,124 candidate records**, not 1,124 additional downloadable assets. Font binaries, personal chart data, and application/backend source code are not included.
 
-## Quick start
+The deployed VirgoStars website is **not** automatically updated from this repository. Asset migration and release integration are separate, reviewed tasks.
 
-Requirements: Node.js **20.19+**. No remote calls or GitHub Actions are required for the local checks.
+## Getting started
 
-```sh
+**Requirements:** Git and Node.js **20.19 or later**. The verification scripts use the Node.js runtime; no external service, GitHub Actions, or production credentials are required.
+
+```bash
+git clone https://github.com/Cesare-ml/astrological-assets.git
+cd astrological-assets
+
 npm test
 npm run audit:catalog
 npm run verify:pack
-npm run check:public-release
-npm run review:public -- --out ./artwork-review.local.json
 ```
 
-`check:public-release` currently **must fail with exit code 2**: the owner selected CC BY 4.0, but the per-image third-party clearance register is still empty. This is the expected safe result, not a broken test. A passing `npm test` verifies tooling, not legal authorship or release approval.
+`npm run verify:pack` reads the checked-out files and checks the recorded SHA-256, size, paths, and manifest metadata. It does not modify the images or establish legal permission to redistribute them.
 
-For a local copy with the authorized upstream repository checked out as a sibling, preview an import without copying anything:
+### Use an asset in an application
 
-```sh
-node scripts/import-approved-assets.mjs --source ../virgo-stars/public/assets --target ./public/assets --approvals ./catalog/approvals.json
+Preserve the repository's existing directory structure. For example, after copying or serving the `public/assets/` tree at your application's `/assets/` path:
+
+```html
+<img
+  src="/assets/img/grafici/light/cartaastrale-segni.png"
+  alt="Light zodiac chart overlay"
+/>
 ```
 
-Only after explicit owner approval and path/hash review, use the importer with `--apply` and `--manifest ./manifests/approved-assets.json`. It verifies bytes and rejects unsafe paths; a batch import is not an atomic filesystem transaction.
+A corresponding dark variant is available at `/assets/img/grafici/dark/cartaastrale-segni.png`. Paths and filename casing matter.
 
-## Using these graphics in Astrological Charts
+For the standalone Angular/Three.js renderer, see [Astrological Charts](https://github.com/Cesare-ml/astrological-charts). That project provides a local, manifest-gated asset server for an authorized checkout:
 
-The renderer source belongs to [astrological-charts](https://github.com/Cesare-ml/astrological-charts), not this repo. With the two repositories checked out side by side, a developer with **authorized asset access** may run the renderer's local read-only asset server:
-
-```sh
+```bash
 cd ../astrological-charts
-node scripts/serve-local-assets.mjs --root ../astrological-assets/public/assets --manifest ../astrological-assets/manifests/approved-assets.json
+node scripts/serve-local-assets.mjs \
+  --root ../astrological-assets/public/assets \
+  --manifest ../astrological-assets/manifests/approved-assets.json
 ```
 
-The development server serves only manifest-listed assets and checks file hashes. Original browser paths such as `/assets/img/...` are preserved. The independent Charts demo can also use synthetic fixtures without requiring private artwork or a VirgoStars backend.
+This repository contains **assets and asset-management tooling**, not the renderer or astronomical calculations.
 
-## Post-publication rights and quality checklist
+## Integrity and maintenance
 
-1. Read the [public release checklist](docs/PUBLIC_RELEASE_CHECKLIST.md). This repository is already public: its files and accessible Git history can be copied or cloned, including earlier commits.
-2. Have the actual rights holder review every included binary, including any symbols generated from fonts with unclear license terms. Record a real, explicit public license and evidence in `catalog/publication-approvals.json`. This must be done manually; scripts and AI agents cannot grant rights.
-3. Run `npm test`, `npm run audit:catalog`, `npm run verify:pack`, and `npm run check:public-release`; investigate every failure.
-4. Independently review the entire Git history and all publication-bound files for private data, artwork and licenses. Use a **clean-history public export** if previous private objects cannot be cleared.
-5. Confirm any future software releases, licensing changes, merges or production migrations separately. Do not run GitHub Actions or deploy automatically.
+| Command | Purpose |
+| --- | --- |
+| `npm test` | Run Node.js tests |
+| `npm run audit:catalog` | Inspect the source asset catalog |
+| `npm run verify:pack` | Verify all committed images against the SHA-256 manifest |
+| `npm run review:public -- --out ./artwork-review.local.json` | Generate a **pending-only** worksheet for human rights review |
+| `npm run check:public-release` | Check image-specific public clearance records, hashes, and owner license policy |
+
+**Expected result today:** `npm run check:public-release` returns **exit code 2**, because [`catalog/publication-approvals.json`](catalog/publication-approvals.json) has no individually cleared image records. This is intentional: being hosted on public GitHub is not evidence that every third-party element used in the images can be relicensed.
+
+The release checker is a technical safeguard, not a substitute for provenance or legal review. The review worksheet never grants permissions automatically.
+
+## Licensing and attribution
+
+**Code and artwork have different licensing scopes.**
+
+| Material | License or policy |
+| --- | --- |
+| Original scripts, tests, tooling, and accompanying source documentation | [Common Public Attribution License 1.0 (CPAL-1.0)](LICENSE), with the `Powered by VirgoStars` attribution specified in the license exhibits |
+| Original creative contributions in images for which the owner holds the necessary rights | Owner-selected [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/); **file-specific review of third-party components remains open** |
+| Third-party fonts, glyphs, textures, maps, and other underlying works | Governed by their own rights and licenses; **not** automatically covered by the owner's CC BY 4.0 choice |
+| Project trademarks and logos | Separate trademark rights; no trademark license is implied |
+
+**Software attribution:**
+
+> Powered by VirgoStars · https://www.virgostars.it/
+
+**Proposed attribution for individually cleared original artwork:**
+
+> VirgoStars — Astrological Assets (original artwork by the project owner) · [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+
+CC BY 4.0 permits sharing and adaptations, including commercial use, **of material actually covered by that license**, subject to its terms (including attribution, a link to the license, and indication of changes). Some assets may incorporate font-derived glyphs or other materials whose rights are not yet established. Do not assume every file in this public repository has cleared those dependencies.
+
+Read the [artwork licensing policy](docs/ARTWORK_LICENSING_POLICY.md), [rights review protocol](docs/RIGHTS_AND_REVIEW.md), and [open rights audit issue #2](https://github.com/Cesare-ml/astrological-assets/issues/2) before redistributing the image pack. Note that publicly accessible Git history can already have been cloned; deleting a file in a later commit does not retract earlier copies.
+
+## Contributing
+
+Contributions to the tools, tests, documentation, and compatible original assets are welcome via issues and pull requests. Please:
+
+- Work in **English** and follow [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md).
+- Preserve original asset paths unless a coordinated migration is explicitly planned.
+- Include provenance and an appropriate rights review when introducing or replacing an image.
+- Keep changes independently testable, with no automatic deployment or GitHub Actions.
 
 ## Documentation
 
-- [Artwork licensing policy — CC BY 4.0](docs/ARTWORK_LICENSING_POLICY.md)
-- [Owner authorship statement and artwork licensing](docs/OWNER_AUTHORSHIP_AND_ARTWORK.md)
-- [Git history file-inventory audit](docs/HISTORY_FILE_AUDIT_2026-11-12.md)
-- [Font rights research](docs/FONT_RIGHTS_RESEARCH.md)
-- [Rights, artwork and review](docs/RIGHTS_AND_REVIEW.md)
-- [Public release checklist](docs/PUBLIC_RELEASE_CHECKLIST.md)
-- [Licensing and required credits](docs/LICENSING_AND_CREDITS.md)
 - [Asset scope and upstream inventory](docs/ASSET_SCOPE.md)
-- [Migration without duplicated assets](docs/MIGRATION_PLAN.md)
+- [Artwork licensing policy](docs/ARTWORK_LICENSING_POLICY.md)
+- [Licensing and credits](docs/LICENSING_AND_CREDITS.md)
+- [Public release checks and unresolved gates](docs/PUBLIC_RELEASE_CHECKLIST.md)
+- [History file-inventory audit](docs/HISTORY_FILE_AUDIT_2026-11-12.md)
+- [Font rights research](docs/FONT_RIGHTS_RESEARCH.md)
 - [Ecosystem coordination](docs/ECOSYSTEM_COORDINATION.md)
-- [Contributing](CONTRIBUTING.md) and [agent instructions](AGENTS.md)
+- [Migration plan](docs/MIGRATION_PLAN.md)
 
-The repository is publicly visible; code is licensed under CPAL-1.0 and owner-created original artistic contributions are subject to the selected CC BY 4.0 policy. Complete-file artwork rights and third-party dependencies still need per-file review before the repository can describe the entire asset pack as cleared.
+---
+
+Made for the [VirgoStars](https://www.virgostars.it/) ecosystem. **Powered by VirgoStars.**
