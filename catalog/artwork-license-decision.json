@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "decisionDate": "2026-11-12",
+  "decisionStatus": "owner-selected-policy",
+  "licenseId": "CC-BY-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "licenseScope": "Original images and creative contributions to which the project owner holds the necessary rights; this statement does not grant rights in any separately owned fonts, glyphs, maps, photographs or textures.",
+  "attribution": "VirgoStars — Astrological Assets (original artwork by the project owner)",
+  "evidenceReference": "Owner replied 'ottimo avanti' immediately following a direct proposal to license their images CC BY 4.0, in the 2026-11-12 project conversation.",
+  "scope": {
+    "manifest": "manifests/approved-assets.json",
+    "manifestGitBlobSha": "6ff2198405354c865a7dcbc908753d5df9cfd096",
+    "expectedAssetCount": 1013
+  },
+  "requiresPerFileClearance": true,
+  "publicationStatus": "blocked-pending-third-party-review",
+  "note": "This record establishes the owner's selected artwork licensing policy, not independent clearance of each asset. No individual file may be marked cleared without real evidence of any third-party dependencies."
+}
