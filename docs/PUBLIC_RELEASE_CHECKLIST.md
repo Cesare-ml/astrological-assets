@@ -9,8 +9,9 @@
 - [x] Public rights recorded separately from private approvals, with an independent, fail-closed preflight.
 - [x] **Project owner asserts direct authorship of the images** — owner declaration recorded 2026-11-12; see [owner-authored artwork](OWNER_AUTHORSHIP_AND_ARTWORK.md).
 - [x] **Git tree filename audit** of 51 main-branch commit snapshots (not a complete secret or legal audit); see [audit record](HISTORY_FILE_AUDIT_2026-11-12.md).
-- [ ] **Rights holder approves each image for public redistribution**, including derivative use, and selects a legally appropriate license. Check any third-party fonts, glyphs, maps, textures, marks, and generated images for source restrictions.
-- [ ] Populate `catalog/publication-approvals.json` with the real image path, SHA-256, license, rights holder, evidence and third-party review. No automatic approval.
+- [x] **Owner selected CC BY 4.0** for the original artistic contributions. See [artwork licensing policy](ARTWORK_LICENSING_POLICY.md).
+- [ ] **Human reviewer clears each complete image file** for public redistribution, including underlying third-party material. Check any third-party fonts, glyphs, maps, textures, marks, and generated images for source restrictions.
+- [ ] Populate `catalog/publication-approvals.json` with exact image paths and SHA-256s, CC-BY-4.0, rights holder and evidence, plus `thirdPartyStatus: "cleared"` and a specific third-party review. No automatic approval.
 - [ ] Verify every current binary: `npm run verify:pack` and `npm run check:public-release` both succeed (exit 0). Review unexpected/unlisted files manually.
 - [ ] Audit contents and metadata of ALL historical Git blobs and earlier commits for non-public asset files, personal information, credentials, third-party content, restricted materials, and other unpublished work. A clean HEAD does **not** mean safe history.
 - [ ] If some historical material cannot be published, **do not switch this repository to public**. Prepare a fresh public repo/export from a rights-cleared tree, with a **new root commit and no connection to private Git history**, then review that export.
@@ -44,16 +45,17 @@ This is an example of the *shape* of a future, independently documented approval
       "sha256": "<actual 64-character SHA-256 of reviewed bytes>",
       "status": "approved",
       "permissionScope": "public-redistribution",
-      "licenseId": "<explicitly chosen license SPDX identifier>",
+      "licenseId": "CC-BY-4.0",
       "rightsHolder": "<verified name or role>",
       "publicApprovalEvidence": "<reference to authorization kept securely>",
-      "thirdPartyReview": "<review of font, glyph, source art and other dependencies>"
+      "thirdPartyStatus": "cleared",
+      "thirdPartyReview": "<specific review of font, glyph, source art and other dependencies>"
     }
   ]
 }
 ```
 
-The path and SHA-256 must match the corresponding record in `manifests/approved-assets.json`. All non-empty legal fields require a **real human decision**. Do not include contract scans, personal contact information or secrets in Git history.
+The approval must match the owner's selected license and the pinned manifest in `catalog/artwork-license-decision.json`. The path and SHA-256 must match the corresponding record in `manifests/approved-assets.json`. All non-empty legal fields require a **real human decision**. Do not include contract scans, personal contact information or secrets in Git history.
 
 ## Publication sequence
 
