@@ -6,7 +6,7 @@ Thank you for helping build reusable astrological graphics and verification tool
 
 Original software and supporting source documentation are offered under [CPAL-1.0](LICENSE), including the required Exhibit B attribution **Powered by VirgoStars** (https://www.virgostars.it/). Preserve applicable notices and follow [licensing and credits](docs/LICENSING_AND_CREDITS.md). Contributors retain applicable copyright in their own contributions. Contributing does not transfer ownership or grant unrelated trademark rights.
 
-**Assets are different from code.** The repository currently holds owner-attested images authorized for *private* use only. Do not assume these images, graphics based on third-party fonts, textures or branded artwork are publicly licensed. Every proposed public image needs its own human-supplied authorship, third-party clearance, chosen public license and a pinned SHA-256 record, per [rights protocol](docs/RIGHTS_AND_REVIEW.md).
+**Assets are different from code.** The project owner selected CC BY 4.0 for original artistic contributions; however the repository currently holds images cleared for *private* sharing only, not yet cleared file by file for public redistribution. See [artwork licensing policy](docs/ARTWORK_LICENSING_POLICY.md). Do not assume these images, graphics based on third-party fonts, textures or branded artwork are publicly licensed. Every proposed public image needs its own human-supplied authorship, third-party clearance, chosen public license and a pinned SHA-256 record, per [rights protocol](docs/RIGHTS_AND_REVIEW.md).
 
 ## Workflow
 
