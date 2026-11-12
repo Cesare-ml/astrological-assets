@@ -2,13 +2,13 @@
 
 **Curated graphics and integrity tooling for the [VirgoStars](https://www.virgostars.it/) ecosystem.**
 
-**Status: PRIVATE — preparing for a future public release. Do not change the repository visibility yet.** Original project tooling is offered under the [Common Public Attribution License 1.0 (CPAL-1.0)](LICENSE), with the same **Powered by VirgoStars** attribution as [VirgoStars-Ephemeris](https://github.com/Cesare-ml/VirgoStars-Ephemeris). **The image files are not automatically licensed under CPAL.** Their current authorization covers private collaboration only; a separate rights check is required before any public distribution.
+**Status: PRIVATE — preparing for a future public release. Do not change the repository visibility yet.** Original project tooling is offered under the [Common Public Attribution License 1.0 (CPAL-1.0)](LICENSE), with the same **Powered by VirgoStars** attribution as [VirgoStars-Ephemeris](https://github.com/Cesare-ml/VirgoStars-Ephemeris). **The image files are not automatically licensed under CPAL.** The owner selected **CC BY 4.0** for original artwork, but each complete image still requires review of any third-party rights before public distribution.
 
 ## What is here?
 
 - **1,013 owner-created image files (owner attestation recorded 2026-11-12)**, with private sharing approval under `public/assets/img/`, and a SHA-256 integrity manifest at `manifests/approved-assets.json`.
 - **1,124 upstream candidate records** in `catalog/upstream-candidates.json` (about 80.44 MiB, metadata only; this is not a publication approval).
-- Reviewed private-use permissions in `catalog/approvals.json`, distinct from the **not-yet-granted** public permissions in `catalog/publication-approvals.json`.
+- Owner-selected CC BY 4.0 artwork policy in `catalog/artwork-license-decision.json`, separate from private-use permissions and the still **pending** file-level public clearances.
 - Node.js tools for selective import, catalog auditing, manifest validation, migration collision checks, and a *fail-closed* public-release gate.
 - **No fonts**, user chart data, backend code, credentials, or production deployment tools.
 
@@ -24,7 +24,7 @@ The original **software tooling and supporting source documentation** are licens
 
 CPAL can require a prominent notice on launch/session start of a covered graphical application, and covered-source availability for certain network deployments. A Credits/About screen is encouraged, but is not by itself a guarantee of full Section 14 compliance. See [licensing and credits](docs/LICENSING_AND_CREDITS.md).
 
-**Image binaries:** no public license is asserted by the presence of this `LICENSE` file. Each asset needs a rights-holder-approved public license and a record at a pinned SHA-256. Do not treat screenshots, font-derived glyphs, branded artwork, textures, or metadata as freely reusable without that review.
+**Image binaries:** the owner selected CC BY 4.0 for their own creative contributions. The software's CPAL license does not itself cover the images; exact-file public rights records and third-party clearance are still required. Do not treat screenshots, font-derived glyphs, branded artwork, textures, or metadata as freely reusable without that review.
 
 ## Quick start
 
@@ -38,7 +38,7 @@ npm run check:public-release
 npm run review:public -- --out ./artwork-review.local.json
 ```
 
-`check:public-release` currently **must fail with exit code 2**: existing private sharing permission is not public redistribution permission. This is the expected safe result, not a broken test. A passing `npm test` verifies tooling, not legal authorship or release approval.
+`check:public-release` currently **must fail with exit code 2**: the owner selected CC BY 4.0, but the per-image third-party clearance register is still empty. This is the expected safe result, not a broken test. A passing `npm test` verifies tooling, not legal authorship or release approval.
 
 For a local copy with the authorized upstream repository checked out as a sibling, preview an import without copying anything:
 
@@ -69,6 +69,7 @@ The development server serves only manifest-listed assets and checks file hashes
 
 ## Documentation
 
+- [Artwork licensing policy — CC BY 4.0](docs/ARTWORK_LICENSING_POLICY.md)
 - [Owner authorship statement and artwork licensing](docs/OWNER_AUTHORSHIP_AND_ARTWORK.md)
 - [Git history file-inventory audit](docs/HISTORY_FILE_AUDIT_2026-11-12.md)
 - [Font rights research](docs/FONT_RIGHTS_RESEARCH.md)
