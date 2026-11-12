@@ -1,6 +1,6 @@
 # Public release checklist — Astrological Assets
 
-**Status as of 2026-11-12: NOT CLEARED FOR PUBLICATION.** The repo is private. The original source tooling has a proposed CPAL-1.0 license; **1,013 committed images have private-only permission records**. A public release requires the project owner's explicit rights decisions, not simply a new `LICENSE` file.
+**Status as of 2026-11-12: REPOSITORY PUBLIC, ARTWORK CLEARANCE INCOMPLETE.** The owner has changed GitHub visibility to public, and 1,013 image files and accessible Git history are exposed. Source tooling has a CPAL-1.0 license; original owner-created artwork is subject to an owner-selected CC BY 4.0 policy, but no per-file third-party clearance has been recorded. Visibility does not prove all images can lawfully be redistributed.
 
 ## Release gates
 
@@ -14,11 +14,12 @@
 - [ ] Populate `catalog/publication-approvals.json` with exact image paths and SHA-256s, CC-BY-4.0, rights holder and evidence, plus `thirdPartyStatus: "cleared"` and a specific third-party review. No automatic approval.
 - [ ] Verify every current binary: `npm run verify:pack` and `npm run check:public-release` both succeed (exit 0). Review unexpected/unlisted files manually.
 - [ ] Audit contents and metadata of ALL historical Git blobs and earlier commits for non-public asset files, personal information, credentials, third-party content, restricted materials, and other unpublished work. A clean HEAD does **not** mean safe history.
-- [ ] If some historical material cannot be published, **do not switch this repository to public**. Prepare a fresh public repo/export from a rights-cleared tree, with a **new root commit and no connection to private Git history**, then review that export.
+- [ ] If rights-restricted material is found in publicly reachable history, promptly assess mitigation with the owner. Removing it from the current tree or moving to a clean-history export does **not** reverse prior public access, clones, caches or forks.
 - [ ] Run `npm test` and `npm run audit:catalog`. Run renderer integration and compatibility tests where meaningful.
 - [ ] Check downstream paths and attribution in actual Angular/Three.js applications, websites and offline artifacts; keep the canonical `/assets/img/` URLs.
 - [ ] Owner verifies the final repository tree/history, license records, README, badges, external links, and GitHub settings.
-- [ ] Obtain **explicit owner approval** before changing GitHub visibility, merging the publication PR, tagging a release or shipping assets.
+- [x] Owner made the repository public on 2026-11-12. PR #5 was merged into `main` at their explicit request.
+- [ ] Obtain **explicit owner approval** before any new release/tag/deployment. Finish historical content audits and per-file artwork rights reviews without implying public access equals legal clearance.
 
 ## Public-release preflight
 
@@ -59,12 +60,12 @@ The approval must match the owner's selected license and the pinned manifest in 
 
 ## Publication sequence
 
-1. Decide if **this existing repository's entire history** is releasable. If not, choose a clean-history export, not a force-push that could leave private objects accessible.
+1. Audit the **already-public** repository history and current tree. If non-distributable historical files are found, escalate to the owner promptly; neither a force-push nor a clean-history export can undo copies already obtained.
 2. Have the rights holder supply and sign off on asset permissions; remove/replace any asset that cannot be lawfully made public from the **future public export**.
 3. Rebuild the manifest from the reviewed asset pack and run integrity, license and consumer checks. Inspect the exact commit.
-4. Publish only following the owner's explicit approval. Preserve `Powered by VirgoStars` attribution and CPAL notices, plus per-asset licensing terms.
+4. Do not claim all image files are cleared for public reuse until the review and clearance records actually pass. Preserve `Powered by VirgoStars` attribution and CPAL notices, plus per-asset licensing terms.
 5. Keep website and offline-Astrolabio deployments separate, version-pinned, tested and reversible. No automatic production migration.
 
 ## Non-goals
 
-This PR does **not** change repository visibility, publish images, relicense third-party material, run GitHub Actions, modify the VirgoStars production site or merge changes automatically.
+The repository is already public as of 2026-11-12. These review and validation tools do **not** settle third-party licensing, run GitHub Actions, modify the VirgoStars production site or deploy releases.
