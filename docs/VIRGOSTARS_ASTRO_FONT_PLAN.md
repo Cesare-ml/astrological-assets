@@ -74,6 +74,10 @@ There are two different strategies:
 
 **VirgoStars ownership and proprietary control are the preferred outcome stated by the owner; the concrete license and distribution permissions still need to be drafted and approved.** Avoid treating CPAL-1.0 (tooling) or CC BY 4.0 (original artwork) as the automatic license of the future font.
 
+## Technical validation of future private builds
+
+A read-only Python/fontTools validator is now available. See [Private font validation](PRIVATE_FONT_VALIDATION.md); it checks Unicode coverage, glyph outlines, OpenType tables, initial metrics and font location outside this public checkout. Its synthetic tests do **not** produce or approve the real VirgoStars Astro glyph designs. Passing it does not decide licensing.
+
 ## Acceptance criteria for an initial original-font PR
 
 - [ ] 22 original outlines with documented authorship/provenance (not derived from the supplied font)
