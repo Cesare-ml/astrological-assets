@@ -74,6 +74,10 @@ There are two different strategies:
 
 **VirgoStars ownership and proprietary control are the preferred outcome stated by the owner; the concrete license and distribution permissions still need to be drafted and approved.** Avoid treating CPAL-1.0 (tooling) or CC BY 4.0 (original artwork) as the automatic license of the future font.
 
+## Approved visual direction: generated image shapes (v0.2)
+
+After rejecting the initial geometric font v0.1, the owner explicitly **approved two newly generated image sheets**, one for the 12 zodiac signs and one for the 10 traditional celestial-body glyphs. A separate private build now contains **22 PNG, 22 SVG and TTF/WOFF2** derived from those *newly generated approved images*, with OpenType validation. **This is an improved, independent v0.2, not reuse of v0.1 outlines.** Image approval does not imply the final font is licensed for public redistribution or that it is already tested in real charts. See [approved glyph images v0.2](APPROVED_GLYPH_IMAGES_V02.md).
+
 ## Private prototype status
 
 A private geometric v0.1 prototype implemented 22 code points and passed TTF/WOFF2 validation, but **the owner explicitly rejected the design quality**. It is **not a usable baseline**: new manually designed original Bézier contours must replace its oversimplified shapes. The corrected plan requires approval of **Virgo, Scorpio, Capricorn** before redrawing the other symbols. See [visual rejection and new acceptance gates](PROTO_V01_VISUAL_REJECTION.md) and [historical technical QA](PRIVATE_PROTOTYPE_QA.md).
