@@ -44,6 +44,7 @@ cd astrological-assets
 npm test
 npm run audit:catalog
 npm run verify:pack
+npm run check:astro-spec
 ```
 
 `npm run verify:pack` reads the checked-out files and checks the recorded SHA-256, size, paths, and manifest metadata. It does not modify the images or establish legal permission to redistribute them.
