@@ -1,6 +1,6 @@
 # VirgoStars Astro — privately generated v0.1 prototype QA
 
-**Status: private working prototype exists; NOT approved, released or committed to GitHub.**
+**Status: REJECTED FOR VISUAL QUALITY BY THE OWNER on 2026-11-12.** The TTF/WOFF2 passed technical validation only; **do not use, distribute or integrate this design**. See [the visual rejection and redesign gate](PROTO_V01_VISUAL_REJECTION.md). No font source/binaries were committed to GitHub.
 
 The project owner requested concrete progress toward a VirgoStars-owned font that contains only the 12 zodiac signs and 10 primary celestial bodies. A **local-only geometric prototype** was created on 2026-11-12, without using outlines or source data from the owner-supplied historical `ASTRO-SE.TTF`.
 
