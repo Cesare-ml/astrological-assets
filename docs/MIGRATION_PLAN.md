@@ -1,5 +1,8 @@
 # Migration plan: one asset source, no double import
 
+> **Publication is a separate gate.** This plan describes private development and later production integration; it does not authorize public redistribution of the committed images. Before publication follow [public release checklist](PUBLIC_RELEASE_CHECKLIST.md), including the full-history audit.
+
+
 ## Current production behavior
 
 The VirgoStars Angular workspace presently copies the monorepo `public/` directory into the web build. This already supplies `/assets/img/...` used by normal frontend components and `grafici-astrologici` Three.js. An Astrolabio device separately maintains an offline subset.
