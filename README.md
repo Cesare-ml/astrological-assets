@@ -120,6 +120,8 @@ Contributions to the tools, tests, documentation, and compatible original assets
 
 ## Documentation
 
+- [VirgoStars Astro — proposed original zodiac and planetary font](docs/VIRGOSTARS_ASTRO_FONT_PLAN.md)
+- [VirgoStars Astro — traditional symbol variants and Unicode mapping](docs/VIRGOSTARS_ASTRO_ICONOGRAPHY.md)
 - [Asset scope and upstream inventory](docs/ASSET_SCOPE.md)
 - [Artwork licensing policy](docs/ARTWORK_LICENSING_POLICY.md)
 - [Licensing and credits](docs/LICENSING_AND_CREDITS.md)
