@@ -130,6 +130,7 @@ Contributions to the tools, tests, documentation, and compatible original assets
 
 - [Development roadmap and backlog](docs/ROADMAP.md)
 - [Private TTF/WOFF2 font-build validation](docs/PRIVATE_FONT_VALIDATION.md)
+- [Private v0.1 prototype status and design review checklist](docs/PRIVATE_PROTOTYPE_QA.md)
 - [VirgoStars Astro — proposed original zodiac and planetary font](docs/VIRGOSTARS_ASTRO_FONT_PLAN.md)
 - [VirgoStars Astro — traditional symbol variants and Unicode mapping](docs/VIRGOSTARS_ASTRO_ICONOGRAPHY.md)
 - [Asset scope and upstream inventory](docs/ASSET_SCOPE.md)
