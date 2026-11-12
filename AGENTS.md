@@ -1,23 +1,22 @@
 # Astrological Assets — instructions for human and AI contributors
 
-This is a **private resource repository**, intended to hold a carefully approved subset of the graphics used by VirgoStars and Astrological Charts.
+**Current state: private repository under preparation for an open-source release.** The original code/tooling uses CPAL-1.0. Images have only private-sharing permission; public release is blocked pending independent rights review.
 
-## Hard rules
+## Non-negotiable rules
 
-1. The authoritative production files still live at `Cesare-ml/virgo-stars/public/assets` until the upstream migration has passed tests. No production write/deploy from here.
-2. **Never automatically copy all files** from `virgo-stars` into this repository. Candidate metadata is not proof of ownership or permission.
-3. Only the owner/rightsholder's explicit review may turn `catalog/approvals.json` entries to `status: "approved"`. An AI agent must not approve its own generated or scraped assets.
-4. Keep `catalog/upstream-candidates.json` as metadata only. Check `gitBlobSha`, size, owner and permission evidence before any migration.
-5. The importer defaults to **dry-run**; `--apply` is only for an explicitly authorized, reviewed selection.
-6. Do not bring in user natal charts, account records, credentials, backend files, AWS keys, website content unrelated to chart rendering or copyrighted third-party graphics without sufficient rights.
-7. Retain relative paths under `public/assets/img` or `public/assets/fonts`, exact casing and file format. Do not silently rename references, including the unresolved `risuonatore-solare-bianco.png` candidate.
-8. Use PRs and targeted reviews. Do not merge, release, distribute, publish, deploy, or change repository visibility without owner approval.
-9. Do not create GitHub Actions or background jobs for this repository without express authorization.
-10. Before any future web asset migration, run `scripts/check-web-asset-collisions.mjs`; never regard a matching legacy file as safe for double inclusion. The starter review is a historical snapshot; consult the current owner-authorized `catalog/approvals.json` and manifest.
-11. Once assets are approved, run import integrity and `npm test`, and document expected consumers and compatibility (Angular, Three.js, offline Astrolabio).
+1. Work in English in all source code, documentation, issues, PR titles and descriptions.
+2. Read `README.md`, `docs/RIGHTS_AND_REVIEW.md`, `docs/PUBLIC_RELEASE_CHECKLIST.md`, `docs/ASSET_SCOPE.md` and `docs/MIGRATION_PLAN.md` before changes.
+3. Preserve the **original developer attribution** in `LICENSE` Exhibits A/B and `NOTICE`: `Powered by VirgoStars` and `https://www.virgostars.it/`. Respect CPAL Sections 14 and 15 when applicable.
+4. **Do not assume that CPAL licenses images.** The owner has selected CC BY 4.0 for their original artwork in `catalog/artwork-license-decision.json`, but any third-party source rights remain subject to human review. Private permissions in `catalog/approvals.json` are not public permissions. Never manufacture, infer, or sign `catalog/publication-approvals.json` entries on behalf of the rights holder. A human rights holder must supply explicit public redistribution evidence and a suitable asset license.
+5. Before recommending any GitHub visibility change, check **all Git history**, as well as the current assets. If any historical files have unverified rights, use a clean-history public export rather than changing this repository's visibility.
+6. Never automatically copy the entire `virgo-stars` asset tree. Candidate metadata is not permission; verify source Git blob SHA, size, exact path and approval.
+7. Keep the importer dry-run by default. Require explicit approval for `--apply`. Preserve existing paths, casing, hashes and file formats. Do not silently rewrite missing `risuonatore-solare-bianco.png` references.
+8. Never add user natal charts, account data, credentials, AWS configuration, secret keys, web-only media, unlicensed graphics, or font binaries without full license review.
+9. Production remains in `virgo-stars/public/assets` until a separately reviewed, tested migration. `astrological-charts` owns renderer code; this repository owns vetted assets and their verification tooling. Avoid duplicate Angular output URLs.
+10. Run `npm test`, `npm run audit:catalog`, `npm run verify:pack`, and `npm run check:public-release` as applicable. The last command is intentionally blocked until public rights are granted; do not bypass or weaken it.
+11. Use focused branches and PRs, report limitations, and do not perform merges, change repository visibility, publish releases, deploy, or add GitHub Actions without explicit owner authorization.
+12. Never mistake metadata/hash checks for legal proof of rights. If a license, authorship, font origin or third-party restriction is uncertain, block the asset from public distribution and request human review.
 
-## Architecture
+## Contributions
 
-This repository owns **binary asset files** after migration. `astrological-charts` owns renderer code. `virgo-stars` owns the website, API and deployments. A verified build should produce **one copy per file in the frontend output**, and the Astrolabio gets a separately versioned minimal offline subset.
-
-Read `README.md`, `docs/ASSET_SCOPE.md`, `docs/RIGHTS_AND_REVIEW.md` and `docs/MIGRATION_PLAN.md` before working.
+Prefer small, auditable improvements to validation, packaging, accessibility, documentation and compatibility with Angular/Three.js and the offline Astrolabio. Update tests and documentation with any behavior change. Do not duplicate astronomical calculations here.

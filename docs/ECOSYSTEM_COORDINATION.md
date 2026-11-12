@@ -1,6 +1,6 @@
 # VirgoStars graphics ecosystem — operating contract
 
-**Updated 2026-11-10.** This file is the cross-repository design and release contract. It describes implemented work and explicitly identifies what is still pending; it does not approve asset licenses or authorize production deployment.
+**Historical coordination snapshot updated 2026-11-10; public-release preparation added 2026-11-12.** This file is the cross-repository design and release contract. It describes implemented work and explicitly identifies what is still pending; it does not approve asset licenses or authorize production deployment.
 
 ## 1. Ownership and boundaries
 
@@ -8,7 +8,7 @@
 |---|---|---|---|
 | [virgo-stars](https://github.com/Cesare-ml/virgo-stars) | Private | Live Angular website, business/backend, account data, Astrolabio software, deployment and currently deployed `public/assets` | Independent development access for graphics contributors |
 | [astrological-charts](https://github.com/Cesare-ml/astrological-charts) | Private | Angular 20 + Three.js renderer source, API, skins, URL resolver, graphics tests and a development-only read-only asset server | Real asset binaries, data/calculation backend, deployments |
-| [astrological-assets](https://github.com/Cesare-ml/astrological-assets) | Private | Candidate inventories, rights review and eventually **one authoritative Git source** of the approved chart images/fonts | Source renderer, private user charts, general site media, production deployment |
+| [astrological-assets](https://github.com/Cesare-ml/astrological-assets) | Private, open-source preparation | Candidate inventories, rights review and eventually **one authoritative Git source** of the approved chart images/fonts | Source renderer, private user charts, general site media, production deployment |
 
 The independent renderer can *compile* without graphics. To visually render the original artwork it **must have reachable assets**. An invited contributor does **not** need access to `virgo-stars` if granted access to this repo **after assets are reviewed and imported**; alternatively, synthetic licensed fixtures can be used for limited tests. URL access and Git repository access are distinct.
 
@@ -38,7 +38,7 @@ The Charts stack was integrated oldest-first, updating the base and verifying th
 
 Source catalog: `catalog/upstream-candidates.json`, pinned to `virgo-stars` commit `9900c36acc309bc2a6e87009f554b2e4141e4864`, 1,124 candidate paths, 80.44 MiB summed sizes, 552 distinct Git blobs. The catalog contains **metadata only** and may include old graphics or fonts not needed in production. The separate pack contains 1,013 imported image files, including 78 `simboli-bianchi` and 46 `_circle` files; obsolete catalog entries and all font files were excluded.
 
-`catalog/approvals.json` records the owner's 2026-11-10 declaration that the images were created by the owner and that private sharing is authorized, including images derived from a font of unknown license. The font itself is excluded; the declaration does not establish a license for the font or public redistribution. Only the owner/rightsholder's explicit review may approve additional assets. Public open-source release requires a separate licensing decision.
+`catalog/approvals.json` records the owner's 2026-11-10 declaration that the images were created by the owner and that private sharing is authorized, including images derived from a font of unknown license. The font itself is excluded; the declaration does not establish a license for the font or public redistribution. Only the owner/rightsholder's explicit review may approve additional assets. Public open-source release still requires per-asset licensing decisions and review of Git history. See [the public release checklist](PUBLIC_RELEASE_CHECKLIST.md).
 
 The source originally referenced the absent `risuonatore-solare-bianco.png` in two skins; the owner authorized using the included `risuonatore-solare-bn.png` instead. Verify its visual appearance separately. The independent Charts renderer uses the same house symbols as the base chart and the `_circle` planet artwork for latitudes; advanced options require separate testing.
 
@@ -75,7 +75,7 @@ Charts PR #13 now includes a narrower synthetic smoke test: a desktop Firefox co
 
 All three repositories are currently private. On GitHub **personal-account** repositories, invitations to private repos do not necessarily offer a strict read-only role. For actual permission separation consider an organization with `read`/`write` roles; otherwise assume code/assets collaborators may have write rights and protect review branches accordingly.
 
-No GitHub Actions, AWS deploys, scheduled jobs or automatic PR merges have been configured. There is no open-source license on the private renderer or asset pack. The public site and sold Astrolabi remain untouched by this work.
+No GitHub Actions, AWS deploys, scheduled jobs or automatic PR merges have been configured. The asset-pack software tooling now has a proposed CPAL-1.0 license on a preparation branch. The image binaries remain private-only and must pass the separate public rights gate; no public repository visibility change is authorized. Renderer licensing is managed in its own repository. The public site and shipped Astrolabi remain untouched by this work.
 
 ## 7. Quick commands for owner (no network side effects)
 
