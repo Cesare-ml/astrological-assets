@@ -2,6 +2,8 @@
 
 **Recorded 2026-11-12.** The project owner explicitly stated that they personally created the images in this repository, in the same conversation requesting preparation of Astrological Assets for a public open-source release. The provenance reference and pinned scope are recorded in [catalog/owner-authorship.json](../catalog/owner-authorship.json): the existing 1,013-file SHA-256 manifest.
 
+For preliminary research into the potentially relevant Zodiac S font and why its terms remain unresolved, see [font rights research](FONT_RIGHTS_RESEARCH.md).
+
 This statement is meaningful: the initial rights review no longer needs to assume the owner is unknown or that the images were sourced wholesale from other creators. It is **not** independent verification and does **not automatically clear any third-party components** used in the images. In particular, an earlier attestation notes that some glyphs were rendered from a font with an unknown license. The repository does not include the font itself.
 
 ## Distinct questions

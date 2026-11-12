@@ -71,6 +71,7 @@ The development server serves only manifest-listed assets and checks file hashes
 
 - [Owner authorship statement and artwork licensing](docs/OWNER_AUTHORSHIP_AND_ARTWORK.md)
 - [Git history file-inventory audit](docs/HISTORY_FILE_AUDIT_2026-11-12.md)
+- [Font rights research](docs/FONT_RIGHTS_RESEARCH.md)
 - [Rights, artwork and review](docs/RIGHTS_AND_REVIEW.md)
 - [Public release checklist](docs/PUBLIC_RELEASE_CHECKLIST.md)
 - [Licensing and required credits](docs/LICENSING_AND_CREDITS.md)
