@@ -76,7 +76,7 @@ There are two different strategies:
 
 ## Private prototype status
 
-A **private geometric prototype v0.1** containing 22 independently constructed Unicode glyphs is available to the owner **outside this public GitHub repository**. TTF and WOFF2 passed the read-only QA validator. It remains a **design draft**, subject to owner inspection of the traditional symbol variants, further optical refinement, and an explicit future font embedding/redistribution policy; no binaries or outline sources were committed here. See [private prototype QA](PRIVATE_PROTOTYPE_QA.md).
+A private geometric v0.1 prototype implemented 22 code points and passed TTF/WOFF2 validation, but **the owner explicitly rejected the design quality**. It is **not a usable baseline**: new manually designed original Bézier contours must replace its oversimplified shapes. The corrected plan requires approval of **Virgo, Scorpio, Capricorn** before redrawing the other symbols. See [visual rejection and new acceptance gates](PROTO_V01_VISUAL_REJECTION.md) and [historical technical QA](PRIVATE_PROTOTYPE_QA.md).
 
 ## Technical validation of future private builds
 
