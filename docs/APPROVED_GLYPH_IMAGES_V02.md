@@ -39,7 +39,7 @@ These hashes are **provenance references**, not public download links or open fo
 - OpenType family: `VirgoStars Astro`; metrics: 1000 units/em, ascender +800, descender −200.
 - The TTF and WOFF2 parse successfully and retain the correct character map.
 - Checksums for both final font binaries are kept in the **private package's manifest**; the conversion scripts use fixed OpenType timestamps to build reproducible binaries.
-- The *font-vs-approved-image* visual comparison shows high silhouette correspondence at review scale. **This is not the same as an actual chart/browser regression test**.
+- The *font-vs-approved-image* visual comparison shows high silhouette correspondence at review scale. The generated SVGs were rasterized and compared against the source PNG alpha masks: **all 22 exceeded 96% intersection-over-union** (minimum 0.9628). A private **16, 20, 24, 32 and 64 px font specimen** has also been rendered for inspection. **These are not the same as actual chart/browser regression tests or final artistic approval of the converted font**.
 - The generation does **not** rely on `ASTRO-SE.TTF` or any original font contours.
 
 ## Remaining release and integration gates
