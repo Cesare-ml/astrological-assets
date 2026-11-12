@@ -50,6 +50,8 @@ The owner specifically wants the **traditional iconographic symbol variants appe
 
 ### Milestone F2 — Visual and accessibility quality
 
+**2026-11-12 visual milestone:** Owner **approved the two newly generated image sheets** (12 zodiac + 10 celestial-body symbols) after explicitly rejecting geometric font v0.1. The shapes are now preserved in a **private v0.2 package** with 22 transparent PNGs, 22 vector SVGs and newly image-derived TTF/WOFF2. Both font formats passed the Unicode/outline/metric checks. **This does not complete F2:** chart-size rendering and owner review of the final font (as opposed to images) remain open. See [approved images v0.2](APPROVED_GLYPH_IMAGES_V02.md).
+
 - [ ] Compare legibility at 16, 20, 24, 32 and 64 pixels and in high-DPI/PNG/SVG exports.
 - [ ] Verify alignment, glyph bounds and visual consistency between zodiac and planetary families.
 - [ ] Test light/dark palettes using the **same** outline set and CSS-driven colors.
