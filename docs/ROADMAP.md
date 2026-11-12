@@ -24,6 +24,8 @@ The owner specifically wants the **traditional iconographic symbol variants appe
 
 ### Milestone F0 — Originality and technical baseline
 
+- [x] Implement the **planning-only Unicode registry** (`specs/virgostars-astro.v0.json`) and offline validator (`npm run check:astro-spec`) with regression tests. The registry defines identity/variant metadata, **not drawings**, and does not constitute author approval or full F0 completion.
+
 - [ ] Freeze a reviewed **22-glyph** Unicode map: 12 zodiac signs (U+2648–U+2653); Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune and Pluto.
 - [ ] Record the legacy *reference* mapping (Astro-SemiBold uppercase `A–L` and `Q–Z`) for human comparison only; never make ASCII letters the new production code points.
 - [ ] Specify an independent, reproducible design system: 1,000 units/em, proportions, optical stroke weight, metrics, baseline and SVG outline conventions.
