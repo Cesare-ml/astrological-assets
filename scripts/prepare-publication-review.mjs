@@ -23,6 +23,7 @@ export function preparePublicationReview(manifest) {
       licenseId: '',
       rightsHolder: '',
       publicApprovalEvidence: '',
+      thirdPartyStatus: 'pending',
       thirdPartyReview: '',
       authorClaimReference: 'catalog/owner-authorship.json',
     };
