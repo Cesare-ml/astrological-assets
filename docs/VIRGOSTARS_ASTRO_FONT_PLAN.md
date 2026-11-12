@@ -4,7 +4,7 @@
 
 ## Goal and boundaries
 
-Create a coherent and legible display font for the **twelve zodiac signs** and **ten major planetary bodies** currently needed by the application. Astro-SemiBold (`ASTRO-SE.TTF`) was supplied by the owner as an example of their preferred overall visual weight and clarity, but its provenance/license remains uncertain (see [font research](FONT_RIGHTS_RESEARCH.md)).
+Create a coherent and legible display font for the **twelve zodiac signs** and **ten major planetary bodies** currently needed by the application. **The owner has clarified that the traditional astrological *symbol forms* in Astro-SemiBold (`ASTRO-SE.TTF`) are the desired iconographic reference**, not merely its visual weight. Keep the same recognizable conventional symbol variants (especially Uranus and Pluto), but construct original, independently authored geometry. Its provenance/license remains uncertain (see [font research](FONT_RIGHTS_RESEARCH.md) and [iconography reference](VIRGOSTARS_ASTRO_ICONOGRAPHY.md)).
 
 **Clean-room rule:** never import, extract, trace, vectorize, reprocess, distort, adapt, convert or copy an Astro-SemiBold outline, glyph bitmap, control point or font file. Do not use that font as a starting template, training sample or source in any generated assets. Define new glyphs from traditional astrological *concepts* and the publicly specified Unicode characters, using a uniform original design system. Do not claim changing a few points would create a legally independent font.
 
@@ -49,7 +49,7 @@ Unicode characters are the primary identifiers, not private custom ASCII substit
 - **Reproducibility:** author vector drawing source with editable parameters; generate binary font artefacts from source only after review. Source files and checksum receipts must be retained privately or under an explicitly selected license.
 - **Accessibility:** symbols should have accessible body/sign names in surrounding markup rather than relying on glyph shape alone.
 
-Astro-SemiBold is a **product-level aesthetic reference** only (e.g. “readable semi-bold astrological notation”). Compare finished results for functional legibility, not geometric similarity or overlapping contours.
+Astro-SemiBold is an **iconographic reference for traditional *which-form* choices** (for example the circle-and-dot Sun, the specific traditional Uranus variant, and the circle–crescent–cross Pluto) **and a general design-character reference**, not a license or an outline template. Match the identity and arrangement of conventional components, but not its exact curves, control points, distinctive details, metrics, or contours. See [symbol reference](VIRGOSTARS_ASTRO_ICONOGRAPHY.md).
 
 ## Planned implementation stages
 
@@ -67,10 +67,10 @@ The user wants **VirgoStars to own its original font**. Ownership of an independ
 
 There are two different strategies:
 
-- **Proprietary `VirgoStars Astro`:** retain original font source and binaries in a private rights-controlled workspace. Define an explicit license for bundling, installation, web embedding and redistribution in VirgoStars Desktop/site (including downstream users of the open-source client). A custom license and distribution terms need a separate decision; `All rights reserved` alone is **not a clear embedding grant**.
+- **Preferred direction — proprietary `VirgoStars Astro`:** retain original font source and binaries in a private rights-controlled workspace. Define an explicit license for bundling, installation, web embedding and redistribution in VirgoStars Desktop/site (including downstream users of the open-source client). A custom license and distribution terms need a separate decision; `All rights reserved` alone is **not a clear embedding grant**.
 - **Open-source font owned by VirgoStars:** license the original font under **SIL OFL 1.1**, with copyright attribution and an optional **Reserved Font Name** for `VirgoStars Astro`. This supports community redistribution/modification subject to OFL and preserves the owner’s copyright and reserved font naming, but **does not make the font exclusive**. See [SIL OFL FAQ](https://software.sil.org/OFL-FAQ_web).
 
-**No font license has been selected by this design proposal.** Avoid treating CPAL-1.0 (tooling) or CC BY 4.0 (original artwork) as the automatic license of the future font.
+**VirgoStars ownership and proprietary control are the preferred outcome stated by the owner; the concrete license and distribution permissions still need to be drafted and approved.** Avoid treating CPAL-1.0 (tooling) or CC BY 4.0 (original artwork) as the automatic license of the future font.
 
 ## Acceptance criteria for an initial original-font PR
 
