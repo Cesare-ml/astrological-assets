@@ -36,6 +36,8 @@ The owner specifically wants the **traditional iconographic symbol variants appe
 
 ### Milestone F1 — 22 original glyphs and font generation
 
+- [x] Provide a **read-only TTF/WOFF2 QA tool** for future independently authored font files (`scripts/validate-private-font.py`) with synthetic-only regression tests; no glyph outlines or font binaries are released. See [private font validation](PRIVATE_FONT_VALIDATION.md).
+
 - [ ] Independently draw the zodiac symbols and celestial bodies using traditional component arrangements from the approved iconography specification.
 - [ ] Preserve the owner's preferred traditional forms, especially Uranus **H-with-circle** and Pluto **circle–crescent–cross**, without reusing the reference font's vectors.
 - [ ] Define canonical Unicode `cmap` entries and valid OpenType naming/metrics; test all symbols and missing glyph fallback.
