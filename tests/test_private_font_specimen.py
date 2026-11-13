@@ -1,6 +1,7 @@
 """Offline specimen tests: synthetic squares only, never private production font data."""
 import importlib.util
 import json
+import shutil
 from pathlib import Path
 import tempfile
 import unittest
@@ -61,20 +62,24 @@ class PrivateSpecimenTests(unittest.TestCase):
     def test_refuses_symlink_output_even_with_force(self):
         target = self.work / 'target.html'
         target.write_text('untouched', encoding='utf-8')
-        self.out.symlink_to(target)
+        try:
+            self.out.symlink_to(target)
+        except (OSError, NotImplementedError):
+            self.skipTest("This platform cannot create symbolic links")
         with self.assertRaisesRegex(module.SpecimenError, 'symbolic link'):
             module.build_specimen(self.font, self.out, self.spec_path, ROOT, force=True)
         self.assertEqual(target.read_text(encoding='utf-8'), 'untouched')
 
     def test_rejects_font_inside_public_checkout(self):
-        exposed = ROOT / 'synthetic-leak.ttf'
-        exposed.write_bytes(self.font.read_bytes())
-        try:
-            with self.assertRaisesRegex(ValueError, 'outside this public repository'):
-                module.build_specimen(exposed, self.out, self.spec_path, ROOT)
-            self.assertFalse(self.out.exists())
-        finally:
-            exposed.unlink()
+        fake_repo = self.work / 'simulated-public-repository'
+        (fake_repo / 'scripts').mkdir(parents=True)
+        shutil.copyfile(ROOT / 'scripts/validate-private-font.py',
+                        fake_repo / 'scripts/validate-private-font.py')
+        exposed = fake_repo / 'synthetic.ttf'
+        shutil.copyfile(self.font, exposed)
+        with self.assertRaisesRegex(ValueError, 'outside this public repository'):
+            module.build_specimen(exposed, self.out, self.spec_path, fake_repo)
+        self.assertFalse(self.out.exists())
 
 
 if __name__ == '__main__':
