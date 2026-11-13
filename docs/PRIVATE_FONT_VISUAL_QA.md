@@ -8,16 +8,16 @@ The owner-approved v0.2 source images are documented in [APPROVED_GLYPH_IMAGES_V
 
 - Python 3.10+ and the optional fontTools/WOFF2 dependency, installed **outside** the public repository as needed:
 
-  \`python -m pip install "fonttools[woff]"\`
+  `python -m pip install "fonttools[woff]"`
 
 - A privately stored **TTF or WOFF2** built from the approved new images or independently authorized original outlines, with the exact 22 Unicode mappings and expected metrics.
 - An **existing private output directory**, both the input font and output HTML outside this public checkout.
 
 ## Generate a specimen locally
 
-From the root of \`astrological-assets\`:
+From the root of `astrological-assets`:
 
-\`\`\`bash
+```bash
 # Create the private output directory yourself, OUTSIDE this repository.
 python scripts/create-private-font-specimen.py \
   --font ../private-font-work/build/VirgoStarsAstro-v0.2.woff2 \
@@ -25,7 +25,7 @@ python scripts/create-private-font-specimen.py \
 
 # Safe by default: existing HTML will not be overwritten.
 # Add --force only when intentionally replacing an existing private specimen.
-\`\`\`
+```
 
 Open the resulting local HTML file manually in a browser; no server, network, account or GitHub Actions are required. The page renders:
 
@@ -37,20 +37,20 @@ Check Virgo, Scorpio and Capricorn particularly for contour quality, tails and j
 
 ## Important confidentiality boundary
 
-**The HTML embeds the entire proprietary font as a base64 data URI. Treat it like a private font binary.** Never commit, attach to public issues/PRs, publish, upload to shared previews or host this HTML. The generator rejects font files and output destinations inside this public checkout, including output-directory symlinks resolving into it. It refuses to overwrite existing files without \`--force\` and refuses symbolic-link output files even with \`--force\`.
+**The HTML embeds the entire proprietary font as a base64 data URI. Treat it like a private font binary.** Never commit, attach to public issues/PRs, publish, upload to shared previews or host this HTML. The generator rejects font files and output destinations inside this public checkout, including output-directory symlinks resolving into it. It refuses to overwrite existing files without `--force` and refuses symbolic-link output files even with `--force`.
 
 The generated page includes a restrictive Content Security Policy and requires no external assets. These safeguards **do not make the output public, prove ownership, prevent intentional copying, or replace a font licensing decision**.
 
-The **existing** \`scripts/validate-private-font.py\` runs before writing any output, and a failure stops specimen generation. Passing does not mean visual quality or embedding rights are approved. Actual browser chart size, DPI, PNG/JPEG exports, hover/focus semantics, and downstream fallback still require separate tests in [astrological-charts](https://github.com/Cesare-ml/astrological-charts).
+The **existing** `scripts/validate-private-font.py` runs before writing any output, and a failure stops specimen generation. Passing does not mean visual quality or embedding rights are approved. Actual browser chart size, DPI, PNG/JPEG exports, hover/focus semantics, and downstream fallback still require separate tests in [astrological-charts](https://github.com/Cesare-ml/astrological-charts).
 
 ## Tests
 
-Synthetic rectangle glyphs only; the actual proprietary font, approved image files and reference \`ASTRO-SE.TTF\` are not test fixtures:
+Synthetic rectangle glyphs only; the actual proprietary font, approved image files and reference `ASTRO-SE.TTF` are not test fixtures:
 
-\`\`\`bash
+```bash
 python -m unittest discover -s tests -p "test_private_font_specimen.py" -v
 python -m unittest discover -s tests -p "test_private_font_validator.py" -v
-\`\`\`
+```
 
 The specimen tests cover complete light/dark coverage, all sizes, Unicode, offline HTML, output path protection, symlink protection, no implicit overwrites and input font location checks. Browser rendering itself is **not** automatically verified by these unit tests.
 
