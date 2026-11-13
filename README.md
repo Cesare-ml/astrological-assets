@@ -130,6 +130,7 @@ Contributions to the tools, tests, documentation, and compatible original assets
 
 - [Development roadmap and backlog](docs/ROADMAP.md)
 - [Private TTF/WOFF2 font-build validation](docs/PRIVATE_FONT_VALIDATION.md)
+- [Private offline visual QA (16–64 px, light/dark wheels; confidential font output)](docs/PRIVATE_FONT_VISUAL_QA.md)
 - [Owner-approved 22 generated glyph images and private v0.2 font conversion](docs/APPROVED_GLYPH_IMAGES_V02.md)
 - [Visual rejection of v0.1 and corrected original-font design process](docs/PROTO_V01_VISUAL_REJECTION.md)
 - [Private v0.1 technical validation history (visually rejected)](docs/PRIVATE_PROTOTYPE_QA.md)
