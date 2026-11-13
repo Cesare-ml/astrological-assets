@@ -52,6 +52,10 @@ The validator checks:
 
 These synthetic fixtures are **not** drafts or deliverables for the real VirgoStars font.
 
+## Private visual QA companion
+
+Use [`create-private-font-specimen.py`](../scripts/create-private-font-specimen.py) to generate a **private, offline HTML** page showing all 22 glyphs at 16/20/24/32/64 px in both themes and zodiac-wheel approximations. See [PRIVATE_FONT_VISUAL_QA.md](PRIVATE_FONT_VISUAL_QA.md) for usage and confidentiality restrictions. **The output contains embedded private font bytes and must never be committed or shared publicly.** This complements, but does not replace, actual chart/browser/export and human visual QA.
+
 ## Next design milestone
 
 Continue with the [VirgoStars Astro font specification](VIRGOSTARS_ASTRO_FONT_PLAN.md), [iconography choices](VIRGOSTARS_ASTRO_ICONOGRAPHY.md), [roadmap](ROADMAP.md) and [issue #8](https://github.com/Cesare-ml/astrological-assets/issues/8). The remaining F0 tasks, original vectors in F1, human rights approval and actual integration are not completed by this validator.
