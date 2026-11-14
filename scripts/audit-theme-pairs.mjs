@@ -48,6 +48,8 @@ export function auditThemePairs(manifest, register) {
     if (!Number.isSafeInteger(record.bytes) || record.bytes < 0 ||
         typeof record.sha256 !== 'string' || !/^[a-f0-9]{64}$/.test(record.sha256))
       throw new Error('Invalid manifest hash or size: ' + path);
+    if (typeof record.gitBlobSha !== 'string' || !/^[a-f0-9]{40}$/.test(record.gitBlobSha))
+      throw new Error('Invalid manifest Git blob SHA-1 metadata: ' + path);
     for (const field of ['rightsHolder', 'permissionBasis', 'approvalEvidence']) {
       if (typeof record[field] !== 'string' || !record[field].trim())
         throw new Error('Missing private approval metadata ' + field + ': ' + path);
