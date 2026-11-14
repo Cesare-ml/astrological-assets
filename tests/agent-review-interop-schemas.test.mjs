@@ -184,3 +184,10 @@ test('contract files contain no real identifiers or credentials', () => {
     assert.doesNotMatch(text, /claims\/[a-z0-9]|submissions\/[a-z0-9]/i);
   }
 });
+
+test('canonical schema URIs are stable absolute links for future exporter consumers', () => {
+  assert.equal(resultSchema.$id,
+    'https://raw.githubusercontent.com/Cesare-ml/astrological-assets/main/schemas/asset-agent-review-results-v1.schema.json');
+  assert.equal(snapshotSchema.$id,
+    'https://raw.githubusercontent.com/Cesare-ml/astrological-assets/main/schemas/asset-agent-review-assignment-snapshot-v1.schema.json');
+});
