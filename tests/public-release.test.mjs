@@ -81,7 +81,7 @@ test('unlisted binaries and stale publication approvals fail closed', () => {
 test('case collisions, malformed register and missing pack files are rejected', () => {
   assert.throws(() => assess(manifest, { schemaVersion: 0, assets: [] }, [path]), /version 1/);
   assert.throws(() => assess(manifest, { schemaVersion: 1, assets: [publicRecord,
-    { ...publicRecord, path: path.toUpperCase() }] }, [path]), /case-colliding public approval/);
+    { ...publicRecord, path: path.replace('01.png', '01.PNG') }] }, [path]), /case-colliding public approval/);
   const r = assess(manifest, { schemaVersion: 1, assets: [publicRecord] }, []);
   assert.equal(r.ready, false);
   assert.match(r.issues[0], /Manifest file not present/);
@@ -117,7 +117,7 @@ test('public release rejects Unicode-normalization aliases of an approved file',
 
 test('multiple physical aliases remain blocked even when one spelling is canonical', () => {
   const publication = { schemaVersion: 1, assets: [publicRecord] };
-  const result = assess(manifest, publication, [path, path.toUpperCase()]);
+  const result = assess(manifest, publication, [path, path.replace('01.png', '01.PNG')]);
   assert.equal(result.ready, false);
   assert.match(result.issues.join(' '), /Case-colliding pack file/);
 });
