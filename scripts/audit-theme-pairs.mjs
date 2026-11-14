@@ -46,6 +46,8 @@ export function auditThemePairs(manifest, register) {
         throw new Error('Missing private approval metadata ' + field + ': ' + path);
     }
     for (const family of FAMILIES) {
+      if (folded.startsWith(family.prefix.toLowerCase()) && !path.startsWith(family.prefix))
+        throw new Error('Chart family path casing mismatch: ' + path);
       if (!path.startsWith(family.prefix)) continue;
       const remainder = path.slice(family.prefix.length);
       const slashIndex = remainder.indexOf('/');
@@ -89,7 +91,7 @@ export function auditThemePairs(manifest, register) {
       const entry = { family: family.id, relativePath, only, missingTheme };
       const key = family.id + '\0' + relativePath.normalize('NFC').toLowerCase();
       const exception = exceptions.get(key);
-      if (exception && exception.only === only) {
+      if (exception && exception.only === only && exception.relativePath === relativePath) {
         used.add(key);
         approvedExceptions.push({ ...entry, reason: exception.reason });
       } else {
