@@ -11,11 +11,20 @@ function validPath(path) {
     path.normalize('NFC') === path;
 }
 
+function validSnapshotDate(date) {
+  return typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) &&
+    !Number.isNaN(Date.parse(date + 'T00:00:00Z')) &&
+    new Date(date + 'T00:00:00Z').toISOString().slice(0, 10) === date;
+}
+
 export function analyzePrIntegration(snapshot) {
   if (snapshot?.schemaVersion !== 1 || snapshot.defaultBranch !== 'main' ||
+      snapshot.repositoryFullName !== 'Cesare-ml/astrological-assets' ||
       !/^[a-f0-9]{40}$/.test(snapshot.mainSha || '') ||
-      !/^\d{4}-\d{2}-\d{2}$/.test(snapshot.capturedDate || '') ||
-      !Array.isArray(snapshot.prs) || snapshot.prs.length === 0)
+      !validSnapshotDate(snapshot.capturedDate) ||
+      !Array.isArray(snapshot.prs) || snapshot.prs.length === 0 ||
+      !Number.isSafeInteger(snapshot.openPrCount) ||
+      snapshot.openPrCount !== snapshot.prs.length)
     throw new Error('Invalid integration snapshot header');
 
   const byNumber = new Map(), byHead = new Map();
@@ -84,6 +93,7 @@ export function analyzePrIntegration(snapshot) {
 
   return {
     capturedDate:snapshot.capturedDate,
+    repositoryFullName:snapshot.repositoryFullName,
     pinnedMainSha:snapshot.mainSha,
     prCount:numbers.length,
     pinnedHeads:numbers.map(number=>({pr:number,sha:byNumber.get(number).headSha})),
