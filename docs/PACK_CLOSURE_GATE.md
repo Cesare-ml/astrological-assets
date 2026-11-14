@@ -32,7 +32,10 @@ not symlinks or junctions, in both default and strict modes. This also
 rejects blank roots and intermediate files used as directories. The normal
 manifest walk uses `lstat` on each path component, so even a dangling
 manifest-listed symlink is identified as a link rather than mistaken for
-a missing file. Strict mode continues to reject unexpected files, case
+a missing file. It also compares each physical entry name against the exact
+manifest spelling using directory enumeration: an incorrectly cased filename
+or directory must fail, including on case-insensitive developer machines.
+This protects canonical `/assets/img/...` URLs on Linux and offline consumers. Strict mode continues to reject unexpected files, case
 collisions and dangling links outside the manifest. An empty directory is
 harmless.
 
