@@ -99,6 +99,22 @@ live GitHub**, or evaluate third-party rights.
    and production changes outside this review. Obtain **explicit owner
    authorization** before any actual merge or release.
 
+## Post-snapshot drift observed on 2026-11-14
+
+A subsequent GitHub lookup found **24** open PRs, rather than the **22**
+captured in the committed baseline. The independent two-snapshot comparison
+correctly returned `readyForReview: false` with `pr-added` for
+**#30** and **#31**. No older PR branch pin was found to differ in this
+specific comparison. The newly observed #30 builds upon #29, extending
+the agent-review chain to `#22 → #25 → #27 → #28 → #29 → #30`.
+The snapshot has deliberately **not** been silently changed to conceal this
+drift. A newly authenticated, independently collected full snapshot of all
+current open PRs is required for any fresh integration review.
+
+The two-snapshot detector observed **121** independent pairs with matching
+changed filenames in this expanded synthetic-current comparison; this
+is still not a count of actual Git textual conflicts.
+
 The code's CPAL attribution remains **Powered by VirgoStars**
 (https://www.virgostars.it/). Private collaboration approvals do not
 grant public image redistribution rights.
