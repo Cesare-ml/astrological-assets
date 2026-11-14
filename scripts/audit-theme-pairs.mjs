@@ -31,6 +31,15 @@ export function auditThemePairs(manifest, register) {
     const folded = path.normalize('NFC').toLowerCase();
     if (foldedPaths.has(folded)) throw new Error('Duplicate or case-colliding manifest path: ' + path);
     foldedPaths.add(folded);
+    if (record.status !== undefined && record.status !== 'approved')
+      throw new Error('Asset is not approved: ' + path);
+    if (!Number.isSafeInteger(record.bytes) || record.bytes < 0 ||
+        typeof record.sha256 !== 'string' || !/^[a-f0-9]{64}$/.test(record.sha256))
+      throw new Error('Invalid manifest hash or size: ' + path);
+    for (const field of ['rightsHolder', 'permissionBasis', 'approvalEvidence']) {
+      if (typeof record[field] !== 'string' || !record[field].trim())
+        throw new Error('Missing private approval metadata ' + field + ': ' + path);
+    }
     for (const family of FAMILIES) {
       if (!path.startsWith(family.prefix)) continue;
       const remainder = path.slice(family.prefix.length);
