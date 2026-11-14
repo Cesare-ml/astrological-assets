@@ -80,6 +80,8 @@ This repository contains **assets and asset-management tooling**, not the render
 | `npm run audit:catalog` | Inspect the source asset catalog |
 | `npm run verify:pack` | Verify all committed images against the SHA-256 manifest |
 | `npm run plan:review-shards -- --manifest manifests/approved-assets.json --shards 100` | Create deterministic, metadata-only review assignments for parallel agents; [guide](docs/PARALLEL_AGENT_REVIEW.md) |
+| `npm run validate:agent-results -- --manifest MANIFEST --results RESULTS` | Validate shard-restricted review results (dependent on planner); [guide](docs/AGENT_REVIEW_RESULTS.md) |
+| `npm run reconcile:agent-assignments -- --manifest MANIFEST --results RESULTS --assignments SNAPSHOT` | Compare results against a trusted private-ledger snapshot; [guide](docs/ORCHESTRATOR_ASSIGNMENT_RECONCILIATION.md) |
 | `npm run review:public -- --out ./artwork-review.local.json` | Generate a **pending-only** worksheet for human rights review |
 | `npm run check:public-release` | Check image-specific public clearance records, hashes, and owner license policy |
 
