@@ -74,6 +74,22 @@ test('noncanonical Unicode exception names cannot silently authorize differences
   assert.throws(() => auditThemePairs(manifest(paths), exceptions), /Non-canonical Unicode/);
 });
 
+test('URL-ambiguous manifest paths and exception filenames fail closed for Charts consumers', () => {
+  for (const bad of ['planet%20glyph.png', 'planet%2fMoon.png', 'planet#dark.png']) {
+    assert.throws(
+      () => auditThemePairs(manifest([...paths, overlay + 'light/' + bad]), register),
+      /URL-ambiguous asset path/,
+    );
+    assert.throws(
+      () => auditThemePairs(manifest(paths), {
+        schemaVersion: 1,
+        exceptions: [{ ...register.exceptions[0], relativePath: bad }],
+      }),
+      /URL-ambiguous asset path/,
+    );
+  }
+});
+
 test('Windows-incompatible asset names are rejected before offline integration', () => {
   for (const name of ['CON.png', 'aux.png', 'COM1.png', 'Lpt9.png',
     'planet?.png', 'planet*.png', 'planet|x.png', 'planet .png.']) {
