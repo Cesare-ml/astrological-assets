@@ -18,6 +18,6 @@
     "check:build-output": "node scripts/check-build-output.mjs",
     "check:public-release": "node scripts/check-public-release.mjs",
     "review:public": "node scripts/prepare-publication-review.mjs",
-    "audit:theme-pairs": "node scripts/audit-theme-pairs.mjs --manifest manifests/approved-assets.json --exceptions manifests/theme-pair-exceptions.json"
+    "audit:theme-pairs": "node scripts/audit-theme-pairs.mjs --manifest manifests/approved-assets.json --exceptions manifests/theme-pair-exceptions.json --required manifests/required-theme-pairs.json"
   }
 }
