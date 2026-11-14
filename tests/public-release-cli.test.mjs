@@ -51,7 +51,7 @@ function fixture(callback) {
   writeJson('catalog/publication-approvals.json', {schemaVersion:1, assets:[]});
   writeJson('catalog/artwork-license-decision.json', policy);
   const run = () => spawnSync(process.execPath, [cli], {cwd:root, encoding:'utf8'});
-  try { callback({root, leaf, assetFile, asset, publicRecord, writeJson, run}); }
+  try { callback({root, leaf, assetFile, asset, publicRecord, policy, writeJson, run}); }
   finally { rmSync(root, {recursive:true, force:true}); }
 }
 
