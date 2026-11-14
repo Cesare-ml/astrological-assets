@@ -66,6 +66,27 @@ test('Windows-incompatible asset names are rejected before offline integration',
   }
 });
 
+test('wrongly cased chart family paths are never silently ignored', () => {
+  for (const path of [
+    'img/Grafici/light/extra.png',
+    'IMG/grafici/light/extra.png',
+    'img/Symbols/planets/light/_circle/extra.png',
+  ]) {
+    assert.throws(() => auditThemePairs(manifest([...paths, path]), register), /Chart family path casing mismatch/);
+  }
+});
+
+test('exception spelling and case must exactly match a manifest filename', () => {
+  const wrongCase = { schemaVersion: 1, exceptions: [{
+    ...register.exceptions[0], relativePath: 'Texture-carta-panna.png',
+  }] };
+  const result = auditThemePairs(manifest(paths), wrongCase);
+  assert.equal(result.verdict, 'blocked');
+  assert.equal(result.approvedExceptions.length, 0);
+  assert.equal(result.missingCounterparts.length, 1);
+  assert.equal(result.staleExceptions.length, 1);
+});
+
 test('pending and incomplete approved-manifest metadata cannot pass', () => {
   const baseline = manifest(paths);
   for (const patch of [
