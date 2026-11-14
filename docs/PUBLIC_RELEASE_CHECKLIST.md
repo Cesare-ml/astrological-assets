@@ -61,8 +61,12 @@ manifest spelling, including case and Unicode normalization. A case-insensitive
 match alone is not sufficient: an alias that works on one Windows checkout may
 produce a missing `/assets/img/...` URL on a case-sensitive server or offline
 device. Keep canonical paths unchanged rather than silently renaming files.
-This safeguard is separate from SHA-256 verification and does not establish
-legal rights.
+The pack enumeration also rejects symlink/junction roots, symlinked ancestor
+directories and any symbolic links nested within the pack. This prevents an
+indirect path alias from bypassing the physical-pack inventory. Run the check
+from a trusted checkout: these checks are not atomic against an adversary
+concurrently swapping directories. This safeguard is separate from SHA-256
+verification and does not establish legal rights.
 
 The approval must match the owner's selected license and the pinned manifest in `catalog/artwork-license-decision.json`. The path and SHA-256 must match the corresponding record in `manifests/approved-assets.json`. All non-empty legal fields require a **real human decision**. Do not include contract scans, personal contact information or secrets in Git history.
 
