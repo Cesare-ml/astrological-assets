@@ -7,7 +7,11 @@ This is a **structural, offline audit** intended for a future authorized integra
 Run only on an operator-authorized local machine, keeping private coordination snapshots **outside this public repository**:
 
 ```sh
-npm run reconcile:agent-assignments --   --manifest ./manifests/approved-assets.json   --results /private/path/review-results.local.json   --assignments /private/path/assignment-snapshot.local.json
+npm run reconcile:agent-assignments -- \
+  --manifest ./manifests/approved-assets.json \
+  --results /private/path/review-results.local.json \
+  --assignments /private/path/assignment-snapshot.local.json \
+  --expected-ledger-commit <independently-verified-private-commit-sha>
 ```
 
 The results file follows [Agent review results](AGENT_REVIEW_RESULTS.md), and the manifest is the *same exact file bytes* used for the worklists in [PR #22](https://github.com/Cesare-ml/astrological-assets/pull/22).
@@ -37,12 +41,12 @@ A future trusted, **PRIVATE** Orchestrator exporter may provide this explicit, d
 }
 ```
 
-These are **synthetic placeholders**, not genuine ownership evidence. Keep the private ledger's repository identity, session IDs, and source claim records outside this repository and all public PRs. The required `ledgerCommitSha` is an opaque 40-character source revision marker; its format is checked, but its authenticity or freshness is **not** checked here. The tool does not open GitHub or fetch the live private ledger.
+These are **synthetic placeholders**, not genuine ownership evidence. Keep the private ledger's repository identity, session IDs, and source claim records outside this repository and all public PRs. The required `ledgerCommitSha` is an opaque 40-character source revision marker. The tool now **requires an independently supplied `--expected-ledger-commit` value** and refuses any mismatch. Obtain the expected SHA from a separately authenticated, permission-scoped read of the PRIVATE ledger's pinned commit; **never trust an expected SHA copied from the snapshot under examination**. The comparator checks equality only: it cannot authenticate the live ledger, prove freshness against new commits, verify a signature, or detect maliciously paired inputs. It does not open GitHub or fetch the live private ledger.
 
 ## Validation behavior
 
 1. Recompute SHA-256 of the **raw manifest bytes** and run the full path/SHA-256/shard membership validator from the dependent PR #25.
-2. Require the snapshot to match the manifest fingerprint, source repository/commit/root, and shard count. Reject unknown fields, invalid IDs, invalid states, duplicate shard assignments and duplicate assignment IDs.
+2. Require the snapshot to match the manifest fingerprint, source repository/commit/root, shard count and **independently pinned private-ledger commit**. Reject unknown fields, invalid IDs, invalid states, duplicate shard assignments and duplicate assignment IDs.
 3. For each result submitted, require **exactly matching** `assignmentId`, `agentId`, shard number and assignment state `submitted`. A `claimed`, `in_progress` or `cancelled` assignment cannot report a completed result.
 4. Summarize never-assigned shards, still-active shards, cancelled shards, previously submitted shards missing their report, and missing report shards, without exposing agent IDs or sensitive approval evidence.
 
@@ -52,7 +56,7 @@ Valid assignment states are: `claimed`, `in_progress`, `submitted`, and `cancell
 
 - **0:** all shards present with current matching `submitted` assignments and each asset self-reported as inspected.
 - **2:** structurally consistent partial work, missing assignments, nonfinal states, or flagged/not-checked findings.
-- **1:** malformed inputs, stale identities, conflicting assignments/results, wrong manifest or schema.
+- **1:** malformed inputs, missing/invalid/mismatched independent ledger pin, stale identities, conflicting assignments/results, wrong manifest or schema.
 
 A zero result means **structural reconciliation only**; it is neither completion approval nor evidence that any image's real bytes, appearance, provenance, third-party rights or downstream consumer have been validated.
 
