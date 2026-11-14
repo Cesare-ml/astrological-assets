@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /** Metadata-only, read-only check of light/dark chart asset inventory. */
 import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateAssetPath } from './import-approved-assets.mjs';
@@ -10,6 +11,10 @@ const FAMILIES = [
   { id: 'planet-circles', prefix: 'img/symbols/planets/' },
 ];
 const THEMES = ['light', 'dark'];
+// Independently pinned SHA-256 of the initial 49 family<TAB>relativePath<LF> pairs.
+// This locks the release-facing CLI against a modified required-baseline file.
+const PINNED_PAIR_COUNT = 49;
+const PINNED_PAIR_SHA256 = '6c96873cf4caaa83ace3a6709d1307c6778e2e146d1f971c78d3694e47d516e8';
 const sorted = items => [...items].sort();
 
 function checkedPath(path) {
@@ -143,24 +148,34 @@ export function auditThemePairs(manifest, register, requiredPairs = null) {
 }
 
 function main(args) {
-  const usage = 'Usage: node scripts/audit-theme-pairs.mjs --manifest <approved-assets.json> --exceptions <theme-pair-exceptions.json> (--required <required-theme-pairs.json> | --parity-only yes)';
+  const usage = 'Usage: node scripts/audit-theme-pairs.mjs --manifest <approved-assets.json> --exceptions <theme-pair-exceptions.json> (--required <pinned-baseline.json> | --fixture-required <test-baseline.json> | --parity-only yes)';
   if (args.length < 6 || args.length % 2) throw new Error(usage);
   const flags = new Map();
   for (let index = 0; index < args.length; index += 2) {
     const name = args[index], value = args[index + 1];
-    if (!['--manifest', '--exceptions', '--required', '--parity-only'].includes(name) ||
+    if (!['--manifest', '--exceptions', '--required', '--fixture-required', '--parity-only'].includes(name) ||
         !value || value.startsWith('--') || flags.has(name)) throw new Error(usage);
     flags.set(name, value);
   }
-  if (!flags.has('--manifest') || !flags.has('--exceptions') ||
-      flags.has('--required') === flags.has('--parity-only') ||
+  const modes = ['--required', '--fixture-required', '--parity-only'].filter(key => flags.has(key));
+  if (!flags.has('--manifest') || !flags.has('--exceptions') || modes.length !== 1 ||
       (flags.has('--parity-only') && flags.get('--parity-only') !== 'yes')) throw new Error(usage);
   const manifest = JSON.parse(readFileSync(flags.get('--manifest'), 'utf8'));
   const register = JSON.parse(readFileSync(flags.get('--exceptions'), 'utf8'));
-  const required = flags.has('--required') ?
-    JSON.parse(readFileSync(flags.get('--required'), 'utf8')) : null;
+  const requiredPath = flags.get('--required') ?? flags.get('--fixture-required');
+  const required = requiredPath ? JSON.parse(readFileSync(requiredPath, 'utf8')) : null;
   const result = auditThemePairs(manifest, register, required);
-  console.log(JSON.stringify(result, null, 2));
+  const auditMode = flags.has('--required') ? 'required-baseline' :
+    flags.has('--fixture-required') ? 'fixture-baseline' : 'parity-only';
+  if (auditMode === 'required-baseline') {
+    // Every expected pair must match the independent pin, not just the number of pairs.
+    const canonical = required.pairs.map(({ family, relativePath }) =>
+      family + '\t' + relativePath).sort().join('\n') + '\n';
+    const digest = createHash('sha256').update(canonical, 'utf8').digest('hex');
+    if (required.pairs.length !== PINNED_PAIR_COUNT || digest !== PINNED_PAIR_SHA256)
+      throw new Error('Pinned theme baseline mismatch: expected 49 exact canonical pairs');
+  }
+  console.log(JSON.stringify({ ...result, auditMode }, null, 2));
   if (result.verdict !== 'verified') process.exitCode = 2;
 }
 
