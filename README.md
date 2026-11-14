@@ -84,6 +84,7 @@ This repository contains **assets and asset-management tooling**, not the render
 | `npm run validate:agent-results -- --manifest MANIFEST --results RESULTS` | Validate shard-restricted review results (dependent on planner); [guide](docs/AGENT_REVIEW_RESULTS.md) |
 | `npm run reconcile:agent-assignments -- --manifest MANIFEST --results RESULTS --assignments SNAPSHOT --expected-ledger-commit SHA1` | Compare results against a trusted private-ledger snapshot; [guide](docs/ORCHESTRATOR_ASSIGNMENT_RECONCILIATION.md) |
 | `npm run census:agent-reviews -- --manifest MANIFEST --results RESULTS --assignments SNAPSHOT --expected-ledger-commit SHA1` | Summarize self-reported review coverage by asset family without exposing paths or agent IDs; [guide](docs/AGENT_REVIEW_PROGRESS_CENSUS.md) |
+| `npm run compare:review-progress -- --before OLD_CENSUS --after NEW_CENSUS` | Compare pinned aggregate review progress reports and flag per-family regressions; [guide](docs/REVIEW_PROGRESS_COMPARISON.md) |
 | `npm run review:public -- --out ./artwork-review.local.json` | Generate a **pending-only** worksheet for human rights review |
 | `npm run check:public-release` | Check image-specific public clearance records, hashes, and owner license policy |
 
