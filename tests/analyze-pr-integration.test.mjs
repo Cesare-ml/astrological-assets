@@ -9,6 +9,7 @@ import { analyzePrIntegration, comparePrSnapshots } from '../scripts/analyze-pr-
 
 const sample = () => ({
   schemaVersion:1, defaultBranch:'main', mainSha:'a'.repeat(40),
+  repositoryFullName:'Cesare-ml/astrological-assets', openPrCount:4,
   capturedDate:'2026-11-14',
   prs:[
     {number:1,base:'main',head:'feat/parent',headSha:'1'.repeat(40),files:['README.md','package.json'],draft:false},
@@ -33,6 +34,7 @@ test('excludes overlaps inherited through any length of dependency chain', () =>
   const input = sample();
   input.prs.splice(2,2, {number:3,base:'feat/child',head:'feat/grandchild',headSha:'3'.repeat(40),
     files:['README.md','package.json'],draft:true});
+  input.openPrCount=3;
   assert.deepEqual(analyzePrIntegration(input).potentialOverlaps, []);
   assert.deepEqual(analyzePrIntegration(input).chains,
     [{pr:2,requires:1},{pr:3,requires:2}]);
@@ -202,6 +204,7 @@ test('stale pinned snapshot detects a newly stacked child PR', () => {
   const baseline=JSON.parse(readFileSync(
     new URL('../docs/pr-integration-snapshot-2026-11-14.json', import.meta.url),'utf8'));
   const current=structuredClone(baseline);
+  current.openPrCount++;
   current.prs.push({
     number:30,
     base:'feat/agent-review-interop-schemas-20261114',
