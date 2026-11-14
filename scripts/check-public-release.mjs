@@ -115,8 +115,18 @@ export function listPackFiles(root) {
       else throw new Error('Unsupported file in public pack: ' + full);
     }
   }
-  if (lstatSync(root).isSymbolicLink()) throw new Error('Symlink pack root forbidden');
-  visit(root, '');
+  // Resolve the requested root without following any symlink/junction along
+  // its ancestor chain. Checking only the final directory permits aliases.
+  let current = resolve(root);
+  while (true) {
+    const stat = lstatSync(current);
+    if (stat.isSymbolicLink()) throw new Error('Symlink in public pack root path: ' + current);
+    if (!stat.isDirectory()) throw new Error('Non-directory in public pack root path: ' + current);
+    const parent = resolve(current, '..');
+    if (parent === current) break;
+    current = parent;
+  }
+  visit(resolve(root), '');
   return result.sort();
 }
 
