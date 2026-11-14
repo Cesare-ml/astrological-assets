@@ -5,16 +5,16 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { analyzePrIntegration } from '../scripts/analyze-pr-integration.mjs';
+import { analyzePrIntegration, comparePrSnapshots } from '../scripts/analyze-pr-integration.mjs';
 
 const sample = () => ({
   schemaVersion:1, defaultBranch:'main', mainSha:'a'.repeat(40),
   capturedDate:'2026-11-14',
   prs:[
-    {number:1,base:'main',head:'feat/parent',files:['README.md','package.json'],draft:false},
-    {number:2,base:'feat/parent',head:'feat/child',files:['package.json','scripts/a.mjs'],draft:true},
-    {number:3,base:'main',head:'fix/unrelated',files:['README.md','package.json'],draft:true},
-    {number:4,base:'main',head:'fix/disjoint',files:['scripts/z.mjs'],draft:false},
+    {number:1,base:'main',head:'feat/parent',headSha:'1'.repeat(40),files:['README.md','package.json'],draft:false},
+    {number:2,base:'feat/parent',head:'feat/child',headSha:'2'.repeat(40),files:['package.json','scripts/a.mjs'],draft:true},
+    {number:3,base:'main',head:'fix/unrelated',headSha:'3'.repeat(40),files:['README.md','package.json'],draft:true},
+    {number:4,base:'main',head:'fix/disjoint',headSha:'4'.repeat(40),files:['scripts/z.mjs'],draft:false},
   ],
 });
 
@@ -31,7 +31,7 @@ test('orders parent before child and distinguishes independent filename overlaps
 
 test('excludes overlaps inherited through any length of dependency chain', () => {
   const input = sample();
-  input.prs.splice(2,2, {number:3,base:'feat/child',head:'feat/grandchild',
+  input.prs.splice(2,2, {number:3,base:'feat/child',head:'feat/grandchild',headSha:'3'.repeat(40),
     files:['README.md','package.json'],draft:true});
   assert.deepEqual(analyzePrIntegration(input).potentialOverlaps, []);
   assert.deepEqual(analyzePrIntegration(input).chains,
@@ -101,5 +101,85 @@ test('CLI reads local snapshot without changing its contents', () => {
     const bad=spawnSync(process.execPath,[cli,'--unsafe'],{cwd:dir,encoding:'utf8'});
     assert.equal(bad.status,1);
     assert.match(bad.stderr,/PR INTEGRATION PLAN BLOCKED/);
+  } finally {rmSync(dir,{recursive:true,force:true});}
+});
+
+test('pins each PR to an exact lowercase SHA-1 head commit', () => {
+  const result = analyzePrIntegration(sample());
+  assert.deepEqual(result.pinnedHeads, [
+    {pr:1,sha:'1'.repeat(40)}, {pr:2,sha:'2'.repeat(40)},
+    {pr:3,sha:'3'.repeat(40)}, {pr:4,sha:'4'.repeat(40)},
+  ]);
+  for (const value of [undefined, 'not-a-hash', 'A'.repeat(40), 'a'.repeat(64)]) {
+    const input=sample(); input.prs[0].headSha=value;
+    assert.throws(()=>analyzePrIntegration(input),/Invalid PR metadata/);
+  }
+});
+
+test('same snapshot compares fresh regardless of PR/file array ordering', () => {
+  const before=sample(), after=structuredClone(before);
+  after.prs.reverse(); after.prs[2].files.reverse(); after.capturedDate='2026-11-15';
+  const result=comparePrSnapshots(before,after);
+  assert.equal(result.readyForReview,true);
+  assert.deepEqual(result.changes,[]);
+});
+
+test('detects main and head SHA drift instead of claiming the snapshot current', () => {
+  const before=sample(), after=structuredClone(before);
+  after.mainSha='b'.repeat(40);
+  after.prs[1].headSha='f'.repeat(40);
+  const result=comparePrSnapshots(before,after);
+  assert.equal(result.readyForReview,false);
+  assert.deepEqual(result.changes.map(item=>item.kind),[
+    'main-advanced','pr-headSha-changed',
+  ]);
+});
+
+test('detects added, removed and changed PR metadata including files', () => {
+  const before=sample(), after=structuredClone(before);
+  after.prs=after.prs.filter(pr=>pr.number!==4);
+  // The new PR is independent; it has valid branch and path metadata.
+  after.prs.push({
+    number:5,base:'main',head:'feat/new',headSha:'5'.repeat(40),
+    files:['scripts/new.mjs'],draft:true,
+  });
+  after.prs[0].draft=true;
+  after.prs[1].files=['scripts/a.mjs','scripts/new.js'];
+  after.prs[2].head='fix/renamed';
+  const result=comparePrSnapshots(before,after);
+  assert.equal(result.readyForReview,false);
+  assert.deepEqual(result.changes.map(item=>item.kind),[
+    'pr-draft-changed','pr-files-changed','pr-head-changed',
+    'pr-removed','pr-added',
+  ]);
+});
+
+test('refuses invalid current snapshots before comparing two PR plans', () => {
+  const before=sample(), after=structuredClone(before);
+  delete after.prs[0].headSha;
+  assert.throws(()=>comparePrSnapshots(before,after),/Invalid PR metadata/);
+  assert.throws(()=>comparePrSnapshots({...before,mainSha:'broken'},sample()),
+    /Invalid integration snapshot header/);
+});
+
+test('CLI exits 0 for a matching fresh snapshot and 2 when main/head changed', () => {
+  const dir=mkdtempSync(join(tmpdir(),'astro-pr-drift-'));
+  try {
+    const before=join(dir,'baseline.json'),after=join(dir,'current.json');
+    const baseline=sample(),current=structuredClone(baseline);
+    writeFileSync(before,JSON.stringify(baseline));
+    writeFileSync(after,JSON.stringify(current));
+    const cli=fileURLToPath(new URL('../scripts/analyze-pr-integration.mjs',import.meta.url));
+    const run=()=>spawnSync(process.execPath,[cli,before,'--current',after],
+      {cwd:dir,encoding:'utf8'});
+    const same=run();
+    assert.equal(same.status,0,same.stderr);
+    assert.equal(JSON.parse(same.stdout).freshness.readyForReview,true);
+    current.prs[0].headSha='f'.repeat(40);
+    writeFileSync(after,JSON.stringify(current));
+    const stale=run();
+    assert.equal(stale.status,2,stale.stderr);
+    assert.deepEqual(JSON.parse(stale.stdout).freshness.changes.map(x=>x.kind),
+      ['pr-headSha-changed']);
   } finally {rmSync(dir,{recursive:true,force:true});}
 });
