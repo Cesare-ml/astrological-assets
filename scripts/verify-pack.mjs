@@ -1,17 +1,33 @@
 #!/usr/bin/env node
 // Verifies a checked-out approved asset pack without the private VirgoStars repository.
 import { createHash } from 'node:crypto';
-import { existsSync, lstatSync, readFileSync, readdirSync } from 'node:fs';
+import { lstatSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateAssetPath } from './import-approved-assets.mjs';
 
+// Validate the pack root and every ancestor without following symlink/junction
+// aliases. Both regular and --strict verification use the same physical root.
+function assertSafePackRoot(root) {
+  if (typeof root !== 'string' || !root.trim()) throw new Error('Invalid asset pack root');
+  const absolute = resolve(root);
+  let current = absolute;
+  while (true) {
+    const info = lstatSync(current);
+    if (info.isSymbolicLink())
+      throw new Error('Unsafe pack root: Symlink forbidden in asset pack root: ' + current);
+    if (!info.isDirectory())
+      throw new Error('Unsafe pack root: Asset pack root ancestor is not a directory: ' + current);
+    const parent = dirname(current);
+    if (parent === current) break;
+    current = parent;
+  }
+  return absolute;
+}
+
 export function verifyPack(root, manifest, { strict = false } = {}) {
   if (typeof strict !== 'boolean') throw new Error('strict must be a boolean');
-  const rootPath = resolve(root);
-  const rootInfo = lstatSync(rootPath);
-  if (rootInfo.isSymbolicLink() || !rootInfo.isDirectory())
-    throw new Error('Unsafe pack root: ' + rootPath);
+  const rootPath = assertSafePackRoot(root);
   if(!manifest || manifest.schemaVersion!==1 || !Array.isArray(manifest.assets) || manifest.assets.length===0)
     throw new Error('Invalid or empty approved assets manifest');
   const seen=new Set(), listedPaths=new Set();
@@ -29,13 +45,21 @@ export function verifyPack(root, manifest, { strict = false } = {}) {
       if(typeof item[field]!=='string' || !item[field].trim())
         throw new Error('Missing approval metadata '+field+' for '+item.path);
     const parts=item.path.split('/');
-    let file=resolve(root);
-    for(const part of parts) {
-      file=join(file,part);
-      if(!existsSync(file)) throw new Error('Missing image/font: '+item.path);
-      if(lstatSync(file).isSymbolicLink()) throw new Error('Symlink forbidden: '+item.path);
+    let file=rootPath;
+    for(let index=0;index<parts.length;index++) {
+      file=join(file,parts[index]);
+      let info;
+      try { info=lstatSync(file); }
+      catch(error) {
+        if(error.code==='ENOENT') throw new Error('Missing image/font: '+item.path);
+        throw error;
+      }
+      if(info.isSymbolicLink()) throw new Error('Symlink forbidden: '+item.path);
+      if(index<parts.length-1 && !info.isDirectory())
+        throw new Error('Parent is not a directory: '+item.path);
+      if(index===parts.length-1 && !info.isFile())
+        throw new Error('Not a file: '+item.path);
     }
-    if(!lstatSync(file).isFile()) throw new Error('Not a file: '+item.path);
     const body=readFileSync(file);
     if(body.length!==item.bytes || createHash('sha256').update(body).digest('hex')!==item.sha256)
       throw new Error('Checksum mismatch: '+item.path);
