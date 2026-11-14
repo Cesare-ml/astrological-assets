@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { assessPublicRelease, listPackFiles } from '../scripts/check-public-release.mjs';
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -139,4 +139,66 @@ test('real pack directory enumeration exposes noncanonical filename casing', () 
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
+});
+
+test('public pack enumeration rejects a directly symlinked root', t => {
+  const base = mkdtempSync(join(tmpdir(), 'astro-public-symlink-root-'));
+  try {
+    const actual = join(base, 'actual');
+    mkdirSync(actual);
+    const alias = join(base, 'alias');
+    try { symlinkSync(actual, alias, process.platform === 'win32' ? 'junction' : 'dir'); }
+    catch (error) {
+      if (process.platform === 'win32' && ['EPERM', 'EACCES'].includes(error.code))
+        return t.skip('Junction creation not allowed');
+      throw error;
+    }
+    assert.throws(() => listPackFiles(alias), /Symlink in public pack root path/);
+  } finally { rmSync(base, { recursive: true, force: true }); }
+});
+
+test('public pack enumeration rejects symlink ancestors above the supplied root', t => {
+  const base = mkdtempSync(join(tmpdir(), 'astro-public-symlink-parent-'));
+  try {
+    const actual = join(base, 'actual');
+    const pack = join(actual, 'nested', 'assets');
+    mkdirSync(pack, { recursive: true });
+    writeFileSync(join(pack, 'fixture.png'), 'local synthetic bytes');
+    assert.deepEqual(listPackFiles(pack), ['fixture.png']);
+    const alias = join(base, 'alias');
+    try { symlinkSync(actual, alias, process.platform === 'win32' ? 'junction' : 'dir'); }
+    catch (error) {
+      if (process.platform === 'win32' && ['EPERM', 'EACCES'].includes(error.code))
+        return t.skip('Junction creation not allowed');
+      throw error;
+    }
+    assert.throws(() => listPackFiles(join(alias, 'nested', 'assets')),
+      /Symlink in public pack root path/);
+  } finally { rmSync(base, { recursive: true, force: true }); }
+});
+
+test('public pack enumeration rejects a file root or missing root', () => {
+  const base = mkdtempSync(join(tmpdir(), 'astro-public-bad-root-'));
+  try {
+    const file = join(base, 'file');
+    writeFileSync(file, 'synthetic');
+    assert.throws(() => listPackFiles(file), /Non-directory in public pack root path/);
+    assert.throws(() => listPackFiles(join(base, 'missing')), /ENOENT/);
+  } finally { rmSync(base, { recursive: true, force: true }); }
+});
+
+test('public pack enumeration still rejects links nested inside an otherwise valid root', t => {
+  const base = mkdtempSync(join(tmpdir(), 'astro-public-symlink-entry-'));
+  try {
+    const pack = join(base, 'pack'), other = join(base, 'other');
+    mkdirSync(pack); mkdirSync(other);
+    const link = join(pack, 'linked');
+    try { symlinkSync(other, link, process.platform === 'win32' ? 'junction' : 'dir'); }
+    catch (error) {
+      if (process.platform === 'win32' && ['EPERM', 'EACCES'].includes(error.code))
+        return t.skip('Junction creation not allowed');
+      throw error;
+    }
+    assert.throws(() => listPackFiles(pack), /Symlinks forbidden in public pack/);
+  } finally { rmSync(base, { recursive: true, force: true }); }
 });
