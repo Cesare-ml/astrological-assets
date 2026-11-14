@@ -32,6 +32,32 @@ npm run check:consumer-assets -- \
   --requirements ./astrolabio-assets.local.json
 ~~~
 
+## Direct Astrological Charts integration
+
+The Charts repository already emits a conservative selection as a **JSON array of paths** via `scripts/derive-chart-asset-selection.mjs`. This tool accepts that array directly, without a manual JSON conversion or writing a second requirements file.
+
+With the `astrological-charts` and `astrological-assets` checkouts as siblings (and Charts' Node dependencies installed):
+
+~~~sh
+cd ../astrological-charts
+node scripts/derive-chart-asset-selection.mjs \
+  --root ../astrological-assets/public/assets \
+  --out ../chart-assets.selection.local.json \
+  --report ../chart-assets.selection.report.local.json
+
+# Continue only when the selection command exits 0 and unresolved is empty.
+cd ../astrological-assets
+npm run check:consumer-assets -- \
+  --root ./public/assets \
+  --manifest ./manifests/approved-assets.json \
+  --selection ../chart-assets.selection.local.json \
+  --consumer AstrologicalCharts
+~~~
+
+The `--selection` input must be a nonempty JSON array of canonical paths, and `--consumer` is mandatory in this mode. The `--requirements` mode above remains available, but the two input modes **must not** be combined. Invalid or ambiguous invocations return exit code 1. Filenames must match on-disk casing exactly, even on Windows.
+
+**Important:** Charts does not write a new selection when it finds unresolved references. Remove or rename any stale selection file before rerunning its generator; never run this check against a previous output after a failed selection. The selection is a conservative candidate list, not proof of complete runtime coverage. Browser rendering, export and license gates remain separate.
+
 The command prints a stable JSON report to stdout. If you want to archive the local report, redirect stdout to a file **outside** the public repository. No output file is created by default.
 
 | Exit | Meaning |
