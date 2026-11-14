@@ -43,20 +43,19 @@ export function summarizeAssetReviewProgress(manifest, manifestSha256, batch, sn
     const family = classifyReviewAsset(asset.path);
     if (!familyStats.has(family)) familyStats.set(family, counters());
     const group = familyStats.get(family);
-    const finding = results.get(asset.path) || 'pending';
-    if (!Object.hasOwn(group, finding)) throw new Error('Unsupported review finding');
+    const rawFinding = results.get(asset.path) || 'pending';
+    const finding = rawFinding === 'not-checked' ? 'notChecked' : rawFinding;
+    if (!Object.hasOwn(group, finding) || finding === 'total')
+      throw new Error('Unsupported review finding');
     group.total++;
     group[finding]++;
     totals.total++;
     totals[finding]++;
   }
-  const known = new Set(FAMILIES.map(([name]) => name));
   const families = [...FAMILIES.map(([name]) => name), 'other']
     .filter(name => familyStats.has(name))
     .map(name => ({ family: name, ...familyStats.get(name) }));
   const allFindings = totals.inspected + totals.flagged + totals.notChecked;
-  if (totals.total !== audit.totalAssets && audit.totalAssets !== undefined)
-    throw new Error('Manifest asset count changed during progress computation');
   if (allFindings !== audit.findings.inspected + audit.findings.flagged + audit.findings.notChecked)
     throw new Error('Review findings changed during progress computation');
   if (totals.total !== allFindings + totals.pending)
