@@ -18,6 +18,10 @@ function checkedPath(path) {
     throw new Error('Unsafe asset path: ' + String(path));
   if (path !== path.normalize('NFC'))
     throw new Error('Non-canonical Unicode asset path: ' + path);
+  // Astrological Charts rejects encoded URL references and fragments.
+  // Keep manifest paths literal and unambiguous in web and offline hosts.
+  if (/[#%]/.test(path))
+    throw new Error('URL-ambiguous asset path: ' + path);
   for (const segment of path.split('/')) {
     if (/[<>:"|?*]/.test(segment) || /[. ]$/.test(segment) ||
         /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(segment))
