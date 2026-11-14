@@ -197,3 +197,22 @@ test('the committed 2026-11-14 snapshot pins all recorded PR head commits', () =
   ]);
   assert.equal(result.potentialOverlaps.length, 110);
 });
+
+test('stale pinned snapshot detects a newly stacked child PR', () => {
+  const baseline=JSON.parse(readFileSync(
+    new URL('../docs/pr-integration-snapshot-2026-11-14.json', import.meta.url),'utf8'));
+  const current=structuredClone(baseline);
+  current.prs.push({
+    number:30,
+    base:'feat/agent-review-interop-schemas-20261114',
+    head:'feat/review-progress-census-20261114',
+    headSha:'c2c94fadfcf33c664aaf86e58bf0767a64584304',
+    draft:true,
+    files:['README.md','docs/AGENT_REVIEW_PROGRESS_CENSUS.md','package.json',
+      'scripts/review-progress-census.mjs','tests/review-progress-census.test.mjs'],
+  });
+  const result=comparePrSnapshots(baseline,current);
+  assert.equal(result.readyForReview,false);
+  assert.deepEqual(result.changes,[{kind:'pr-added',pr:30}]);
+  assert.ok(analyzePrIntegration(current).chains.some(x=>x.pr===30 && x.requires===29));
+});
