@@ -19,6 +19,7 @@
     "check:public-release": "node scripts/check-public-release.mjs",
     "review:public": "node scripts/prepare-publication-review.mjs",
     "plan:review-shards": "node scripts/plan-review-shards.mjs",
-    "validate:agent-results": "node scripts/validate-agent-results.mjs"
+    "validate:agent-results": "node scripts/validate-agent-results.mjs",
+    "reconcile:agent-assignments": "node scripts/reconcile-agent-assignments.mjs"
   }
 }
