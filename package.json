@@ -12,6 +12,7 @@
     "audit:catalog": "node scripts/audit-catalog.mjs",
     "import:approved": "node scripts/import-approved-assets.mjs",
     "verify:pack": "node scripts/verify-pack.mjs --root ./public/assets --manifest ./manifests/approved-assets.json",
+    "check:raster-headers": "node scripts/check-raster-headers.mjs --root ./public/assets --manifest ./manifests/approved-assets.json",
     "review:family": "node scripts/prepare-review.mjs",
     "catalog:refresh": "node scripts/refresh-source-catalog.mjs",
     "check:web-collisions": "node scripts/check-web-asset-collisions.mjs",
