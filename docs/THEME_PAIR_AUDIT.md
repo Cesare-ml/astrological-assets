@@ -9,10 +9,10 @@ node scripts/audit-theme-pairs.mjs --manifest manifests/approved-assets.json --e
 node --test tests/audit-theme-pairs.test.mjs
 ```
 
-The tool reads only the two JSON files. It checks case/Unicode-colliding paths, rejects unknown or incorrectly cased theme directories, blocks manifests with either chart theme family absent, reports unmatched light/dark asset names within both families, and requires every exceptional missing counterpart to be explicitly documented. An exception automatically becomes stale if its source asset disappears or its counterpart is added. Results and ordering are deterministic.
+The tool reads only the two JSON files. It checks the version-1 manifest records for nonnegative safe integer lengths, lowercase SHA-256 metadata, and nonempty private-approval fields (a structurally valid record is **not** public clearance). It checks case/Unicode-colliding paths, rejects unknown or incorrectly cased theme directories, blocks manifests with either chart theme family absent, reports unmatched light/dark asset names within both families, and requires every exceptional missing counterpart to be explicitly documented. An exception automatically becomes stale if its source asset disappears or its counterpart is added. Results and ordering are deterministic.
 
 - **Exit 0:** paired assets and current documented exceptions match the inventory.
 - **Exit 2:** unexpected unmatched assets, missing theme families, or stale exception records; review the source artwork before any consumer integration.
-- **Exit 1:** invalid manifest/exception input, unsafe paths, or command usage.
+- **Exit 1:** invalid or incomplete manifest/exception input, unsafe paths, or command usage.
 
 The audit is **metadata-only**: it does not read or compare PNG bytes, assess visual equivalence, check SHA-256, validate third-party font/artwork rights, approve distribution, or touch production applications. Continue to run `npm run verify:pack` and the independent public-rights review before any release. `catalog/publication-approvals.json` is not modified or inferred. The canonical consumer URLs retain their existing `/assets/img/...` paths and case. **Powered by VirgoStars** · https://www.virgostars.it/.
