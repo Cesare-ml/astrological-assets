@@ -21,6 +21,7 @@
     "plan:review-shards": "node scripts/plan-review-shards.mjs",
     "validate:agent-results": "node scripts/validate-agent-results.mjs",
     "reconcile:agent-assignments": "node scripts/reconcile-agent-assignments.mjs",
-    "census:agent-reviews": "node scripts/review-progress-census.mjs"
+    "census:agent-reviews": "node scripts/review-progress-census.mjs",
+    "compare:review-progress": "node scripts/compare-review-progress.mjs"
   }
 }
