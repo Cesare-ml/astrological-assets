@@ -16,7 +16,11 @@ const paths = [
   planets + 'light/_circle/Sun.png', planets + 'dark/_circle/Sun.png',
   'img/simboli/segni/01.png',
 ];
-const manifest = assets => ({ schemaVersion: 1, assets: assets.map(path => ({ path })) });
+const approved = path => ({
+  path, bytes: 1, sha256: 'a'.repeat(64), rightsHolder: 'test author',
+  permissionBasis: 'synthetic private test asset', approvalEvidence: 'fixture only',
+});
+const manifest = assets => ({ schemaVersion: 1, assets: assets.map(approved) });
 const register = { schemaVersion: 1, exceptions: [{ family: 'chart-overlays', relativePath: 'texture-carta-panna.png', only: 'light', reason: 'Light-only' }] };
 
 test('known light-only texture is an explicit exception, and both families are paired', () => {
@@ -52,6 +56,17 @@ test('unsafe manifest paths and cross-platform path collisions fail closed', () 
   assert.throws(() => auditThemePairs(manifest([...paths, '../secret.png']), register), /Unsafe/);
   assert.throws(() => auditThemePairs(manifest([...paths, overlay + 'LIGHT/cartaastrale-case.png']), register), /case-colliding/);
   assert.throws(() => auditThemePairs(manifest([...paths, overlay + 'light/te\u0301st.png', overlay + 'light/t\u00e9st.png']), register), /case-colliding/);
+});
+
+test('pending and incomplete approved-manifest metadata cannot pass', () => {
+  const baseline = manifest(paths);
+  for (const patch of [
+    { status: 'pending' }, { bytes: -1 }, { bytes: 1.5 }, { sha256: 'bad' },
+    { rightsHolder: '' }, { permissionBasis: '' }, { approvalEvidence: '' },
+  ]) {
+    const changed = { ...baseline, assets: [{ ...baseline.assets[0], ...patch }, ...baseline.assets.slice(1)] };
+    assert.throws(() => auditThemePairs(changed, register), /not approved|hash or size|approval metadata/);
+  }
 });
 
 test('invalid, repeated, or dangerous exceptions fail closed', () => {
