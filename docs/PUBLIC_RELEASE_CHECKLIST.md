@@ -31,6 +31,14 @@ npm run check:public-release
 npm run review:public -- --out ./artwork-review.local.json
 ```
 
+The automated suite also includes `tests/public-release-cli.test.mjs`: it runs
+the **actual CLI** with disposable synthetic files, checking the expected
+`0` (synthetic metadata complete), `2` (public approvals missing,
+unexpected files) and `1` (tampered bytes, invalid pinned policy, unsafe
+pack roots) exit paths. Its fixture-based `approved` records exist only
+inside temporary test directories and **are not legal evidence** or real
+permission to publish any VirgoStars artwork.
+
 The last command returns **exit code 2** when any image is missing explicit public approval, a record is inconsistent, or the current pack includes an unlisted binary; it returns **exit code 0** only if the *current pack* meets the recorded metadata checks. The script does **not** authenticate legal ownership, discover unknown third-party rights, or scan historical Git objects. This is a technical guardrail, **not legal certification**.
 
 ### Public authorization record format (illustrative only)
