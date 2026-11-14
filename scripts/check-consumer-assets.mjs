@@ -4,7 +4,7 @@
  * A private pack manifest is NOT evidence of public redistribution rights.
  */
 import { createHash } from 'node:crypto';
-import { lstatSync, readFileSync } from 'node:fs';
+import { lstatSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -41,6 +41,8 @@ function readCheckedAsset(root, relativePath) {
   let current = root;
   const segments = relativePath.split('/');
   for (let i = 0; i < segments.length; i++) {
+    // Windows can resolve a differently-cased file name; chart URLs cannot rely on that.
+    if (!readdirSync(current).includes(segments[i])) return null;
     current = join(current, segments[i]);
     let info;
     try { info = lstatSync(current); }
@@ -116,12 +118,31 @@ export function inspectConsumerAssets({ assetRoot, manifest, requirements }) {
 }
 
 function main(args) {
-  if (args.length !== 6 || args[0] !== '--root' || args[2] !== '--manifest' || args[4] !== '--requirements')
-    throw new Error('Usage: node scripts/check-consumer-assets.mjs --root public/assets --manifest manifests/approved-assets.json --requirements private-requirements.json');
+  const usage = 'Usage: --root public/assets --manifest manifests/approved-assets.json (--requirements private-requirements.json | --selection chart-assets.selection.local.json --consumer AstrologicalCharts)';
+  const flags = new Map();
+  const allowed = new Set(['--root', '--manifest', '--requirements', '--selection', '--consumer']);
+  if (args.length % 2) throw new Error(usage);
+  for (let i = 0; i < args.length; i += 2) {
+    if (!allowed.has(args[i]) || !args[i + 1] || flags.has(args[i])) throw new Error(usage);
+    flags.set(args[i], args[i + 1]);
+  }
+  const usingRequirements = flags.has('--requirements'), usingSelection = flags.has('--selection');
+  if (!flags.has('--root') || !flags.has('--manifest') || usingRequirements === usingSelection ||
+      (usingRequirements && flags.has('--consumer')) || (usingSelection && !flags.has('--consumer')))
+    throw new Error(usage);
+
+  let requirements;
+  if (usingRequirements) {
+    requirements = JSON.parse(readFileSync(flags.get('--requirements'), 'utf8'));
+  } else {
+    const files = JSON.parse(readFileSync(flags.get('--selection'), 'utf8'));
+    if (!Array.isArray(files)) throw new Error('Chart selection must be a JSON array of asset paths');
+    requirements = { schemaVersion: 1, consumer: flags.get('--consumer'), assets: files };
+  }
   const report = inspectConsumerAssets({
-    assetRoot: args[1],
-    manifest: JSON.parse(readFileSync(args[3], 'utf8')),
-    requirements: JSON.parse(readFileSync(args[5], 'utf8')),
+    assetRoot: flags.get('--root'),
+    manifest: JSON.parse(readFileSync(flags.get('--manifest'), 'utf8')),
+    requirements,
   });
   console.log(JSON.stringify(report, null, 2));
   if (report.verdict === 'blocked') process.exitCode = 2;
