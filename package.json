@@ -18,6 +18,7 @@
     "check:build-output": "node scripts/check-build-output.mjs",
     "check:public-release": "node scripts/check-public-release.mjs",
     "review:public": "node scripts/prepare-publication-review.mjs",
-    "check:consumer-assets": "node scripts/check-consumer-assets.mjs"
+    "check:consumer-assets": "node scripts/check-consumer-assets.mjs",
+    "lock:consumer-assets": "node scripts/create-consumer-lock.mjs"
   }
 }
