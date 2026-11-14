@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { assessPublicRelease } from '../scripts/check-public-release.mjs';
+import { assessPublicRelease, listPackFiles } from '../scripts/check-public-release.mjs';
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 const path = 'img/simboli-bianchi/segni/01.png';
 const sha256 = 'a'.repeat(64);
@@ -120,4 +123,20 @@ test('multiple physical aliases remain blocked even when one spelling is canonic
   const result = assess(manifest, publication, [path, path.replace('01.png', '01.PNG')]);
   assert.equal(result.ready, false);
   assert.match(result.issues.join(' '), /Case-colliding pack file/);
+});
+
+test('real pack directory enumeration exposes noncanonical filename casing', () => {
+  const root = mkdtempSync(join(tmpdir(), 'astro-public-paths-'));
+  try {
+    const folder = join(root, 'img', 'simboli-bianchi', 'segni');
+    mkdirSync(folder, { recursive: true });
+    writeFileSync(join(folder, '01.PNG'), Buffer.from('synthetic fixture only'));
+    const files = listPackFiles(root);
+    assert.deepEqual(files, [path.replace('01.png', '01.PNG')]);
+    const result = assess(manifest, { schemaVersion: 1, assets: [publicRecord] }, files);
+    assert.equal(result.ready, false);
+    assert.match(result.issues.join(' '), /canonical manifest spelling/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
