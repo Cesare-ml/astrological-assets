@@ -79,6 +79,7 @@ This repository contains **assets and asset-management tooling**, not the render
 | `npm test` | Run Node.js tests |
 | `npm run audit:catalog` | Inspect the source asset catalog |
 | `npm run verify:pack` | Verify all committed images against the SHA-256 manifest |
+| `npm run check:consumer-assets -- --root ./public/assets --manifest ./manifests/approved-assets.json --requirements ./consumer.local.json` | Read-only SHA-256 preflight for an explicitly requested renderer/offline subset; no files copied or public rights granted |
 | `npm run review:public -- --out ./artwork-review.local.json` | Generate a **pending-only** worksheet for human rights review |
 | `npm run check:public-release` | Check image-specific public clearance records, hashes, and owner license policy |
 
@@ -128,6 +129,7 @@ Contributions to the tools, tests, documentation, and compatible original assets
 - [Font rights research](docs/FONT_RIGHTS_RESEARCH.md)
 - [Ecosystem coordination](docs/ECOSYSTEM_COORDINATION.md)
 - [Migration plan](docs/MIGRATION_PLAN.md)
+- [Private consumer/offline asset preflight](docs/CONSUMER_ASSET_PREFLIGHT.md)
 
 ---
 
