@@ -47,7 +47,8 @@ export function verifyPack(root, manifest, { strict = false } = {}) {
     const parts=item.path.split('/');
     let file=rootPath;
     for(let index=0;index<parts.length;index++) {
-      file=join(file,parts[index]);
+      const parent=file;
+      file=join(parent,parts[index]);
       let info;
       try { info=lstatSync(file); }
       catch(error) {
@@ -55,6 +56,10 @@ export function verifyPack(root, manifest, { strict = false } = {}) {
         throw error;
       }
       if(info.isSymbolicLink()) throw new Error('Symlink forbidden: '+item.path);
+      // A case-insensitive filesystem may resolve a differently-cased URL path.
+      // Compare each physical directory entry with the canonical manifest name.
+      if(!readdirSync(parent).includes(parts[index]))
+        throw new Error('Non-canonical asset path spelling: '+item.path);
       if(index<parts.length-1 && !info.isDirectory())
         throw new Error('Parent is not a directory: '+item.path);
       if(index===parts.length-1 && !info.isFile())
