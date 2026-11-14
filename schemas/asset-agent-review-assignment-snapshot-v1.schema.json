@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "asset-agent-review-assignment-snapshot-v1.schema.json",
+  "$id": "https://raw.githubusercontent.com/Cesare-ml/astrological-assets/main/schemas/asset-agent-review-assignment-snapshot-v1.schema.json",
   "title": "VirgoStars asset review assignment snapshot v1",
   "description": "A minimal private-ledger-export envelope. Does not prove authenticity or freshness by itself; consumers must require an independently authenticated ledger commit SHA.",
   "type": "object",
