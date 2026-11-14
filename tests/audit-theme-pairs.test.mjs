@@ -149,11 +149,13 @@ test('invalid, repeated, or dangerous exceptions fail closed', () => {
 test('CLI uses distinct success, parity-block, and invalid-input exit codes without writing', () => {
   const dir = mkdtempSync(join(tmpdir(), 'theme-parity-'));
   const file = join(dir, 'manifest.json'), exceptionFile = join(dir, 'exceptions.json');
-  const run = () => spawnSync(process.execPath, [join(repo, 'scripts/audit-theme-pairs.mjs'), '--manifest', file, '--exceptions', exceptionFile], { encoding: 'utf8' });
+  const run = () => spawnSync(process.execPath, [join(repo, 'scripts/audit-theme-pairs.mjs'), '--manifest', file, '--exceptions', exceptionFile, '--parity-only', 'yes'], { encoding: 'utf8' });
   try {
     writeFileSync(exceptionFile, JSON.stringify(register));
     writeFileSync(file, JSON.stringify(manifest(paths)));
-    assert.equal(run().status, 0);
+    const valid = run();
+    assert.equal(valid.status, 0);
+    assert.equal(JSON.parse(valid.stdout).auditMode, 'parity-only');
     writeFileSync(file, JSON.stringify(manifest([...paths, overlay + 'dark/unpaired.png'])));
     assert.equal(run().status, 2);
     writeFileSync(file, '{invalid');
@@ -204,6 +206,35 @@ test('required baseline rejects invalid families, duplicates, unsafe names and e
     { schemaVersion: 1, pairs: [{ family: 'chart-overlays', relativePath: '../escape.png' }] },
     { schemaVersion: 1, pairs: [...valid.pairs, { ...valid.pairs[0], relativePath: 'Cartaastrale-case.png' }] },
   ]) assert.throws(() => auditThemePairs(manifest(paths), register, required));
+});
+
+test('CLI refuses implicit parity-only verification or conflicting modes', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'theme-cli-mode-'));
+  const manifestFile = join(dir, 'manifest.json');
+  const exceptionsFile = join(dir, 'exceptions.json');
+  const requiredFile = join(dir, 'required.json');
+  const run = (...mode) => spawnSync(process.execPath, [
+    join(repo, 'scripts/audit-theme-pairs.mjs'),
+    '--manifest', manifestFile, '--exceptions', exceptionsFile, ...mode,
+  ], { encoding: 'utf8' });
+  try {
+    writeFileSync(manifestFile, JSON.stringify(manifest(paths)));
+    writeFileSync(exceptionsFile, JSON.stringify(register));
+    writeFileSync(requiredFile, JSON.stringify({ schemaVersion: 1, pairs: [
+      { family: 'chart-overlays', relativePath: 'cartaastrale-case.png' },
+    ] }));
+    for (const bad of [
+      [], ['--parity-only', 'no'], ['--required', requiredFile, '--parity-only', 'yes'],
+      ['--parity-only', 'yes', '--parity-only', 'yes'],
+    ]) {
+      const result = run(...bad);
+      assert.equal(result.status, 1, JSON.stringify(bad));
+      assert.match(result.stderr, /Usage:/);
+    }
+    const required = run('--required', requiredFile);
+    assert.equal(required.status, 0);
+    assert.equal(JSON.parse(required.stdout).auditMode, 'required-baseline');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
 test('CLI required inventory flags loss of both chart theme files', () => {
