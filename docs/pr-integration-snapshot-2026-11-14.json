@@ -1,0 +1,300 @@
+{
+  "schemaVersion": 1,
+  "defaultBranch": "main",
+  "mainSha": "8d310f71d399f656d9baa511aec7c0a1fca2acbd",
+  "capturedDate": "2026-11-14",
+  "prs": [
+    {
+      "number": 7,
+      "base": "main",
+      "head": "docs/identify-astro-semibold-font-provenance",
+      "draft": false,
+      "files": [
+        "README.md",
+        "docs/ARTWORK_LICENSING_POLICY.md",
+        "docs/FONT_RIGHTS_RESEARCH.md",
+        "docs/RIGHTS_AND_REVIEW.md"
+      ]
+    },
+    {
+      "number": 9,
+      "base": "main",
+      "head": "docs/virgostars-astro-original-font-plan",
+      "draft": false,
+      "files": [
+        "AGENTS.md",
+        "README.md",
+        "docs/APPROVED_GLYPH_IMAGES_V02.md",
+        "docs/ECOSYSTEM_COORDINATION.md",
+        "docs/MIGRATION_PLAN.md",
+        "docs/PRIVATE_FONT_VALIDATION.md",
+        "docs/PRIVATE_PROTOTYPE_QA.md",
+        "docs/PROTO_V01_VISUAL_REJECTION.md",
+        "docs/ROADMAP.md",
+        "docs/VIRGOSTARS_ASTRO_FONT_PLAN.md",
+        "docs/VIRGOSTARS_ASTRO_ICONOGRAPHY.md",
+        "package.json",
+        "scripts/check-astro-spec.mjs",
+        "scripts/validate-private-font.py",
+        "specs/virgostars-astro.v0.json",
+        "tests/astro-spec.test.mjs",
+        "tests/test_private_font_validator.py"
+      ]
+    },
+    {
+      "number": 10,
+      "base": "main",
+      "head": "fix/strict-pack-closure-gate-20261113",
+      "draft": false,
+      "files": [
+        "docs/PACK_CLOSURE_GATE.md",
+        "docs/PUBLIC_RELEASE_CHECKLIST.md",
+        "scripts/verify-pack.mjs",
+        "tests/verify-pack-strict.test.mjs"
+      ]
+    },
+    {
+      "number": 11,
+      "base": "docs/virgostars-astro-original-font-plan",
+      "head": "feat/private-font-visual-qa-20261113",
+      "draft": false,
+      "files": [
+        "AGENTS.md",
+        "README.md",
+        "docs/PRIVATE_FONT_VALIDATION.md",
+        "docs/PRIVATE_FONT_VISUAL_QA.md",
+        "docs/ROADMAP.md",
+        "scripts/create-private-font-specimen.py",
+        "tests/test_private_font_specimen.py"
+      ]
+    },
+    {
+      "number": 12,
+      "base": "main",
+      "head": "fix/private-review-output-safety-20261114",
+      "draft": true,
+      "files": [
+        "docs/RIGHTS_AND_REVIEW.md",
+        "scripts/prepare-review.mjs",
+        "tests/prepare-review-cli.test.mjs",
+        "tests/prepare-review-family.test.mjs"
+      ]
+    },
+    {
+      "number": 13,
+      "base": "main",
+      "head": "fix/collision-report-safe-output-20261114",
+      "draft": false,
+      "files": [
+        "docs/MIGRATION_PLAN.md",
+        "scripts/check-web-asset-collisions.mjs",
+        "scripts/write-collision-report.mjs",
+        "tests/write-collision-report.test.mjs"
+      ]
+    },
+    {
+      "number": 14,
+      "base": "main",
+      "head": "feat/consumer-assets-preflight-20261114",
+      "draft": false,
+      "files": [
+        "README.md",
+        "docs/CONSUMER_ASSET_PREFLIGHT.md",
+        "package.json",
+        "scripts/check-consumer-assets.mjs",
+        "tests/check-consumer-assets.test.mjs"
+      ]
+    },
+    {
+      "number": 15,
+      "base": "main",
+      "head": "feat/raster-header-integrity-20261114",
+      "draft": false,
+      "files": [
+        "README.md",
+        "docs/RASTER_HEADER_PREFLIGHT.md",
+        "package.json",
+        "scripts/check-raster-headers.mjs",
+        "tests/check-raster-headers.test.mjs"
+      ]
+    },
+    {
+      "number": 16,
+      "base": "main",
+      "head": "fix/build-output-root-symlink-guard-20261114",
+      "draft": true,
+      "files": [
+        "docs/MIGRATION_PLAN.md",
+        "scripts/check-build-output.mjs",
+        "tests/check-build-output-root.test.mjs"
+      ]
+    },
+    {
+      "number": 17,
+      "base": "feat/consumer-assets-preflight-20261114",
+      "head": "feat/versioned-consumer-lock-20261114",
+      "draft": false,
+      "files": [
+        "README.md",
+        "docs/CONSUMER_LOCKFILE.md",
+        "package.json",
+        "scripts/create-consumer-lock.mjs",
+        "tests/create-consumer-lock.test.mjs"
+      ]
+    },
+    {
+      "number": 18,
+      "base": "main",
+      "head": "feat/manifest-diff-gate-20261114",
+      "draft": true,
+      "files": [
+        "README.md",
+        "docs/MANIFEST_DIFF_GATE.md",
+        "package.json",
+        "scripts/compare-manifests.mjs",
+        "tests/compare-manifests.test.mjs"
+      ]
+    },
+    {
+      "number": 19,
+      "base": "main",
+      "head": "feat/asset-footprint-planning-20261114",
+      "draft": true,
+      "files": [
+        "README.md",
+        "docs/ASSET_FOOTPRINT.md",
+        "scripts/report-asset-footprint.mjs",
+        "tests/report-asset-footprint.test.mjs"
+      ]
+    },
+    {
+      "number": 20,
+      "base": "main",
+      "head": "fix/public-worksheet-output-safety-20261114",
+      "draft": true,
+      "files": [
+        "docs/RIGHTS_AND_REVIEW.md",
+        "scripts/prepare-publication-review.mjs",
+        "scripts/write-pending-worksheet.mjs",
+        "tests/publication-review-cli.test.mjs",
+        "tests/write-pending-worksheet.test.mjs"
+      ]
+    },
+    {
+      "number": 21,
+      "base": "main",
+      "head": "feat/chart-theme-parity-audit-20261114",
+      "draft": true,
+      "files": [
+        "README.md",
+        "docs/THEME_PAIR_AUDIT.md",
+        "manifests/theme-pair-exceptions.json",
+        "package.json",
+        "scripts/audit-theme-pairs.mjs",
+        "tests/audit-theme-pairs.test.mjs"
+      ]
+    },
+    {
+      "number": 22,
+      "base": "main",
+      "head": "feat/agent-review-shards-20261114",
+      "draft": true,
+      "files": [
+        "README.md",
+        "docs/PARALLEL_AGENT_REVIEW.md",
+        "package.json",
+        "scripts/plan-review-shards.mjs",
+        "tests/plan-review-shards.test.mjs"
+      ]
+    },
+    {
+      "number": 23,
+      "base": "main",
+      "head": "fix/catalog-refresh-local-snapshot-20261114",
+      "draft": true,
+      "files": [
+        "README.md",
+        "docs/ASSET_SCOPE.md",
+        "scripts/refresh-source-catalog.mjs",
+        "scripts/write-local-catalog-snapshot.mjs",
+        "tests/refresh-source-catalog-cli.test.mjs",
+        "tests/write-local-catalog-snapshot.test.mjs"
+      ]
+    },
+    {
+      "number": 24,
+      "base": "main",
+      "head": "fix/catalog-audit-provenance-20261114",
+      "draft": true,
+      "files": [
+        "README.md",
+        "docs/CATALOG_AUDIT_CONTRACT.md",
+        "scripts/audit-catalog.mjs",
+        "tests/catalog-provenance.test.mjs",
+        "tests/catalog.test.mjs"
+      ]
+    },
+    {
+      "number": 25,
+      "base": "feat/agent-review-shards-20261114",
+      "head": "feat/agent-review-results-gate-20261114",
+      "draft": true,
+      "files": [
+        "docs/AGENT_REVIEW_RESULTS.md",
+        "package.json",
+        "scripts/validate-agent-results.mjs",
+        "tests/validate-agent-results.test.mjs"
+      ]
+    },
+    {
+      "number": 26,
+      "base": "main",
+      "head": "fix/public-pack-canonical-path-20261114",
+      "draft": true,
+      "files": [
+        "docs/PUBLIC_RELEASE_CHECKLIST.md",
+        "scripts/check-public-release.mjs",
+        "tests/public-release-cli.test.mjs",
+        "tests/public-release.test.mjs"
+      ]
+    },
+    {
+      "number": 27,
+      "base": "feat/agent-review-results-gate-20261114",
+      "head": "feat/agent-assignment-snapshot-gate-20261114",
+      "draft": true,
+      "files": [
+        "README.md",
+        "docs/ORCHESTRATOR_ASSIGNMENT_RECONCILIATION.md",
+        "package.json",
+        "scripts/reconcile-agent-assignments.mjs",
+        "tests/reconcile-agent-assignments.test.mjs"
+      ]
+    },
+    {
+      "number": 28,
+      "base": "feat/agent-assignment-snapshot-gate-20261114",
+      "head": "fix/reconcile-ledger-pin-20261114",
+      "draft": true,
+      "files": [
+        "README.md",
+        "docs/ORCHESTRATOR_ASSIGNMENT_RECONCILIATION.md",
+        "scripts/reconcile-agent-assignments.mjs",
+        "tests/reconcile-agent-assignments.test.mjs"
+      ]
+    },
+    {
+      "number": 29,
+      "base": "fix/reconcile-ledger-pin-20261114",
+      "head": "feat/agent-review-interop-schemas-20261114",
+      "draft": true,
+      "files": [
+        "README.md",
+        "docs/AGENT_REVIEW_INTEROP_SCHEMAS.md",
+        "schemas/asset-agent-review-assignment-snapshot-v1.schema.json",
+        "schemas/asset-agent-review-results-v1.schema.json",
+        "tests/agent-review-interop-schemas.test.mjs"
+      ]
+    }
+  ]
+}
