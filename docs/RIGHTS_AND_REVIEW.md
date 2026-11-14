@@ -32,7 +32,7 @@ To prepare a new private rights worksheet without approving anything:
 node scripts/prepare-review.mjs --family img/simboli-bianchi/segni/ --out ./segni-review.local.json
 ```
 
-The generated entries are **pending**; humans must evaluate them. The generator neither copies files nor sends data anywhere.
+The generated entries are **pending**; humans must evaluate them. The generator neither copies files nor sends data anywhere. Its `--out` filename must end in `.local.json` (ignored by Git), and the command **refuses to overwrite an existing file**. This prevents a draft worksheet from replacing a human-edited review or the authoritative `catalog/approvals.json` register. Choose a new local filename for each worksheet run; never rename a generated pending worksheet into an approval register without an independent human decision.
 
 ## Import safety and integrity
 
