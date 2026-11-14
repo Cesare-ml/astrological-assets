@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, realpathSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
@@ -102,4 +102,22 @@ test('rejects regular files in ancestor positions before attempting the final as
 test('reports genuinely missing manifest files without hiding link errors', () => withSyntheticPack(({ root, manifest }) => {
   rmSync(join(root, ...manifest.assets[0].path.split('/')));
   assert.throws(() => verifyPack(root, manifest), /Missing image\/font/);
+}));
+
+test('rejects a differently-cased filename even when the bytes and hash match', () => withSyntheticPack(({ root, manifest }) => {
+  manifest.assets[0].path = 'img/simboli-bianchi/segni/01.PNG';
+  assert.throws(() => verifyPack(root, manifest), /Non-canonical asset path spelling|Missing image\/font/);
+}));
+
+test('rejects a differently-cased directory component of a manifest path', () => withSyntheticPack(({ root, manifest }) => {
+  manifest.assets[0].path = 'img/SIMBOLI-BIANCHI/segni/01.png';
+  assert.throws(() => verifyPack(root, manifest), /Non-canonical asset path spelling|Missing image\/font/);
+}));
+
+test('accepts a mixed-case physical filename when the manifest uses its exact spelling', () => withSyntheticPack(({ root, manifest, bytes }) => {
+  const original = join(root, ...manifest.assets[0].path.split('/'));
+  const physical = 'img/simboli-bianchi/segni/01.MixedCase.PNG';
+  renameSync(original, join(root, ...physical.split('/')));
+  manifest.assets[0].path = physical;
+  assert.deepEqual(verifyPack(root, manifest), { verified: 1, bytes: bytes.length });
 }));
