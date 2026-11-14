@@ -6,7 +6,10 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { reconcileAgentAssignments } from '../scripts/reconcile-agent-assignments.mjs';
+import { reconcileAgentAssignments as reconcileWithPin } from '../scripts/reconcile-agent-assignments.mjs';
+const trustedPin = 'b'.repeat(40);
+const reconcileAgentAssignments = (manifest, fingerprint, reports, claims) =>
+  reconcileWithPin(manifest, fingerprint, reports, claims, trustedPin);
 
 const source = { repository: 'owner/source', commit: 'a'.repeat(40), assetRoot: 'public/assets' };
 const assets = Array.from({ length: 1013 }, (_, i) => ({
@@ -145,6 +148,7 @@ function cli(reports, claims, args = null) {
       '--manifest', join(dir, 'manifest.json'),
       '--results', join(dir, 'results.json'),
       '--assignments', join(dir, 'assignments.json'),
+      '--expected-ledger-commit', trustedPin,
     ])], { encoding: 'utf8' });
   } finally { rmSync(dir, { recursive: true, force: true }); }
 }
@@ -169,4 +173,26 @@ test('results are checked against the manifest before snapshot inspection', () =
   const { reports, claims } = full(2);
   reports.submissions[0].results[0].sha256 = 'f'.repeat(64);
   assert.throws(() => reconcileAgentAssignments(manifest, fingerprint, reports, claims), /Stale asset digest/);
+});
+
+test('independent ledger pin must be supplied and match exact snapshot revision', () => {
+  const { reports, claims } = full(2);
+  assert.throws(() => reconcileWithPin(manifest, fingerprint, reports, claims), /independently verified/);
+  assert.throws(() => reconcileWithPin(manifest, fingerprint, reports, claims, 'invalid'), /independently verified/);
+  assert.throws(() => reconcileWithPin(manifest, fingerprint, reports, claims, 'c'.repeat(40)), /independently pinned/);
+  assert.equal(reconcileWithPin(manifest, fingerprint, reports, claims, trustedPin).requiresFollowUp, false);
+});
+
+test('CLI refuses incorrect or missing independent ledger pin', () => {
+  const { reports, claims } = full(2);
+  const missing = cli(reports, claims, ['--manifest', 'manifest.json', '--results', 'results.json',
+    '--assignments', 'assignments.json']);
+  assert.equal(missing.status, 1);
+  assert.match(missing.stderr, /Usage:/);
+  const invalid = cli(reports, claims, [
+    '--manifest', 'manifest.json', '--results', 'results.json',
+    '--assignments', 'assignments.json', '--expected-ledger-commit', 'invalid',
+  ]);
+  assert.equal(invalid.status, 1);
+  assert.match(invalid.stderr, /RECONCILIATION FAILED/);
 });
