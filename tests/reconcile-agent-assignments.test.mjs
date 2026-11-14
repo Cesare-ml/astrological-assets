@@ -138,7 +138,7 @@ test('output excludes private ledger metadata and opaque task/agent identities',
   assert.match(output, /authenticity/);
 });
 
-function cli(reports, claims, args = null) {
+function cli(reports, claims, args = null, pin = trustedPin) {
   const dir = mkdtempSync(join(tmpdir(), 'astro-agent-reconcile-'));
   try {
     for (const [filename, value] of [['manifest.json', manifest], ['results.json', reports], ['assignments.json', claims]])
@@ -148,7 +148,7 @@ function cli(reports, claims, args = null) {
       '--manifest', join(dir, 'manifest.json'),
       '--results', join(dir, 'results.json'),
       '--assignments', join(dir, 'assignments.json'),
-      '--expected-ledger-commit', trustedPin,
+      '--expected-ledger-commit', pin,
     ])], { encoding: 'utf8' });
   } finally { rmSync(dir, { recursive: true, force: true }); }
 }
@@ -189,10 +189,10 @@ test('CLI refuses incorrect or missing independent ledger pin', () => {
     '--assignments', 'assignments.json']);
   assert.equal(missing.status, 1);
   assert.match(missing.stderr, /Usage:/);
-  const invalid = cli(reports, claims, [
-    '--manifest', 'manifest.json', '--results', 'results.json',
-    '--assignments', 'assignments.json', '--expected-ledger-commit', 'invalid',
-  ]);
+  const invalid = cli(reports, claims, null, 'invalid');
   assert.equal(invalid.status, 1);
-  assert.match(invalid.stderr, /RECONCILIATION FAILED/);
+  assert.match(invalid.stderr, /independently verified/);
+  const stale = cli(reports, claims, null, 'c'.repeat(40));
+  assert.equal(stale.status, 1);
+  assert.match(stale.stderr, /independently pinned/);
 });
