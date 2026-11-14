@@ -180,7 +180,7 @@ test('cross-record uniqueness and identity rules remain enforced by runtime, not
 test('contract files contain no real identifiers or credentials', () => {
   for (const schema of [resultSchema, snapshotSchema]) {
     const text = JSON.stringify(schema);
-    assert.doesNotMatch(text, /session_id|oauth|access_token|password|personal_access_token|private\\.git/i);
-    assert.doesNotMatch(text, /claims\\/[a-z0-9]|submissions\\/[a-z0-9]/i);
+    assert.doesNotMatch(text, /session_id|oauth|access_token|password|personal_access_token|private\.git/i);
+    assert.doesNotMatch(text, /claims\/[a-z0-9]|submissions\/[a-z0-9]/i);
   }
 });
