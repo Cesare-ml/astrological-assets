@@ -28,6 +28,7 @@ These are individual assets from the repository, not complete rendered natal cha
 | [`public/assets/img/risuonatore-solare.png`](public/assets/img/risuonatore-solare.png) | Solar Resonator artwork, with additional variants nearby |
 | [`manifests/approved-assets.json`](manifests/approved-assets.json) | Exact asset paths, file sizes, SHA-256 hashes, and provenance metadata |
 | [`scripts/`](scripts/) and [`tests/`](tests/) | Read-only verification, catalog review, selective import, and release-safety checks |
+| [`schemas/`](schemas/) | Public, versioned JSON Schema contracts for agent review reports and PRIVATE-ledger snapshot interchange; [integration guide](docs/AGENT_REVIEW_INTEROP_SCHEMAS.md) |
 
 The committed image pack contains **1,013 PNG, JPG, and WebP files**. The separate [upstream candidate catalog](catalog/upstream-candidates.json) lists **1,124 candidate records**, not 1,124 additional downloadable assets. Font binaries, personal chart data, and application/backend source code are not included.
 
