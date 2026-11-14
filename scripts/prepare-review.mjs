@@ -12,7 +12,9 @@ export function prepareReview(catalog,family,{includeLegacy=false}={}) {
   if(typeof family!=='string' || !/^(?:img|fonts)\/[a-zA-Z0-9_\-./ ]+\/?$/.test(family)
     || family.includes('..') || family.includes('\\'))
     throw new Error('Specify a safe non-root --family prefix');
-  const records=catalog.files.filter(x=>x.path.startsWith(family) && (includeLegacy || !x.legacy));
+  // Match a directory boundary, not similarly named sibling families.
+  const prefix=family.endsWith('/') ? family : family+'/';
+  const records=catalog.files.filter(x=>x.path.startsWith(prefix) && (includeLegacy || !x.legacy));
   if(!records.length) throw new Error('No candidate images/fonts match that family');
   return {
     schemaVersion:1,
