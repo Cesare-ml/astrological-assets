@@ -79,6 +79,7 @@ This repository contains **assets and asset-management tooling**, not the render
 | `npm test` | Run Node.js tests |
 | `npm run audit:catalog` | Inspect the source asset catalog |
 | `npm run verify:pack` | Verify all committed images against the SHA-256 manifest |
+| `npm run plan:review-shards -- --manifest manifests/approved-assets.json --shards 100` | Create deterministic, metadata-only review assignments for parallel agents; [guide](docs/PARALLEL_AGENT_REVIEW.md) |
 | `npm run review:public -- --out ./artwork-review.local.json` | Generate a **pending-only** worksheet for human rights review |
 | `npm run check:public-release` | Check image-specific public clearance records, hashes, and owner license policy |
 
