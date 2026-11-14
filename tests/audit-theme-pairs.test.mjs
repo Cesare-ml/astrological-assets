@@ -58,6 +58,22 @@ test('unsafe manifest paths and cross-platform path collisions fail closed', () 
   assert.throws(() => auditThemePairs(manifest([...paths, overlay + 'light/te\u0301st.png', overlay + 'light/t\u00e9st.png']), register), /case-colliding/);
 });
 
+test('noncanonical Unicode paths, unsupported types and asset roots are rejected', () => {
+  const decomposed = overlay + 'light/te\u0301st.png';
+  assert.throws(() => auditThemePairs(manifest([...paths, decomposed]), register), /Non-canonical Unicode/);
+  assert.throws(() => auditThemePairs(manifest([...paths, 'fonts/te\u0301st.woff2']), register), /Non-canonical Unicode/);
+  assert.throws(() => auditThemePairs(manifest([...paths, 'img/unknown/new.exe']), register), /Unsupported asset type/);
+  assert.throws(() => auditThemePairs(manifest([...paths, 'private/account.png']), register), /Unsafe asset path/);
+  assert.throws(() => auditThemePairs(manifest([...paths, 'img/not-an-asset']), register), /Unsupported asset type/);
+});
+
+test('noncanonical Unicode exception names cannot silently authorize differences', () => {
+  const exceptions = { schemaVersion: 1, exceptions: [{
+    ...register.exceptions[0], relativePath: 'te\u0301xture-carta-panna.png',
+  }] };
+  assert.throws(() => auditThemePairs(manifest(paths), exceptions), /Non-canonical Unicode/);
+});
+
 test('Windows-incompatible asset names are rejected before offline integration', () => {
   for (const name of ['CON.png', 'aux.png', 'COM1.png', 'Lpt9.png',
     'planet?.png', 'planet*.png', 'planet|x.png', 'planet .png.']) {
