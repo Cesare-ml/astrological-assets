@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "asset-agent-review-results-v1.schema.json",
+  "$id": "https://raw.githubusercontent.com/Cesare-ml/astrological-assets/main/schemas/asset-agent-review-results-v1.schema.json",
   "title": "VirgoStars asset agent review result batch v1",
   "description": "Read-only, self-reported per-shard review results. Not an authorization, lease, attestation or public asset license.",
   "type": "object",
