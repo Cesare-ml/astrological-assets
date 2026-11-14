@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/Cesare-ml/astrological-assets/main/schemas/asset-agent-review-assignment-snapshot-v1.schema.json",
+  "title": "VirgoStars asset review assignment snapshot v1",
+  "description": "A minimal private-ledger-export envelope. Does not prove authenticity or freshness by itself; consumers must require an independently authenticated ledger commit SHA.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "purpose",
+    "source",
+    "manifestSha256",
+    "shardCount",
+    "ledgerCommitSha",
+    "assignments"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "purpose": {
+      "const": "asset-review-assignment-snapshot"
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "manifestSha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "shardCount": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000
+    },
+    "ledgerCommitSha": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$",
+      "description": "Opaque Git SHA-1 of a specific PRIVATE ledger snapshot; must match a separately verified trusted pin."
+    },
+    "assignments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/assignment"
+      }
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "commit",
+        "assetRoot"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$"
+        },
+        "assetRoot": {
+          "const": "public/assets"
+        }
+      }
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "opaqueId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+      "description": "Opaque nonsecret identifier; no personal data, session credentials, or private ledger path."
+    },
+    "assignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "shardIndex",
+        "assignmentId",
+        "agentId",
+        "state"
+      ],
+      "properties": {
+        "shardIndex": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "assignmentId": {
+          "$ref": "#/$defs/opaqueId"
+        },
+        "agentId": {
+          "$ref": "#/$defs/opaqueId"
+        },
+        "state": {
+          "enum": [
+            "claimed",
+            "in_progress",
+            "submitted",
+            "cancelled"
+          ]
+        }
+      }
+    }
+  }
+}
