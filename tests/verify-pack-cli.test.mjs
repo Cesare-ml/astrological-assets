@@ -58,7 +58,7 @@ test('CLI strict mode rejects unlisted and hidden files, while default remains m
   assert.equal(run().status, 0);
   const strict = run('--strict');
   assert.equal(strict.status, 1);
-  assert.match(strict.stderr, /Unlisted files in pack \\(1\\): img\\/\\.unlisted/);
+  assert.match(strict.stderr, /Unlisted files in pack \(1\): img\/\.unlisted/);
   assert.doesNotMatch(strict.stdout, /Strict closure verified/);
 }));
 
@@ -100,7 +100,7 @@ test('CLI rejects wrong physical directory case in default and strict modes', ()
   for (const flags of [[], ['--strict']]) {
     const result = run(...flags);
     assert.equal(result.status, 1);
-    assert.match(result.stderr, /Non-canonical asset path spelling|Missing image\\/font/);
+    assert.match(result.stderr, /Non-canonical asset path spelling|Missing image\/font/);
   }
 }));
 
@@ -123,7 +123,7 @@ test('CLI accepts --strict at the start and rejects duplicate or unknown flags',
   for (const args of [['--strict', '--strict'], ['--unexpected'], ['--strict', '--unexpected']]) {
     const result = run(...args);
     assert.equal(result.status, 1);
-    assert.match(result.stderr, /Usage: node scripts\\/verify-pack/);
+    assert.match(result.stderr, /Usage: node scripts\/verify-pack/);
   }
 }));
 
