@@ -266,8 +266,8 @@ test('CLI required inventory flags loss of both chart theme files', () => {
 test('the required 49-pair baseline cannot be silently substituted while keeping its size', () => {
   const baseline = JSON.parse(readFileSync(join(repo, 'manifests/required-theme-pairs.json'), 'utf8'));
   const canonicalDigest = pairs => createHash('sha256')
-    .update(pairs.map(({ family, relativePath }) => family + '\\t' + relativePath)
-      .sort().join('\\n') + '\\n', 'utf8')
+    .update(pairs.map(({ family, relativePath }) => family + '\t' + relativePath)
+      .sort().join('\n') + '\n', 'utf8')
     .digest('hex');
   // Independently pinned against the initial complete 49-pair chart inventory.
   // Intentional changes must update this check under the same reviewed PR.
