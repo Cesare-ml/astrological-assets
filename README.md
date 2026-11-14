@@ -78,7 +78,7 @@ This repository contains **assets and asset-management tooling**, not the render
 | --- | --- |
 | `npm test` | Run Node.js tests |
 | `npm run audit:catalog` | Inspect the source asset catalog |
-| `npm run audit:theme-pairs` | Check exact light/dark asset counterparts and documented exceptions |
+| `npm run audit:theme-pairs` | Check exact light/dark counterparts, the 49 required paired paths and documented exceptions |
 | `npm run verify:pack` | Verify all committed images against the SHA-256 manifest |
 | `npm run review:public -- --out ./artwork-review.local.json` | Generate a **pending-only** worksheet for human rights review |
 | `npm run check:public-release` | Check image-specific public clearance records, hashes, and owner license policy |
