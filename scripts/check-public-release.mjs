@@ -83,7 +83,10 @@ export function assessPublicRelease(manifest, publication, assetPaths = [], lice
     const key = checkedPath(path);
     if (packPaths.has(key)) issues.push('Case-colliding pack file: ' + path);
     packPaths.add(key);
-    if (!manifestByPath.has(key)) issues.push('Pack file missing from manifest: ' + path);
+    const canonical = manifestByPath.get(key);
+    if (!canonical) issues.push('Pack file missing from manifest: ' + path);
+    else if (path !== canonical.path)
+      issues.push('Pack path differs from canonical manifest spelling: ' + path + ' (expected ' + canonical.path + ')');
   }
   for (const [key, asset] of manifestByPath) {
     if (!packPaths.has(key)) issues.push('Manifest file not present in pack: ' + asset.path);
