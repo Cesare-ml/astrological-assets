@@ -18,6 +18,23 @@ Equivalent direct invocation:
 node scripts/verify-pack.mjs --root ./public/assets --manifest ./manifests/approved-assets.json --strict
 ```
 
+### Command-line outcomes
+
+The pack verifier is deliberately read-only and returns **exit code 0** only
+after the requested checks pass; it returns **exit code 1** for invalid flags,
+missing or malformed manifests, checksum mismatches, unsafe paths, unlisted
+files in strict mode, and other failures. The `--strict` switch can be
+placed before or after the required arguments, but is accepted only once.
+Do not confuse this status contract with the separate public-rights gate,
+`npm run check:public-release`, which uses exit code **2** for missing
+public permissions.
+
+The automated `tests/verify-pack-cli.test.mjs` suite exercises the **actual
+CLI** with temporary synthetic assets, including clean packs, hidden extras,
+dangling symlinks, symlinked ancestors, mismatched case, tampered hashes,
+invalid flags and invalid manifest JSON. A passing CLI test does **not**
+authorize distribution of any repository artwork.
+
 Strict mode first performs the normal manifest verification and then scans
 the entire pack root. It fails if it finds:
 
