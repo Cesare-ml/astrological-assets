@@ -10,7 +10,12 @@ any integration.
 ## Generate the dependency/overlap report
 
 ```sh
+# Analyze the pinned snapshot (metadata only):
 node scripts/analyze-pr-integration.mjs docs/pr-integration-snapshot-2026-11-14.json
+
+# Compare with a *separately collected* fresh snapshot using the same schema:
+node scripts/analyze-pr-integration.mjs docs/pr-integration-snapshot-2026-11-14.json --current ./pr-snapshot-fresh.local.json
+
 node --test tests/analyze-pr-integration.test.mjs
 ```
 
@@ -19,9 +24,19 @@ GitHub API response*. The CLI uses local files only: it performs no GitHub
 calls, merge, branch mutation, writes or publishing. A malformed snapshot,
 unknown parent branch, dependency cycle, duplicate entry, unsafe path or
 missing file list fails closed (exit 1). Valid snapshots produce a JSON
-report including ordered PRs, direct dependencies and filename overlaps
-(exit 0). **Exit 0 means the metadata is internally consistent, not that
-a merge is safe.** Do not treat the printed order as authorization to merge.
+report including ordered PRs, **exact lowercase 40-digit head Git SHAs**, direct
+dependencies and filename overlaps (exit 0). When passed `--current`, it
+compares main and individual PR head SHAs, base/head branch names, draft
+status, changed-file sets, and PR additions/removals. It exits **2 on
+detected drift**, **1 on invalid snapshot/input**, **0 on a matching
+comparison**. Differences in file-list order or capture date alone do not
+mark a snapshot stale. The `--current` file must be captured independently
+from fresh GitHub data; merely copying the baseline proves nothing.
+
+**Exit 0 means only that the supplied metadata is internally consistent
+(and, if compared, matches the second supplied snapshot), not that
+either file is live or a merge is safe.** Do not treat the printed order
+as authorization to merge.
 
 ## Exact dependency chains
 
@@ -56,15 +71,18 @@ conflicts. The most common shared files are:
   workflow together even though the main implementation files differ.
 
 Important: this tool looks only at **identical changed filenames**. It
-cannot prove semantic compatibility, detect cross-file side effects, resolve
-merge conflicts, compare exact HEAD SHAs or evaluate third-party rights.
+cannot prove semantic compatibility, detect cross-file side effects,
+resolve merge conflicts, **authenticate the supplied head SHAs against
+live GitHub**, or evaluate third-party rights.
 
 ## Required review gates before any authorized integration
 
-1. Refresh the live PR listing, base/head branch names, head SHAs, draft
-   statuses and **changed file lists** from GitHub. Rebuild the JSON snapshot
-   deliberately and review the diff. Never rely on this static snapshot after
-   another agent pushes or merges.
+1. Refresh the live PR listing, base/head branch names, **exact head SHAs**,
+   draft statuses and changed-file lists from GitHub. Capture a new version-1
+   JSON snapshot with `headSha` on every PR, then run the `--current`
+   comparison and review its result. Rebuild the JSON deliberately;
+   do not copy the baseline into the current file. Never rely on this
+   static snapshot after another agent pushes or merges.
 2. Select one parent PR at a time, review its entire patch and run its focused
    tests. Where multiple PRs touch the same files, construct a **separate
    temporary integration branch** and reconcile the changes with human
