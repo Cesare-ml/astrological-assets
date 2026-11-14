@@ -4,7 +4,7 @@
 
 | Material | Intended license | Publication clearance |
 | --- | --- | --- |
-| Original tooling, scripts, tests and accompanying source documentation | [CPAL-1.0](../LICENSE), including VirgoStars attribution | On this preparation branch |
+| Original tooling, scripts, tests and accompanying source documentation | [CPAL-1.0](../LICENSE), including VirgoStars attribution | Public repository; retain CPAL obligations |
 | Original artistic contributions for which the owner has the necessary rights | **CC BY 4.0** | Owner decision recorded; **individual file clearances pending** |
 | Separately licensed fonts, glyphs, textures, maps and artwork | Their respective owners' terms | Must be reviewed or excluded |
 | Logos, trademarks and trade dress | Separate trademark rules | Not licensed by CC BY |
@@ -19,7 +19,7 @@ The **Powered by VirgoStars** attribution under the software CPAL license is ind
 
 ## Important limitation
 
-The owner has affirmed authorship of the images, but earlier project records describe image outputs generated using a font of uncertain licensing. No font binary is present in this repository. That does not prove that every image made using that font can be redistributed under CC BY 4.0. Images containing unreviewed third-party content must be excluded from a public release or the underlying rights must first be cleared.
+The owner has affirmed authorship of the images and identified the font used in some artwork as **Astro-SemiBold (`ASTRO-SE.TTF`)**. Its metadata, fingerprints and third-party provenance are documented in [font research](FONT_RIGHTS_RESEARCH.md), but its relevant license and glyph-output rights remain unverified. No font binary is present in this repository. That does not prove that every image made using that font can be redistributed under CC BY 4.0. Images containing unreviewed third-party content must be excluded from a public release or the underlying rights must first be cleared.
 
 **Do not interpret this owner-level license choice as a blanket technical approval of all 1,013 image binaries.** `catalog/publication-approvals.json` remains the authority for file-specific public redistribution clearance. That register is still empty. The preflight must remain blocked until each exact image hash has a specific third-party clearance record, or any non-clearable images have been removed from a separately audited public export.
 

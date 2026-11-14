@@ -2,7 +2,7 @@
 
 ## Private approval is not public distribution permission
 
-The initial inventory and approved image pack are **not automatically public-domain or open-source artwork**. `catalog/approvals.json` contains a project-owner attestation dated 2026-11-10 authorizing the existing 1,013 images for private collaborators only. That attestation includes images generated with a font whose licensing is unknown. The font files themselves are not in the pack. This does **not** establish public redistribution rights for the images or rights in the font.
+The initial inventory and approved image pack are **not automatically public-domain or open-source artwork**. `catalog/approvals.json` contains a project-owner attestation dated 2026-11-10 authorizing the existing 1,013 images for private collaborators only. That attestation includes images generated with a font whose licensing is unknown. The owner has subsequently identified that font as **Astro-SemiBold (`ASTRO-SE.TTF`)**, with exact file fingerprint and historical sources in [font research](FONT_RIGHTS_RESEARCH.md). The font files themselves are not in the pack. This does **not** establish public redistribution rights for the images or rights in the font.
 
 On 2026-11-12, the project owner also explicitly affirmed personal authorship of the images; see [owner-authored artwork declaration](OWNER_AUTHORSHIP_AND_ARTWORK.md). This resolves the authorship claim at the attestation level, but it does not license third-party font glyphs or itself select a public artwork license.
 

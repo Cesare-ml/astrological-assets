@@ -105,7 +105,7 @@ The release checker is a technical safeguard, not a substitute for provenance or
 
 > VirgoStars — Astrological Assets (original artwork by the project owner) · [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 
-CC BY 4.0 permits sharing and adaptations, including commercial use, **of material actually covered by that license**, subject to its terms (including attribution, a link to the license, and indication of changes). Some assets may incorporate font-derived glyphs or other materials whose rights are not yet established. Do not assume every file in this public repository has cleared those dependencies.
+CC BY 4.0 permits sharing and adaptations, including commercial use, **of material actually covered by that license**, subject to its terms (including attribution, a link to the license, and indication of changes). The owner has identified the historical glyph font used in some artwork as **Astro-SemiBold (`ASTRO-SE.TTF`)**; its redistribution and glyph-output terms are not yet established. See the [font provenance audit](docs/FONT_RIGHTS_RESEARCH.md). Do not assume every file in this public repository has cleared those dependencies.
 
 Read the [artwork licensing policy](docs/ARTWORK_LICENSING_POLICY.md), [rights review protocol](docs/RIGHTS_AND_REVIEW.md), and [open rights audit issue #2](https://github.com/Cesare-ml/astrological-assets/issues/2) before redistributing the image pack. Note that publicly accessible Git history can already have been cloned; deleting a file in a later commit does not retract earlier copies.
 
