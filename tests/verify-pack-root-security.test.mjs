@@ -121,3 +121,32 @@ test('accepts a mixed-case physical filename when the manifest uses its exact sp
   manifest.assets[0].path = physical;
   assert.deepEqual(verifyPack(root, manifest), { verified: 1, bytes: bytes.length });
 }));
+
+test('rejects manifest paths with canonical Unicode collisions', () => withSyntheticPack(({ root, manifest }) => {
+  const original=manifest.assets[0];
+  const alias={...original,path:original.path.toUpperCase()};
+  assert.throws(
+    () => verifyPack(root,{...manifest,assets:[original,alias]}),
+    /Duplicate or case-colliding asset|Missing image\/font|Non-canonical asset path spelling/,
+  );
+}));
+
+test('accepts an exact Unicode filename without normalizing the physical path', () => withSyntheticPack(({ root, manifest, bytes }) => {
+  const original=join(root,...manifest.assets[0].path.split('/'));
+  const path='img/simboli-bianchi/segni/étoile.png';
+  renameSync(original,join(root,...path.split('/')));
+  manifest.assets[0].path=path;
+  assert.deepEqual(verifyPack(root,manifest),{verified:1,bytes:bytes.length});
+}));
+
+test('rejects Unicode-normalization aliases instead of accepting equivalent file bytes', () => withSyntheticPack(({ root, manifest }) => {
+  const original=join(root,...manifest.assets[0].path.split('/'));
+  const nfc='img/simboli-bianchi/segni/étoile.png';
+  const nfd='img/simboli-bianchi/segni/e\u0301toile.png';
+  renameSync(original,join(root,...nfc.split('/')));
+  manifest.assets[0].path=nfd;
+  assert.throws(
+    () => verifyPack(root,manifest),
+    /Non-canonical asset path spelling|Missing image\/font/,
+  );
+}));
