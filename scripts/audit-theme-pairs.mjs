@@ -11,6 +11,15 @@ const FAMILIES = [
   { id: 'planet-circles', prefix: 'img/symbols/planets/' },
 ];
 const THEMES = ['light', 'dark'];
+// Theme families are renderer imagery, never font or data payloads.
+const IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg', '.avif']);
+
+function validateThemeImage(relativePath) {
+  const extension = relativePath.slice(relativePath.lastIndexOf('.')).toLowerCase();
+  if (!IMAGE_EXTENSIONS.has(extension))
+    throw new Error('Non-image chart theme asset: ' + relativePath);
+}
+
 // Independently pinned SHA-256 of the initial 49 family<TAB>relativePath<LF> pairs.
 // This locks the release-facing CLI against a modified required-baseline file.
 const PINNED_PAIR_COUNT = 49;
@@ -71,6 +80,7 @@ export function auditThemePairs(manifest, register, requiredPairs = null) {
       if (!THEMES.includes(theme))
         throw new Error('Unexpected chart theme directory: ' + path);
       const relativePath = checkedPath(remainder.slice(slashIndex + 1));
+      validateThemeImage(relativePath);
       byFamily.get(family.id)[theme].add(relativePath);
     }
   }
@@ -83,6 +93,7 @@ export function auditThemePairs(manifest, register, requiredPairs = null) {
     const family = FAMILIES.find(f => f.id === item.family);
     const relativePath = checkedPath(item.relativePath);
     checkedPath(family.prefix + item.only + '/' + relativePath);
+    validateThemeImage(relativePath);
     const key = item.family + '\0' + relativePath.normalize('NFC').toLowerCase();
     if (exceptions.has(key)) throw new Error('Duplicate theme exception: ' + relativePath);
     exceptions.set(key, item);
@@ -130,6 +141,7 @@ export function auditThemePairs(manifest, register, requiredPairs = null) {
       // Reuse importer type/path rules for both canonical consumer URLs.
       validateAssetPath(family.prefix + 'light/' + relativePath);
       validateAssetPath(family.prefix + 'dark/' + relativePath);
+      validateThemeImage(relativePath);
       const key = family.id + '\0' + relativePath.toLowerCase();
       if (seenRequired.has(key)) throw new Error('Duplicate or case-colliding required theme pair: ' + relativePath);
       seenRequired.add(key);
