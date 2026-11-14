@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Verifies a checked-out approved asset pack without the private VirgoStars repository.
 import { createHash } from 'node:crypto';
-import { lstatSync, readFileSync } from 'node:fs';
+import { lstatSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateAssetPath } from './import-approved-assets.mjs';
@@ -43,7 +43,8 @@ export function verifyPack(root, manifest) {
     const parts=item.path.split('/');
     let file=safeRoot;
     for(let index=0;index<parts.length;index++) {
-      file=join(file,parts[index]);
+      const parent=file;
+      file=join(parent,parts[index]);
       let info;
       try { info=lstatSync(file); }
       catch(error) {
@@ -51,6 +52,10 @@ export function verifyPack(root, manifest) {
         throw error;
       }
       if(info.isSymbolicLink()) throw new Error('Symlink forbidden: '+item.path);
+      // Case-insensitive filesystems may resolve a different spelling than
+      // the canonical URL recorded in the manifest. Require exact names.
+      if(!readdirSync(parent).includes(parts[index]))
+        throw new Error('Non-canonical asset path spelling: '+item.path);
       if(index<parts.length-1 && !info.isDirectory()) throw new Error('Parent is not a directory: '+item.path);
       if(index===parts.length-1 && !info.isFile()) throw new Error('Not a file: '+item.path);
     }
