@@ -137,21 +137,24 @@ export function auditThemePairs(manifest, register, requiredPairs = null) {
   }
   const verdict = emptyFamilies.length || missingCounterparts.length || staleExceptions.length ||
     missingRequiredPairs.length ? 'blocked' : 'verified';
-  return { schemaVersion: 1, families, emptyFamilies, approvedExceptions, missingCounterparts,
+  return { schemaVersion: 1, auditMode: requiredPairs === null ? 'parity-only' : 'required-baseline',
+    families, emptyFamilies, approvedExceptions, missingCounterparts,
     staleExceptions, missingRequiredPairs, verdict };
 }
 
 function main(args) {
-  const usage = 'Usage: node scripts/audit-theme-pairs.mjs --manifest <approved-assets.json> --exceptions <theme-pair-exceptions.json> [--required <required-theme-pairs.json>]';
-  if (args.length < 4 || args.length % 2) throw new Error(usage);
+  const usage = 'Usage: node scripts/audit-theme-pairs.mjs --manifest <approved-assets.json> --exceptions <theme-pair-exceptions.json> (--required <required-theme-pairs.json> | --parity-only yes)';
+  if (args.length < 6 || args.length % 2) throw new Error(usage);
   const flags = new Map();
   for (let index = 0; index < args.length; index += 2) {
     const name = args[index], value = args[index + 1];
-    if (!['--manifest', '--exceptions', '--required'].includes(name) ||
+    if (!['--manifest', '--exceptions', '--required', '--parity-only'].includes(name) ||
         !value || value.startsWith('--') || flags.has(name)) throw new Error(usage);
     flags.set(name, value);
   }
-  if (!flags.has('--manifest') || !flags.has('--exceptions')) throw new Error(usage);
+  if (!flags.has('--manifest') || !flags.has('--exceptions') ||
+      flags.has('--required') === flags.has('--parity-only') ||
+      (flags.has('--parity-only') && flags.get('--parity-only') !== 'yes')) throw new Error(usage);
   const manifest = JSON.parse(readFileSync(flags.get('--manifest'), 'utf8'));
   const register = JSON.parse(readFileSync(flags.get('--exceptions'), 'utf8'));
   const required = flags.has('--required') ?
