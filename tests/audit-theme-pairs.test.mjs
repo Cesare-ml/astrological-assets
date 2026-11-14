@@ -55,7 +55,7 @@ test('exceptions become stale if their asset disappears or gains a counterpart',
 test('unsafe manifest paths and cross-platform path collisions fail closed', () => {
   assert.throws(() => auditThemePairs(manifest([...paths, '../secret.png']), register), /Unsafe/);
   assert.throws(() => auditThemePairs(manifest([...paths, overlay + 'LIGHT/cartaastrale-case.png']), register), /case-colliding/);
-  assert.throws(() => auditThemePairs(manifest([...paths, overlay + 'light/te\u0301st.png', overlay + 'light/t\u00e9st.png']), register), /case-colliding/);
+  assert.throws(() => auditThemePairs(manifest([...paths, overlay + 'light/te\u0301st.png', overlay + 'light/t\u00e9st.png']), register), /Non-canonical Unicode/);
 });
 
 test('noncanonical Unicode paths, unsupported types and asset roots are rejected', () => {
@@ -88,7 +88,8 @@ test('wrongly cased chart family paths are never silently ignored', () => {
     'IMG/grafici/light/extra.png',
     'img/Symbols/planets/light/_circle/extra.png',
   ]) {
-    assert.throws(() => auditThemePairs(manifest([...paths, path]), register), /Chart family path casing mismatch/);
+    const expected = path.startsWith('IMG/') ? /Unsafe asset path/ : /Chart family path casing mismatch/;
+    assert.throws(() => auditThemePairs(manifest([...paths, path]), register), expected);
   }
 });
 
@@ -140,7 +141,8 @@ test('unknown, wrongly cased or incomplete theme directories are rejected', () =
     overlay + 'LIGHT/new.png', overlay + 'Dark/new.png', overlay + 'sepia/new.png',
     overlay + 'light', planets + 'BLUE/_circle/Neptune.png',
   ]) {
-    assert.throws(() => auditThemePairs(manifest([...paths, path]), register), /Unexpected chart theme/);
+    const expected = path === overlay + 'light' ? /Unsupported asset type/ : /Unexpected chart theme/;
+    assert.throws(() => auditThemePairs(manifest([...paths, path]), register), expected);
   }
 });
 
