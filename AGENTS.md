@@ -2,6 +2,10 @@
 
 **Current state: public repository; original asset rights review remains incomplete.** The original code/tooling uses CPAL-1.0. Images have only private-sharing permission; public release is blocked pending independent rights review.
 
+## VirgoStars agent fleet (owner authorization 2026-11-14)
+
+Chats started with the VirgoStars fleet prompt follow [`AGENT_START.md`](https://github.com/Cesare-ml/virgostars-development-orchestrator/blob/main/AGENT_START.md) and the entry for `Cesare-ml/astrological-assets` in [`config/agent-fleet.json`](https://github.com/Cesare-ml/virgostars-development-orchestrator/blob/main/config/agent-fleet.json). For those agents, the runbook's merge gate is the owner's authorization to merge qualifying PRs, and `ci_allowed` there governs adding read-only CI. Every other rule in this file still applies.
+
 ## Non-negotiable rules
 
 1. Work in English in all source code, documentation, issues, PR titles and descriptions.
