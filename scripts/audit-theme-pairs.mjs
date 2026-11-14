@@ -32,13 +32,16 @@ export function auditThemePairs(manifest, register) {
     if (foldedPaths.has(folded)) throw new Error('Duplicate or case-colliding manifest path: ' + path);
     foldedPaths.add(folded);
     for (const family of FAMILIES) {
-      for (const theme of THEMES) {
-        const prefix = family.prefix + theme + '/';
-        if (path.startsWith(prefix)) {
-          const relativePath = checkedPath(path.slice(prefix.length));
-          byFamily.get(family.id)[theme].add(relativePath);
-        }
-      }
+      if (!path.startsWith(family.prefix)) continue;
+      const remainder = path.slice(family.prefix.length);
+      const slashIndex = remainder.indexOf('/');
+      if (slashIndex < 1 || slashIndex === remainder.length - 1)
+        throw new Error('Unexpected chart theme path: ' + path);
+      const theme = remainder.slice(0, slashIndex);
+      if (!THEMES.includes(theme))
+        throw new Error('Unexpected chart theme directory: ' + path);
+      const relativePath = checkedPath(remainder.slice(slashIndex + 1));
+      byFamily.get(family.id)[theme].add(relativePath);
     }
   }
 
@@ -59,8 +62,10 @@ export function auditThemePairs(manifest, register) {
   const missingCounterparts = [];
   const approvedExceptions = [];
   const families = [];
+  const emptyFamilies = [];
   for (const family of FAMILIES) {
     const modes = byFamily.get(family.id);
+    if (!modes.light.size || !modes.dark.size) emptyFamilies.push(family.id);
     let pairedCount = 0;
     for (const relativePath of sorted(new Set([...modes.light, ...modes.dark]))) {
       const hasLight = modes.light.has(relativePath), hasDark = modes.dark.has(relativePath);
@@ -83,8 +88,8 @@ export function auditThemePairs(manifest, register) {
     const entry = exceptions.get(key);
     return { family: entry.family, relativePath: entry.relativePath, only: entry.only };
   });
-  const verdict = missingCounterparts.length || staleExceptions.length ? 'blocked' : 'verified';
-  return { schemaVersion: 1, families, approvedExceptions, missingCounterparts, staleExceptions, verdict };
+  const verdict = emptyFamilies.length || missingCounterparts.length || staleExceptions.length ? 'blocked' : 'verified';
+  return { schemaVersion: 1, families, emptyFamilies, approvedExceptions, missingCounterparts, staleExceptions, verdict };
 }
 
 function main(args) {
