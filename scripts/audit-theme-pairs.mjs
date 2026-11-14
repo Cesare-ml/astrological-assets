@@ -3,6 +3,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { validateAssetPath } from './import-approved-assets.mjs';
 
 const FAMILIES = [
   { id: 'chart-overlays', prefix: 'img/grafici/' },
@@ -15,6 +16,8 @@ function checkedPath(path) {
   if (typeof path !== 'string' || !path || path.startsWith('/') || path.includes('\\') ||
       /[\x00-\x1f\x7f]/.test(path) || path.split('/').some(part => !part || part === '.' || part === '..' || part.includes(':')))
     throw new Error('Unsafe asset path: ' + String(path));
+  if (path !== path.normalize('NFC'))
+    throw new Error('Non-canonical Unicode asset path: ' + path);
   for (const segment of path.split('/')) {
     if (/[<>:"|?*]/.test(segment) || /[. ]$/.test(segment) ||
         /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(segment))
@@ -32,7 +35,7 @@ export function auditThemePairs(manifest, register) {
   const byFamily = new Map(FAMILIES.map(f => [f.id, { light: new Set(), dark: new Set() }]));
   const foldedPaths = new Set();
   for (const record of manifest.assets) {
-    const path = checkedPath(record?.path);
+    const path = validateAssetPath(checkedPath(record?.path));
     const folded = path.normalize('NFC').toLowerCase();
     if (foldedPaths.has(folded)) throw new Error('Duplicate or case-colliding manifest path: ' + path);
     foldedPaths.add(folded);
