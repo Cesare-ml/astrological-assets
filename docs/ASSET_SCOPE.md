@@ -33,3 +33,37 @@ The upstream renderer references `img/risuonatore-solare-bianco.png`, but the sn
 Some skins reuse identical binary files at different paths. Git stores identical content blobs efficiently, but those distinct paths can still be necessary for existing runtime URL compatibility. Do not collapse paths unless renderer/frontend references are deliberately migrated and tested.
 
 The new repository is **not yet the deployed source of truth**.
+
+## Refreshing source metadata without overwriting the pinned catalog
+
+The refresh tool reads the **committed Git tree** in an authorized local checkout
+of `Cesare-ml/virgo-stars`. No artwork is copied or uploaded and the resulting
+candidate metadata does not grant distribution or public rights.
+
+```sh
+# Read-only inspection (default):
+npm run catalog:refresh -- --repo ../virgo-stars
+
+# Create a new Git-ignored local snapshot, refusing existing files:
+npm run catalog:refresh -- --repo ../virgo-stars --write --out ./upstream-candidates.local.json
+
+# Inspect and audit the snapshot before any manual change to the tracked catalog:
+npm run audit:catalog -- ./upstream-candidates.local.json
+```
+
+The output **must end in `.local.json`** and is exclusively created (never
+overwritten), with owner-only permissions on POSIX systems. The command blocks
+symlink/junction output ancestors, missing parent directories, protected
+repository directories and any output inside the source VirgoStars checkout.
+A local `.tmp/` directory is also suitable if it already exists. Do not
+put rights evidence, credentials or private chart data into the snapshot.
+
+A successful audit verifies **metadata consistency**, not image integrity,
+provenance rights, redistribution permission or consumer compatibility.
+To update `catalog/upstream-candidates.json`, review the difference and
+perform a separate, deliberate tracked change through a normal PR, then
+rerun `npm test` and `npm run audit:catalog`. Do not auto-sync the
+snapshot to production, approval registers or release artifacts.
+
+These filesystem checks assume a trusted local workspace; they do not
+eliminate concurrent directory replacement races.
