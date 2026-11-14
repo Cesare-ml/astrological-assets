@@ -57,7 +57,14 @@ Never merge a stacked child directly into `main` ahead of its parent.
 
 The snapshot analyzer reports **110 independent PR pairs with one or more
 matching paths**. These are *potential overlap warnings*, not Git textual
-conflicts. The most common shared files are:
+conflicts. The analyzer also reports **`caseVariantOverlaps`** separately:
+independent PRs touching paths such as `img/Icon.png` and `img/icon.png`
+may collide in case-insensitive Windows/offline deployments even when Git
+considers the paths different. The snapshot of the original 22 PRs has **0**
+case-variant pairs; nine real Node.js regressions exercise synthetic examples,
+including NFC Unicode. A single PR containing two case-folded path aliases
+is rejected as invalid input. Neither report proves a merge conflict.
+The most common shared files are:
 
 - `README.md` and `package.json`: numerous independently developed
   commands and installation instructions. Compare combined script entries
