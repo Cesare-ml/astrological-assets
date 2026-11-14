@@ -232,9 +232,12 @@ test('CLI refuses implicit parity-only verification or conflicting modes', () =>
       assert.equal(result.status, 1, JSON.stringify(bad));
       assert.match(result.stderr, /Usage:/);
     }
-    const required = run('--required', requiredFile);
+    const required = run('--fixture-required', requiredFile);
     assert.equal(required.status, 0);
-    assert.equal(JSON.parse(required.stdout).auditMode, 'required-baseline');
+    assert.equal(JSON.parse(required.stdout).auditMode, 'fixture-baseline');
+    const unpinned = run('--required', requiredFile);
+    assert.equal(unpinned.status, 1);
+    assert.match(unpinned.stderr, /Pinned theme baseline mismatch/);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
@@ -244,7 +247,7 @@ test('CLI required inventory flags loss of both chart theme files', () => {
   const requiredFile = join(dir, 'required.json');
   const run = () => spawnSync(process.execPath, [
     join(repo, 'scripts/audit-theme-pairs.mjs'),
-    '--manifest', manifestFile, '--exceptions', exceptionsFile, '--required', requiredFile,
+    '--manifest', manifestFile, '--exceptions', exceptionsFile, '--fixture-required', requiredFile,
   ], { encoding: 'utf8' });
   const extended = [...paths, overlay + 'light/asse-as.png', overlay + 'dark/asse-as.png'];
   try {
@@ -260,6 +263,46 @@ test('CLI required inventory flags loss of both chart theme files', () => {
     assert.equal(JSON.parse(blocked.stdout).missingRequiredPairs.length, 1);
     writeFileSync(requiredFile, '{malformed');
     assert.equal(run().status, 1);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('release CLI rejects a substituted 49-pair baseline even when its count is unchanged', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'theme-release-pin-'));
+  const manifestFile = join(dir, 'manifest.json');
+  const exceptionsFile = join(dir, 'exceptions.json');
+  const requiredFile = join(dir, 'required.json');
+  const canonical = JSON.parse(readFileSync(join(repo, 'manifests/required-theme-pairs.json'), 'utf8'));
+  const run = () => spawnSync(process.execPath, [
+    join(repo, 'scripts/audit-theme-pairs.mjs'),
+    '--manifest', manifestFile, '--exceptions', exceptionsFile,
+    '--required', requiredFile,
+  ], { encoding: 'utf8' });
+  const familyPrefix = { 'chart-overlays': overlay, 'planet-circles': planets };
+  const complete = [
+    ...canonical.pairs.flatMap(({ family, relativePath }) => [
+      familyPrefix[family] + 'light/' + relativePath,
+      familyPrefix[family] + 'dark/' + relativePath,
+    ]),
+    overlay + 'light/texture-carta-panna.png',
+  ];
+  try {
+    writeFileSync(manifestFile, JSON.stringify(manifest(complete)));
+    writeFileSync(exceptionsFile, JSON.stringify(register));
+    writeFileSync(requiredFile, JSON.stringify(canonical));
+    const accepted = run();
+    assert.equal(accepted.status, 0, accepted.stderr);
+    assert.equal(JSON.parse(accepted.stdout).auditMode, 'required-baseline');
+    const changed = { ...canonical, pairs: canonical.pairs.map((pair, i) =>
+      i === 0 ? { ...pair, relativePath: 'substituted-but-49.png' } : pair) };
+    // Supply both variants of the substituted name, so only the independent
+    // baseline pin detects the otherwise self-consistent inventory.
+    const replaced = complete.filter(path => !path.endsWith(canonical.pairs[0].relativePath));
+    replaced.push(overlay + 'light/substituted-but-49.png', overlay + 'dark/substituted-but-49.png');
+    writeFileSync(manifestFile, JSON.stringify(manifest(replaced)));
+    writeFileSync(requiredFile, JSON.stringify(changed));
+    const rejected = run();
+    assert.equal(rejected.status, 1);
+    assert.match(rejected.stderr, /Pinned theme baseline mismatch/);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
