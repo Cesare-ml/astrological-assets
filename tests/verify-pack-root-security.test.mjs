@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { verifyPack } from '../scripts/verify-pack.mjs';
 
 function withSyntheticPack(callback) {
-  const dir = mkdtempSync(join(tmpdir(), 'astro-verify-root-'));
+  const dir = realpathSync(mkdtempSync(join(tmpdir(), 'astro-verify-root-')));
   const root = join(dir, 'real', 'assets');
   const path = 'img/simboli-bianchi/segni/01.png';
   const bytes = Buffer.from('synthetic fixture: no production artwork');
