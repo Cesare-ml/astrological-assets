@@ -27,9 +27,24 @@ the entire pack root. It fails if it finds:
 - two entries whose normalized, case-folded paths collide (important when
   moving from Linux to Windows or macOS).
 
-The pack root itself must also be a real directory, not a symlink, in either
-mode. An empty directory is harmless. The scan reads files and directory
-metadata; it never deletes, publishes, relabels or rewrites any asset.
+The pack root **and every ancestor directory** must be real directories,
+not symlinks or junctions, in both default and strict modes. This also
+rejects blank roots and intermediate files used as directories. The normal
+manifest walk uses `lstat` on each path component, so even a dangling
+manifest-listed symlink is identified as a link rather than mistaken for
+a missing file. Strict mode continues to reject unexpected files, case
+collisions and dangling links outside the manifest. An empty directory is
+harmless.
+
+**Integration note:** this branch is intentionally stacked on PR #10, bringing
+the root security behavior of independent PR #33 together with its optional
+strict-closure mode. Reviewers must reconcile PR #33 before merging either
+patch into `main`; do not apply both versions of `scripts/verify-pack.mjs`
+by overwriting one with the other. Both feature sets have regression tests.
+The scan reads files and directory metadata; it never deletes, publishes,
+relabels or rewrites any asset. The checks assume a trusted, non-concurrently
+mutated checkout and do not prevent a local attacker swapping directories
+during verification.
 
 Use a clean staging directory when building a distributable pack. If strict
 mode fails, review the unexpected files or paths; **do not add them to the
