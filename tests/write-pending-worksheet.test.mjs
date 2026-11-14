@@ -13,8 +13,8 @@ const worksheet = {
 
 function withFixture(run) {
   const root = mkdtempSync(join(tmpdir(), 'astro-public-review-'));
-  mkdirSync(join(root, 'catalog'));
-  mkdirSync(join(root, 'public'));
+  for (const folder of ['.git', 'catalog', 'docs', 'manifests', 'public', 'scripts', 'tests'])
+    mkdirSync(join(root, folder));
   mkdirSync(join(root, 'private-reports'));
   try { return run(root); }
   finally { rmSync(root, { recursive: true, force: true }); }
@@ -37,7 +37,7 @@ test('allows a new file in an existing private output directory', () => withFixt
 }));
 
 test('rejects outputs in asset and authoritative register directories', () => withFixture(root => {
-  for (const folder of ['catalog', 'public']) {
+  for (const folder of ['.git', 'catalog', 'docs', 'manifests', 'public', 'scripts', 'tests']) {
     assert.throws(() => save(root, join(root, folder, 'review.local.json')), /forbidden/);
   }
 }));
