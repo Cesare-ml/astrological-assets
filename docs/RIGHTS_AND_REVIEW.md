@@ -43,3 +43,28 @@ The generated entries are **pending**; humans must evaluate them. The generator 
 `scripts/check-public-release.mjs` checks for explicit public-permission records that match **exact current-pack SHA-256s** and reports missing or inconsistent entries. It also detects unlisted files in the asset tree. A passing check is a necessary technical gate but cannot establish legal rights by itself.
 
 **Crucial:** The repository is already public as of 2026-11-12. Its reachable history and images may already have been copied. Deleting or replacing an image now does not undo earlier exposure. Promptly escalate any identified third-party or sensitive material to the owner; a fresh history may reduce future exposure but cannot undo existing clones or caches.
+
+## Local public-rights worksheet output safety
+
+Generate a **pending-only** worksheet for manual review with:
+
+```sh
+npm run review:public -- --out ./artwork-review.local.json
+```
+
+The output must end in `.local.json`. The command exclusively creates a new file
+(no overwriting an existing file or following an existing output symlink), rejects
+symlinked/junction ancestors and missing parent directories, and refuses outputs
+inside the repository's `catalog/`, `manifests/`, `public/`, `docs/`, `scripts/`,
+`tests/` and `.git/` directories. A root-level ignored `.local.json` file or a
+separately maintained private workspace directory is allowed. On POSIX systems
+new worksheets are created with owner-only file permissions (subject to the
+operating system's filesystem semantics).
+
+The worksheet can **only** contain records marked `pending` with
+`permissionScope: "not-yet-granted"`. It never updates
+`catalog/publication-approvals.json` or grants redistribution rights. A manual
+rights review, evidence and owner authorization are still required. Keep the
+worksheet private; do not commit it or use the command in an unattended public
+artifact pipeline. Filesystem checks are not an atomic defense against an
+adversary concurrently changing directories; use a trusted local workspace.
