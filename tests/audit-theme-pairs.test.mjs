@@ -58,6 +58,14 @@ test('unsafe manifest paths and cross-platform path collisions fail closed', () 
   assert.throws(() => auditThemePairs(manifest([...paths, overlay + 'light/te\u0301st.png', overlay + 'light/t\u00e9st.png']), register), /case-colliding/);
 });
 
+test('Windows-incompatible asset names are rejected before offline integration', () => {
+  for (const name of ['CON.png', 'aux.png', 'COM1.png', 'Lpt9.png',
+    'planet?.png', 'planet*.png', 'planet|x.png', 'planet .png.']) {
+    const attempted = manifest([...paths, overlay + 'light/' + name]);
+    assert.throws(() => auditThemePairs(attempted, register), /Windows-incompatible/);
+  }
+});
+
 test('pending and incomplete approved-manifest metadata cannot pass', () => {
   const baseline = manifest(paths);
   for (const patch of [
