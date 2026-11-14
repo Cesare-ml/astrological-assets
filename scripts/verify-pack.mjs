@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Verifies a checked-out approved asset pack without the private VirgoStars repository.
 import { createHash } from 'node:crypto';
-import { existsSync, lstatSync, readFileSync } from 'node:fs';
+import { lstatSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateAssetPath } from './import-approved-assets.mjs';
@@ -42,12 +42,18 @@ export function verifyPack(root, manifest) {
         throw new Error('Missing approval metadata '+field+' for '+item.path);
     const parts=item.path.split('/');
     let file=safeRoot;
-    for(const part of parts) {
-      file=join(file,part);
-      if(!existsSync(file)) throw new Error('Missing image/font: '+item.path);
-      if(lstatSync(file).isSymbolicLink()) throw new Error('Symlink forbidden: '+item.path);
+    for(let index=0;index<parts.length;index++) {
+      file=join(file,parts[index]);
+      let info;
+      try { info=lstatSync(file); }
+      catch(error) {
+        if(error.code==='ENOENT') throw new Error('Missing image/font: '+item.path);
+        throw error;
+      }
+      if(info.isSymbolicLink()) throw new Error('Symlink forbidden: '+item.path);
+      if(index<parts.length-1 && !info.isDirectory()) throw new Error('Parent is not a directory: '+item.path);
+      if(index===parts.length-1 && !info.isFile()) throw new Error('Not a file: '+item.path);
     }
-    if(!lstatSync(file).isFile()) throw new Error('Not a file: '+item.path);
     const body=readFileSync(file);
     if(body.length!==item.bytes || createHash('sha256').update(body).digest('hex')!==item.sha256)
       throw new Error('Checksum mismatch: '+item.path);
