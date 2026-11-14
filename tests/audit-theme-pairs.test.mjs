@@ -91,6 +91,24 @@ test('URL-ambiguous manifest paths and exception filenames fail closed for Chart
   }
 });
 
+test('chart theme families, exceptions and required pairs reject font or data formats', () => {
+  const nonImageNames = ['new.woff2', 'new.ttf', 'new.otf'];
+  for (const name of nonImageNames) {
+    for (const prefix of [overlay, planets]) {
+      assert.throws(() => auditThemePairs(manifest([...paths, prefix + 'light/' + name]), register),
+        /Non-image chart theme asset/);
+    }
+    assert.throws(() => auditThemePairs(manifest(paths), {
+      schemaVersion: 1, exceptions: [{ ...register.exceptions[0], relativePath: name }],
+    }), /Non-image chart theme asset/);
+    assert.throws(() => auditThemePairs(manifest(paths), register, {
+      schemaVersion: 1, pairs: [{ family: 'chart-overlays', relativePath: name }],
+    }), /Non-image chart theme asset/);
+  }
+  const graphic = manifest([...paths, overlay + 'light/next.webp', overlay + 'dark/next.webp']);
+  assert.equal(auditThemePairs(graphic, register).verdict, 'verified');
+});
+
 test('Windows-incompatible asset names are rejected before offline integration', () => {
   for (const name of ['CON.png', 'aux.png', 'COM1.png', 'Lpt9.png',
     'planet?.png', 'planet*.png', 'planet|x.png', 'planet .png.']) {
