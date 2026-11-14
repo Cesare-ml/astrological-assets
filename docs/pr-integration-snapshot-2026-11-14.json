@@ -14,7 +14,8 @@
         "docs/ARTWORK_LICENSING_POLICY.md",
         "docs/FONT_RIGHTS_RESEARCH.md",
         "docs/RIGHTS_AND_REVIEW.md"
-      ]
+      ],
+      "headSha": "82d4120dbc296b3b5d5ea657eb8913ef4cb90725"
     },
     {
       "number": 9,
@@ -39,7 +40,8 @@
         "specs/virgostars-astro.v0.json",
         "tests/astro-spec.test.mjs",
         "tests/test_private_font_validator.py"
-      ]
+      ],
+      "headSha": "047c38f0269d9a35d050c1d0d0340cb6321fbcc3"
     },
     {
       "number": 10,
@@ -51,7 +53,8 @@
         "docs/PUBLIC_RELEASE_CHECKLIST.md",
         "scripts/verify-pack.mjs",
         "tests/verify-pack-strict.test.mjs"
-      ]
+      ],
+      "headSha": "7f219c21aa6fcf4859810271794f5ebe690ac6f8"
     },
     {
       "number": 11,
@@ -66,7 +69,8 @@
         "docs/ROADMAP.md",
         "scripts/create-private-font-specimen.py",
         "tests/test_private_font_specimen.py"
-      ]
+      ],
+      "headSha": "0a940815515225828f6c816e347ad98d2042e0ff"
     },
     {
       "number": 12,
@@ -78,7 +82,8 @@
         "scripts/prepare-review.mjs",
         "tests/prepare-review-cli.test.mjs",
         "tests/prepare-review-family.test.mjs"
-      ]
+      ],
+      "headSha": "bffcc8a9bfb546eeec249836ff3250e591b23727"
     },
     {
       "number": 13,
@@ -90,7 +95,8 @@
         "scripts/check-web-asset-collisions.mjs",
         "scripts/write-collision-report.mjs",
         "tests/write-collision-report.test.mjs"
-      ]
+      ],
+      "headSha": "a931b2fb5950f5d4d7f45ff1c4a052cc98d8d87b"
     },
     {
       "number": 14,
@@ -103,7 +109,8 @@
         "package.json",
         "scripts/check-consumer-assets.mjs",
         "tests/check-consumer-assets.test.mjs"
-      ]
+      ],
+      "headSha": "3644a1e79e8105be1c1fbaeadde5b0218fc179bb"
     },
     {
       "number": 15,
@@ -116,7 +123,8 @@
         "package.json",
         "scripts/check-raster-headers.mjs",
         "tests/check-raster-headers.test.mjs"
-      ]
+      ],
+      "headSha": "b284c97e60c845092272252e387ba8b22052fc6e"
     },
     {
       "number": 16,
@@ -127,7 +135,8 @@
         "docs/MIGRATION_PLAN.md",
         "scripts/check-build-output.mjs",
         "tests/check-build-output-root.test.mjs"
-      ]
+      ],
+      "headSha": "b7f11f408d6ee29e65580cea455bc44fd7183b82"
     },
     {
       "number": 17,
@@ -140,7 +149,8 @@
         "package.json",
         "scripts/create-consumer-lock.mjs",
         "tests/create-consumer-lock.test.mjs"
-      ]
+      ],
+      "headSha": "391c6d18ef8f47fec2123c2b4fc2ff0cc46ac3bb"
     },
     {
       "number": 18,
@@ -153,7 +163,8 @@
         "package.json",
         "scripts/compare-manifests.mjs",
         "tests/compare-manifests.test.mjs"
-      ]
+      ],
+      "headSha": "c39d67fa1d38d000c165c8c35d354418729719df"
     },
     {
       "number": 19,
@@ -165,7 +176,8 @@
         "docs/ASSET_FOOTPRINT.md",
         "scripts/report-asset-footprint.mjs",
         "tests/report-asset-footprint.test.mjs"
-      ]
+      ],
+      "headSha": "57a5508d92ddee563396be70343085df0b4f56fa"
     },
     {
       "number": 20,
@@ -178,7 +190,8 @@
         "scripts/write-pending-worksheet.mjs",
         "tests/publication-review-cli.test.mjs",
         "tests/write-pending-worksheet.test.mjs"
-      ]
+      ],
+      "headSha": "d15ef4ef95fb5705676c65c090073232ebc8ab6b"
     },
     {
       "number": 21,
@@ -192,7 +205,8 @@
         "package.json",
         "scripts/audit-theme-pairs.mjs",
         "tests/audit-theme-pairs.test.mjs"
-      ]
+      ],
+      "headSha": "3585821e169f912220cffe705f4af3bf14fb5bd3"
     },
     {
       "number": 22,
@@ -205,7 +219,8 @@
         "package.json",
         "scripts/plan-review-shards.mjs",
         "tests/plan-review-shards.test.mjs"
-      ]
+      ],
+      "headSha": "ad555cea8e2fa0d75cc0e5b68e506d1fa025e10d"
     },
     {
       "number": 23,
@@ -219,7 +234,8 @@
         "scripts/write-local-catalog-snapshot.mjs",
         "tests/refresh-source-catalog-cli.test.mjs",
         "tests/write-local-catalog-snapshot.test.mjs"
-      ]
+      ],
+      "headSha": "2e573c45c0ab360e9f89bb5e7cf8cbf85a99bf76"
     },
     {
       "number": 24,
@@ -232,7 +248,8 @@
         "scripts/audit-catalog.mjs",
         "tests/catalog-provenance.test.mjs",
         "tests/catalog.test.mjs"
-      ]
+      ],
+      "headSha": "238e46a84df0632cfcb0710d3bed2f5892fc98ac"
     },
     {
       "number": 25,
@@ -244,7 +261,8 @@
         "package.json",
         "scripts/validate-agent-results.mjs",
         "tests/validate-agent-results.test.mjs"
-      ]
+      ],
+      "headSha": "6a0a1b251f94ae9cb24c8c25bdc56f3cee9af6c1"
     },
     {
       "number": 26,
@@ -256,7 +274,8 @@
         "scripts/check-public-release.mjs",
         "tests/public-release-cli.test.mjs",
         "tests/public-release.test.mjs"
-      ]
+      ],
+      "headSha": "e6c8cf7bc17b3806f15bc3d038a722b3ed6cd33b"
     },
     {
       "number": 27,
@@ -269,7 +288,8 @@
         "package.json",
         "scripts/reconcile-agent-assignments.mjs",
         "tests/reconcile-agent-assignments.test.mjs"
-      ]
+      ],
+      "headSha": "fa577cec3e60b8264095d78d4c7cd52a3cbfa784"
     },
     {
       "number": 28,
@@ -281,7 +301,8 @@
         "docs/ORCHESTRATOR_ASSIGNMENT_RECONCILIATION.md",
         "scripts/reconcile-agent-assignments.mjs",
         "tests/reconcile-agent-assignments.test.mjs"
-      ]
+      ],
+      "headSha": "f4e5fa2f333ec31324583553aad6ee7e24558e06"
     },
     {
       "number": 29,
@@ -294,7 +315,8 @@
         "schemas/asset-agent-review-assignment-snapshot-v1.schema.json",
         "schemas/asset-agent-review-results-v1.schema.json",
         "tests/agent-review-interop-schemas.test.mjs"
-      ]
+      ],
+      "headSha": "4b67e7ed142bae0fb666f0a7d5e854b3799355d2"
     }
   ]
 }
