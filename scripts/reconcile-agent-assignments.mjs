@@ -26,7 +26,9 @@ function requireKeys(value, keys, label) {
  * snapshot. A syntactically valid snapshot alone is NOT proof of authenticity.
  * Assignment IDs must never be reused when the coordinator reassigns a shard.
  */
-export function reconcileAgentAssignments(manifest, manifestSha256, batch, snapshot) {
+export function reconcileAgentAssignments(manifest, manifestSha256, batch, snapshot, expectedLedgerCommitSha) {
+  if (typeof expectedLedgerCommitSha !== 'string' || !SHA1.test(expectedLedgerCommitSha))
+    throw new Error('An independently verified ledger commit SHA is required');
   // First apply the existing full, fail-closed manifest and worklist checks.
   const results = validateAgentResults(manifest, manifestSha256, batch);
   requireKeys(snapshot, [
@@ -41,6 +43,8 @@ export function reconcileAgentAssignments(manifest, manifestSha256, batch, snaps
       !SHA1.test(snapshot.ledgerCommitSha || '') ||
       !Array.isArray(snapshot.assignments))
     throw new Error('Stale or invalid assignment snapshot');
+  if (snapshot.ledgerCommitSha !== expectedLedgerCommitSha)
+    throw new Error('Assignment snapshot differs from independently pinned ledger commit');
   requireKeys(snapshot.source, ['repository', 'commit', 'assetRoot'], 'snapshot source');
   for (const key of ['repository', 'commit', 'assetRoot'])
     if (snapshot.source[key] !== manifest.source[key])
@@ -104,16 +108,16 @@ export function reconcileAgentAssignments(manifest, manifestSha256, batch, snaps
 }
 
 function parseArgs(args) {
-  if (args.length !== 6)
-    throw new Error('Usage: node scripts/reconcile-agent-assignments.mjs --manifest manifest.json --results results.json --assignments assignments.json');
+  if (args.length !== 8)
+    throw new Error('Usage: node scripts/reconcile-agent-assignments.mjs --manifest manifest.json --results results.json --assignments assignments.json --expected-ledger-commit SHA1');
   const opts = new Map();
   for (let i = 0; i < args.length; i += 2) {
-    if (!['--manifest', '--results', '--assignments'].includes(args[i]) ||
+    if (!['--manifest', '--results', '--assignments', '--expected-ledger-commit'].includes(args[i]) ||
         opts.has(args[i]) || !args[i + 1])
       throw new Error('Duplicate, unknown or missing CLI option');
     opts.set(args[i], args[i + 1]);
   }
-  if (opts.size !== 3) throw new Error('All three input files are required');
+  if (opts.size !== 4) throw new Error('All three input files and a trusted ledger commit pin are required');
   return opts;
 }
 
@@ -124,7 +128,7 @@ function main() {
   const manifest = JSON.parse(rawManifest.toString('utf8'));
   const batch = JSON.parse(readFileSync(opts.get('--results'), 'utf8'));
   const snapshot = JSON.parse(readFileSync(opts.get('--assignments'), 'utf8'));
-  const report = reconcileAgentAssignments(manifest, manifestSha256, batch, snapshot);
+  const report = reconcileAgentAssignments(manifest, manifestSha256, batch, snapshot, opts.get('--expected-ledger-commit'));
   console.log(JSON.stringify(report, null, 2));
   if (report.requiresFollowUp) process.exitCode = 2;
 }
