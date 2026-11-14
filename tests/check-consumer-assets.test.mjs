@@ -90,3 +90,41 @@ test('CLI uses exit 0 verified, 2 blocked, and 1 invalid', () => fixture(({ fold
   writeFileSync(requestsFile, '{bad json');
   assert.equal(exec().status, 1);
 }));
+
+test('Charts selection array works directly with --selection and --consumer', () => fixture(({ folder, root, manifest }) => {
+  const script = fileURLToPath(new URL('../scripts/check-consumer-assets.mjs', import.meta.url));
+  const manifestFile = join(folder, 'manifest.json'), selectionFile = join(folder, 'selection.json');
+  writeFileSync(manifestFile, JSON.stringify(manifest));
+  writeFileSync(selectionFile, JSON.stringify([asset]));
+  const base = ['--root', root, '--manifest', manifestFile];
+  const run = (...extra) => spawnSync(process.execPath, [script, ...extra, ...base], { encoding: 'utf8' });
+  const ok = run('--consumer', 'AstrologicalCharts', '--selection', selectionFile);
+  assert.equal(ok.status, 0, ok.stderr);
+  assert.equal(JSON.parse(ok.stdout).consumer, 'AstrologicalCharts');
+  writeFileSync(selectionFile, JSON.stringify([asset, 'img/missing.png']));
+  const blocked = run('--selection', selectionFile, '--consumer', 'AstrologicalCharts');
+  assert.equal(blocked.status, 2);
+  assert.deepEqual(JSON.parse(blocked.stdout).missingFromManifest, ['img/missing.png']);
+}));
+
+test('CLI rejects ambiguous modes, missing consumer and non-array selection', () => fixture(({ folder, root, manifest, requirements }) => {
+  const script = fileURLToPath(new URL('../scripts/check-consumer-assets.mjs', import.meta.url));
+  const manifestFile = join(folder, 'manifest.json'), selectionFile = join(folder, 'selection.json');
+  const requirementsFile = join(folder, 'requirements.json');
+  writeFileSync(manifestFile, JSON.stringify(manifest));
+  writeFileSync(selectionFile, JSON.stringify(requirements));
+  writeFileSync(requirementsFile, JSON.stringify(requirements));
+  const run = (...extra) => spawnSync(process.execPath, [script, '--root', root, '--manifest', manifestFile, ...extra], { encoding: 'utf8' });
+  assert.equal(run('--selection', selectionFile, '--consumer', 'AstrologicalCharts').status, 1);
+  assert.equal(run('--selection', selectionFile).status, 1);
+  assert.equal(run('--selection', selectionFile, '--consumer', 'AstrologicalCharts', '--requirements', requirementsFile).status, 1);
+  assert.equal(run('--requirements', requirementsFile, '--consumer', 'AstrologicalCharts').status, 1);
+  assert.equal(run('--requirements', requirementsFile, '--requirements', requirementsFile).status, 1);
+}));
+
+test('rejects files with different on-disk casing even when manifest and request agree', () => fixture(({ manifest, requirements, run }) => {
+  const differentlyCased = 'img/grafici/light/Cartaastrale-segni.png';
+  manifest.assets[0].path = differentlyCased;
+  requirements.assets = [differentlyCased];
+  assert.deepEqual(run().missingFromPack, [differentlyCased]);
+}));
