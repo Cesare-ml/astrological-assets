@@ -129,6 +129,31 @@ The two-snapshot detector observed **121** independent pairs with matching
 changed filenames in this expanded synthetic-current comparison; this
 is still not a count of actual Git textual conflicts.
 
+## Repository-bound snapshot verification — 2026-11-14 update
+
+The offline analyzer now **requires** `repositoryFullName:
+"Cesare-ml/astrological-assets"`, an exact safe-integer `openPrCount`
+equal to the recorded PR entries, and a real Gregorian date in
+`capturedDate`. These fields must appear in *both* input snapshots; an
+unrecognized repository, incomplete count or invalid calendar date fails
+closed with exit 1. Count confirmation still requires a separately checked,
+complete GitHub PR listing. The analyzer cannot prove that a matching
+self-reported count reflects every open PR.
+
+The complete set of **32 Node.js tests** in the three analyzer test files
+passed on Node.js 22.16.0 using the **exact Git blob bytes** of the source,
+tests and dated snapshot from this feature branch. These results are for
+the integration analyzer only, not the full repository-wide `npm test`
+or the 1,013 artwork files.
+
+A later live check found **26** open PRs (#32 and #33 also appeared).
+#32 depends on #30; the agent-review sequence therefore extends through
+`#22 → #25 → #27 → #28 → #29 → #30 → #32`.
+#33 independently changes `scripts/verify-pack.mjs`, which #10 also
+modifies. Compare their actual patches before any authorized combination.
+Do not silently replace the pinned, dated baseline with this changing
+live state.
+
 The code's CPAL attribution remains **Powered by VirgoStars**
 (https://www.virgostars.it/). Private collaboration approvals do not
 grant public image redistribution rights.
