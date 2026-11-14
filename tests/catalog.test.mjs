@@ -33,9 +33,9 @@ test('Git tree parser preserves spaces and excludes unrelated images or symlinks
 });
 test('catalog audit rejects unknown content hashes and case-colliding paths',()=>{
   const a={path:'img/simboli-bianchi/segni/01.png',bytes:2,gitBlobSha:'b'.repeat(40),legacy:false};
-  const source={assetRoot:'public/assets',commit:'c'.repeat(40),repository:'test'};
-  assert.throws(()=>auditCatalog({schemaVersion:1,fileCount:1,source,files:[{...a,gitBlobSha:'invalid'}]}),/Invalid source blob/);
-  assert.throws(()=>auditCatalog({schemaVersion:1,fileCount:2,source,files:[a,{...a,path:'img/simboli-bianchi/segni/01.PNG'}]}),/collision/);
+  const source={assetRoot:'public/assets',commit:'c'.repeat(40),repository:'Cesare-ml/virgo-stars'};
+  assert.throws(()=>auditCatalog({schemaVersion:1,fileCount:1,source,rightsStatus:'unreviewed',files:[{...a,gitBlobSha:'invalid'}]}),/Invalid source blob/);
+  assert.throws(()=>auditCatalog({schemaVersion:1,fileCount:2,source,rightsStatus:'unreviewed',files:[a,{...a,path:'img/simboli-bianchi/segni/01.PNG'}]}),/collision/);
 });
 
 test('family review generator creates only pending permissions for known astrology symbols',()=>{
