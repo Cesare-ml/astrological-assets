@@ -17,7 +17,7 @@ const paths = [
   'img/simboli/segni/01.png',
 ];
 const approved = path => ({
-  path, bytes: 1, sha256: 'a'.repeat(64), rightsHolder: 'test author',
+  path, bytes: 1, sha256: 'a'.repeat(64), gitBlobSha: 'b'.repeat(40), rightsHolder: 'test author',
   permissionBasis: 'synthetic private test asset', approvalEvidence: 'fixture only',
 });
 const manifest = assets => ({ schemaVersion: 1, assets: assets.map(approved) });
@@ -124,10 +124,19 @@ test('pending and incomplete approved-manifest metadata cannot pass', () => {
   const baseline = manifest(paths);
   for (const patch of [
     { status: 'pending' }, { bytes: -1 }, { bytes: 1.5 }, { sha256: 'bad' },
+    { gitBlobSha: undefined }, { gitBlobSha: 'BAD' }, { gitBlobSha: 'C'.repeat(40) },
     { rightsHolder: '' }, { permissionBasis: '' }, { approvalEvidence: '' },
   ]) {
     const changed = { ...baseline, assets: [{ ...baseline.assets[0], ...patch }, ...baseline.assets.slice(1)] };
-    assert.throws(() => auditThemePairs(changed, register), /not approved|hash or size|approval metadata/);
+    assert.throws(() => auditThemePairs(changed, register), /not approved|hash or size|Git blob SHA-1|approval metadata/);
+  }
+});
+
+test('source Git blob metadata must have a canonical lowercase SHA-1 format', () => {
+  const base = manifest(paths);
+  for (const value of [null, undefined, '', 'a'.repeat(39), 'A'.repeat(40), 'z'.repeat(40)]) {
+    const modified = { ...base, assets: [{ ...base.assets[0], gitBlobSha: value }, ...base.assets.slice(1)] };
+    assert.throws(() => auditThemePairs(modified, register), /Invalid manifest Git blob SHA-1/);
   }
 });
 
