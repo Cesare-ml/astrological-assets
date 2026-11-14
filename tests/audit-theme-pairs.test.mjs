@@ -75,6 +75,23 @@ test('CLI uses distinct success, parity-block, and invalid-input exit codes with
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
+test('unknown, wrongly cased or incomplete theme directories are rejected', () => {
+  for (const path of [
+    overlay + 'LIGHT/new.png', overlay + 'Dark/new.png', overlay + 'sepia/new.png',
+    overlay + 'light', planets + 'BLUE/_circle/Neptune.png',
+  ]) {
+    assert.throws(() => auditThemePairs(manifest([...paths, path]), register), /Unexpected chart theme/);
+  }
+});
+
+test('the audit cannot pass if an entire chart theme family disappears', () => {
+  for (const prefix of [overlay, planets]) {
+    const result = auditThemePairs(manifest(paths.filter(p => !p.startsWith(prefix))), register);
+    assert.equal(result.verdict, 'blocked');
+    assert.equal(result.emptyFamilies.length, 1);
+  }
+});
+
 test('committed manifest has 26 overlay pairs, 23 planet pairs, one documented exception', () => {
   const realManifest = JSON.parse(readFileSync(join(repo, 'manifests/approved-assets.json'), 'utf8'));
   const realExceptions = JSON.parse(readFileSync(join(repo, 'manifests/theme-pair-exceptions.json'), 'utf8'));
