@@ -121,6 +121,7 @@ Contributions to the tools, tests, documentation, and compatible original assets
 ## Documentation
 
 - [Asset scope and upstream inventory](docs/ASSET_SCOPE.md)
+- [Fail-closed catalog metadata audit contract](docs/CATALOG_AUDIT_CONTRACT.md)
 - [Artwork licensing policy](docs/ARTWORK_LICENSING_POLICY.md)
 - [Licensing and credits](docs/LICENSING_AND_CREDITS.md)
 - [Public release checks and unresolved gates](docs/PUBLIC_RELEASE_CHECKLIST.md)
