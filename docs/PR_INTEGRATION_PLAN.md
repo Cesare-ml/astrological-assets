@@ -21,9 +21,14 @@ node --test tests/analyze-pr-integration.test.mjs
 
 The input JSON is an audited **point-in-time metadata copy**, *not a live
 GitHub API response*. The CLI uses local files only: it performs no GitHub
-calls, merge, branch mutation, writes or publishing. A malformed snapshot,
-unknown parent branch, dependency cycle, duplicate entry, unsafe path or
-missing file list fails closed (exit 1). Valid snapshots produce a JSON
+calls, merge, branch mutation, writes or publishing. A malformed snapshot, wrong `repositoryFullName` (only
+`Cesare-ml/astrological-assets` is accepted), inconsistent
+`openPrCount`, invalid Gregorian `capturedDate`, unknown parent branch,
+dependency cycle, duplicate entry, unsafe path or missing file list fails
+closed (exit 1). Both compared snapshots must independently pass these
+checks. The recorded count must be obtained from a separate **complete**
+GitHub open-PR listing; a self-consistent but incomplete list could still
+pass if its count was fabricated. Valid snapshots produce a JSON
 report including ordered PRs, **exact lowercase 40-digit head Git SHAs**, direct
 dependencies and filename overlaps (exit 0). When passed `--current`, it
 compares main and individual PR head SHAs, base/head branch names, draft
@@ -84,8 +89,10 @@ live GitHub**, or evaluate third-party rights.
 
 ## Required review gates before any authorized integration
 
-1. Refresh the live PR listing, base/head branch names, **exact head SHAs**,
-   draft statuses and changed-file lists from GitHub. Capture a new version-1
+1. Refresh the **complete** live PR listing (including pagination if
+   necessary), independently confirm the number of open PRs, repository
+   identity, base/head branch names, exact head SHAs, draft statuses and
+   changed-file lists from GitHub. Capture a new version-1
    JSON snapshot with `headSha` on every PR, then run the `--current`
    comparison and review its result. Rebuild the JSON deliberately;
    do not copy the baseline into the current file. Never rely on this
