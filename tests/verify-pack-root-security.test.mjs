@@ -80,3 +80,26 @@ test('CLI refuses a symlinked asset root without modifying its contents', t => w
   assert.match(run.stderr, /Symlink forbidden in asset pack root/);
   assert.equal(verifyPack(root, manifest).verified, 1);
 }));
+
+test('rejects dangling links at a manifest-listed file instead of treating them as missing', t => withSyntheticPack(({ root, manifest }) => {
+  const target = join(root, ...manifest.assets[0].path.split('/'));
+  rmSync(target);
+  try { symlinkSync(join(root, 'absent.png'), target); }
+  catch(error) {
+    if(process.platform==='win32' && ['EPERM','EACCES','ENOTSUP'].includes(error.code)) return t.skip('File links unavailable');
+    throw error;
+  }
+  assert.throws(() => verifyPack(root, manifest), /Symlink forbidden/);
+}));
+
+test('rejects regular files in ancestor positions before attempting the final asset', () => withSyntheticPack(({ root, manifest }) => {
+  const path = 'img/simboli-bianchi/segni/01.png';
+  rmSync(join(root, 'img'), { recursive: true });
+  writeFileSync(join(root, 'img'), 'not a directory');
+  assert.throws(() => verifyPack(root, manifest), /Parent is not a directory/);
+}));
+
+test('reports genuinely missing manifest files without hiding link errors', () => withSyntheticPack(({ root, manifest }) => {
+  rmSync(join(root, ...manifest.assets[0].path.split('/')));
+  assert.throws(() => verifyPack(root, manifest), /Missing image\/font/);
+}));
