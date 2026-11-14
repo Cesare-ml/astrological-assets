@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, realpathSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, realpathSync, readdirSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
@@ -122,29 +122,35 @@ test('accepts a mixed-case physical filename when the manifest uses its exact sp
   assert.deepEqual(verifyPack(root, manifest), { verified: 1, bytes: bytes.length });
 }));
 
-test('rejects manifest paths with canonical Unicode collisions', () => withSyntheticPack(({ root, manifest }) => {
-  const original=manifest.assets[0];
-  const alias={...original,path:original.path.toUpperCase()};
+test('rejects Unicode-normalization duplicates in the approved manifest', () => withSyntheticPack(({ root, manifest, bytes }) => {
+  const directory=join(root,'img','simboli-bianchi','segni');
+  const original=join(directory,'01.png');
+  renameSync(original,join(directory,'étoile.png'));
+  // Some filesystems normalize names on disk. Read its actual spelling.
+  const actual=readdirSync(directory)[0];
+  const path='img/simboli-bianchi/segni/'+actual;
+  const alternate=actual===actual.normalize('NFC') ? actual.normalize('NFD') : actual.normalize('NFC');
+  const first={...manifest.assets[0],path};
+  assert.deepEqual(verifyPack(root,{...manifest,assets:[first]}),{verified:1,bytes:bytes.length});
   assert.throws(
-    () => verifyPack(root,{...manifest,assets:[original,alias]}),
-    /Duplicate or case-colliding asset|Missing image\/font|Non-canonical asset path spelling/,
+    () => verifyPack(root,{...manifest,assets:[first,{...first,path:'img/simboli-bianchi/segni/'+alternate}]}),
+    /Duplicate or case-colliding asset/,
   );
 }));
 
-test('accepts an exact Unicode filename without normalizing the physical path', () => withSyntheticPack(({ root, manifest, bytes }) => {
-  const original=join(root,...manifest.assets[0].path.split('/'));
-  const path='img/simboli-bianchi/segni/étoile.png';
-  renameSync(original,join(root,...path.split('/')));
-  manifest.assets[0].path=path;
+test('accepts exact on-disk Unicode spelling', () => withSyntheticPack(({ root, manifest, bytes }) => {
+  const directory=join(root,'img','simboli-bianchi','segni');
+  renameSync(join(directory,'01.png'),join(directory,'étoile.png'));
+  manifest.assets[0].path='img/simboli-bianchi/segni/'+readdirSync(directory)[0];
   assert.deepEqual(verifyPack(root,manifest),{verified:1,bytes:bytes.length});
 }));
 
-test('rejects Unicode-normalization aliases instead of accepting equivalent file bytes', () => withSyntheticPack(({ root, manifest }) => {
-  const original=join(root,...manifest.assets[0].path.split('/'));
-  const nfc='img/simboli-bianchi/segni/étoile.png';
-  const nfd='img/simboli-bianchi/segni/e\u0301toile.png';
-  renameSync(original,join(root,...nfc.split('/')));
-  manifest.assets[0].path=nfd;
+test('rejects a different Unicode normalization of an otherwise identical file path', () => withSyntheticPack(({ root, manifest }) => {
+  const directory=join(root,'img','simboli-bianchi','segni');
+  renameSync(join(directory,'01.png'),join(directory,'étoile.png'));
+  const actual=readdirSync(directory)[0];
+  const alternate=actual===actual.normalize('NFC') ? actual.normalize('NFD') : actual.normalize('NFC');
+  manifest.assets[0].path='img/simboli-bianchi/segni/'+alternate;
   assert.throws(
     () => verifyPack(root,manifest),
     /Non-canonical asset path spelling|Missing image\/font/,
