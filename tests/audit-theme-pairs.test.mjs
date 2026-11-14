@@ -179,11 +179,66 @@ test('the audit cannot pass if an entire chart theme family disappears', () => {
   }
 });
 
+test('required baseline blocks removal of an entire matching pair that parity alone misses', () => {
+  const required = { schemaVersion: 1, pairs: [
+    { family: 'chart-overlays', relativePath: 'cartaastrale-case.png' },
+    { family: 'planet-circles', relativePath: '_circle/Sun.png' },
+  ] };
+  const extended = [...paths, overlay + 'light/asse-as.png', overlay + 'dark/asse-as.png'];
+  const removed = extended.filter(p => !p.endsWith('cartaastrale-case.png'));
+  assert.equal(auditThemePairs(manifest(removed), register).verdict, 'verified');
+  const report = auditThemePairs(manifest(removed), register, required);
+  assert.equal(report.verdict, 'blocked');
+  assert.deepEqual(report.missingRequiredPairs, [{
+    family: 'chart-overlays', relativePath: 'cartaastrale-case.png', missingThemes: ['light', 'dark'],
+  }]);
+});
+
+test('required baseline rejects invalid families, duplicates, unsafe names and empty inventories', () => {
+  const valid = { schemaVersion: 1, pairs: [{ family: 'chart-overlays', relativePath: 'cartaastrale-case.png' }] };
+  assert.equal(auditThemePairs(manifest(paths), register, valid).verdict, 'verified');
+  for (const required of [
+    { schemaVersion: 1, pairs: [] },
+    { schemaVersion: 2, pairs: valid.pairs },
+    { schemaVersion: 1, pairs: [{ family: 'other', relativePath: 'cartaastrale-case.png' }] },
+    { schemaVersion: 1, pairs: [{ family: 'chart-overlays', relativePath: '../escape.png' }] },
+    { schemaVersion: 1, pairs: [...valid.pairs, { ...valid.pairs[0], relativePath: 'Cartaastrale-case.png' }] },
+  ]) assert.throws(() => auditThemePairs(manifest(paths), register, required));
+});
+
+test('CLI required inventory flags loss of both chart theme files', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'theme-baseline-'));
+  const manifestFile = join(dir, 'manifest.json'), exceptionsFile = join(dir, 'exceptions.json');
+  const requiredFile = join(dir, 'required.json');
+  const run = () => spawnSync(process.execPath, [
+    join(repo, 'scripts/audit-theme-pairs.mjs'),
+    '--manifest', manifestFile, '--exceptions', exceptionsFile, '--required', requiredFile,
+  ], { encoding: 'utf8' });
+  const extended = [...paths, overlay + 'light/asse-as.png', overlay + 'dark/asse-as.png'];
+  try {
+    writeFileSync(manifestFile, JSON.stringify(manifest(extended)));
+    writeFileSync(exceptionsFile, JSON.stringify(register));
+    writeFileSync(requiredFile, JSON.stringify({ schemaVersion: 1, pairs: [
+      { family: 'chart-overlays', relativePath: 'cartaastrale-case.png' },
+    ] }));
+    assert.equal(run().status, 0);
+    writeFileSync(manifestFile, JSON.stringify(manifest(extended.filter(p => !p.endsWith('cartaastrale-case.png')))));
+    const blocked = run();
+    assert.equal(blocked.status, 2);
+    assert.equal(JSON.parse(blocked.stdout).missingRequiredPairs.length, 1);
+    writeFileSync(requiredFile, '{malformed');
+    assert.equal(run().status, 1);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
 test('committed manifest has 26 overlay pairs, 23 planet pairs, one documented exception', () => {
   const realManifest = JSON.parse(readFileSync(join(repo, 'manifests/approved-assets.json'), 'utf8'));
   const realExceptions = JSON.parse(readFileSync(join(repo, 'manifests/theme-pair-exceptions.json'), 'utf8'));
-  const result = auditThemePairs(realManifest, realExceptions);
+  const realRequired = JSON.parse(readFileSync(join(repo, 'manifests/required-theme-pairs.json'), 'utf8'));
+  const result = auditThemePairs(realManifest, realExceptions, realRequired);
   assert.equal(result.verdict, 'verified');
   assert.deepEqual(result.families.map(f => [f.lightCount, f.darkCount, f.pairedCount]), [[27, 26, 26], [23, 23, 23]]);
+  assert.equal(realRequired.pairs.length, 49);
+  assert.deepEqual(result.missingRequiredPairs, []);
   assert.equal(result.approvedExceptions.length, 1);
 });
