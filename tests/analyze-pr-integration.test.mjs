@@ -183,3 +183,17 @@ test('CLI exits 0 for a matching fresh snapshot and 2 when main/head changed', (
       ['pr-headSha-changed']);
   } finally {rmSync(dir,{recursive:true,force:true});}
 });
+
+test('the committed 2026-11-14 snapshot pins all recorded PR head commits', () => {
+  const snapshot = JSON.parse(readFileSync(
+    new URL('../docs/pr-integration-snapshot-2026-11-14.json', import.meta.url), 'utf8'));
+  const result = analyzePrIntegration(snapshot);
+  assert.equal(result.prCount, 22);
+  assert.equal(result.pinnedHeads.length, 22);
+  assert.ok(result.pinnedHeads.every(item => /^[a-f0-9]{40}$/.test(item.sha)));
+  assert.deepEqual(result.chains, [
+    {pr:11, requires:9}, {pr:17, requires:14}, {pr:25, requires:22},
+    {pr:27, requires:25}, {pr:28, requires:27}, {pr:29, requires:28},
+  ]);
+  assert.equal(result.potentialOverlaps.length, 110);
+});
