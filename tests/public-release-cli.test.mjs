@@ -112,3 +112,27 @@ test('full CLI rejects a symlink ancestor above the pack root', t =>
     assert.equal(result.status, 1);
     assert.match(result.stderr, /Symlink in public pack root path/);
   }));
+
+test('full CLI blocks an unexpected extra physical asset despite valid synthetic approvals', () =>
+  fixture(({run, publicRecord, writeJson, leaf}) => {
+    writeJson('catalog/publication-approvals.json', {schemaVersion:1, assets:[publicRecord]});
+    writeFileSync(join(leaf, 'unexpected.png'), 'synthetic unlisted bytes');
+    const result = run();
+    assert.equal(result.status, 2, result.stderr);
+    const report = JSON.parse(result.stdout);
+    assert.equal(report.ready, false);
+    assert.equal(report.verifiedPackFiles, 1);
+    assert.ok(report.firstIssues.some(issue => issue.includes('Pack file missing from manifest')));
+  }));
+
+test('full CLI refuses an owner license policy pinned to different manifest bytes', () =>
+  fixture(({run, policy, writeJson}) => {
+    const stale = {
+      ...policy,
+      scope:{...policy.scope, manifestGitBlobSha:'f'.repeat(40)},
+    };
+    writeJson('catalog/artwork-license-decision.json', stale);
+    const result = run();
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /not pinned to the current manifest/);
+  }));
