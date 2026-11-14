@@ -9,6 +9,7 @@ import { analyzePrIntegration, comparePrSnapshots } from '../scripts/analyze-pr-
 
 const snapshot = () => ({
   schemaVersion:1, defaultBranch:'main', capturedDate:'2026-11-14', mainSha:'a'.repeat(40),
+  repositoryFullName:'Cesare-ml/astrological-assets', openPrCount:2,
   prs:[
     {number:1,base:'main',head:'feat/first',headSha:'1'.repeat(40),draft:false,files:['img/Icon.png']},
     {number:2,base:'main',head:'feat/second',headSha:'2'.repeat(40),draft:true,files:['img/icon.png']},
