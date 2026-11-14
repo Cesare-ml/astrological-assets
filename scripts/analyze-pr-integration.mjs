@@ -23,6 +23,7 @@ export function analyzePrIntegration(snapshot) {
     if (!Number.isSafeInteger(pr?.number) || pr.number <= 0 ||
         typeof pr.head !== 'string' || !/^[a-z0-9][a-z0-9/_-]*$/.test(pr.head) ||
         typeof pr.base !== 'string' || !/^[a-z0-9][a-z0-9/_-]*$/.test(pr.base) ||
+        !/^[a-f0-9]{40}$/.test(pr.headSha || '') ||
         typeof pr.draft !== 'boolean' ||
         !Array.isArray(pr.files) || pr.files.length === 0 ||
         pr.files.some(path => !validPath(path)) ||
@@ -78,6 +79,7 @@ export function analyzePrIntegration(snapshot) {
     capturedDate:snapshot.capturedDate,
     pinnedMainSha:snapshot.mainSha,
     prCount:numbers.length,
+    pinnedHeads:numbers.map(number=>({pr:number,sha:byNumber.get(number).headSha})),
     order:ordered,
     chains:ordered.filter(number=>dependencies.get(number)!==null)
       .map(number=>({pr:number,requires:dependencies.get(number)})),
@@ -91,11 +93,59 @@ export function analyzePrIntegration(snapshot) {
   };
 }
 
+/**
+ * Compare two independently captured, local PR snapshots.
+ * A changed commit or PR metadata makes the baseline STALE, never merge-ready.
+ * The caller is responsible for collecting/authenticating the fresh snapshot.
+ */
+export function comparePrSnapshots(baseline, current) {
+  analyzePrIntegration(baseline);
+  analyzePrIntegration(current);
+  const changes = [];
+  if (baseline.mainSha !== current.mainSha)
+    changes.push({kind:'main-advanced', before:baseline.mainSha, after:current.mainSha});
+  const before = new Map(baseline.prs.map(pr=>[pr.number,pr]));
+  const after = new Map(current.prs.map(pr=>[pr.number,pr]));
+  for (const number of [...new Set([...before.keys(), ...after.keys()])].sort((a,b)=>a-b)) {
+    const oldPr = before.get(number), newPr=after.get(number);
+    if (!oldPr) {
+      changes.push({kind:'pr-added', pr:number});
+      continue;
+    }
+    if (!newPr) {
+      changes.push({kind:'pr-removed', pr:number});
+      continue;
+    }
+    for (const key of ['head','base','headSha','draft']) {
+      if (oldPr[key] !== newPr[key])
+        changes.push({kind:'pr-'+key+'-changed', pr:number, before:oldPr[key], after:newPr[key]});
+    }
+    const oldFiles=[...oldPr.files].sort(), newFiles=[...newPr.files].sort();
+    if (JSON.stringify(oldFiles)!==JSON.stringify(newFiles))
+      changes.push({kind:'pr-files-changed', pr:number});
+  }
+  return {
+    currentMainSha:current.mainSha,
+    readyForReview:changes.length===0,
+    changes,
+    warning:'A matching snapshot is not proof of live freshness or authorization to merge; independently authenticate the current data.',
+  };
+}
+
 function main(args) {
-  if (args.length !== 1 || args[0].startsWith('-'))
-    throw new Error('Usage: node scripts/analyze-pr-integration.mjs <snapshot.json>');
-  const snapshot = JSON.parse(readFileSync(resolve(args[0]), 'utf8'));
-  console.log(JSON.stringify(analyzePrIntegration(snapshot), null, 2));
+  if (!([1,3].includes(args.length)) || args[0].startsWith('-') ||
+      (args.length===3 && (args[1] !== '--current' || args[2].startsWith('-'))))
+    throw new Error('Usage: node scripts/analyze-pr-integration.mjs <snapshot.json> [--current <fresh-snapshot.json>]');
+  const baseline=JSON.parse(readFileSync(resolve(args[0]),'utf8'));
+  const plan=analyzePrIntegration(baseline);
+  if (args.length===1) {
+    console.log(JSON.stringify(plan,null,2));
+    return;
+  }
+  const current=JSON.parse(readFileSync(resolve(args[2]),'utf8'));
+  const freshness=comparePrSnapshots(baseline,current);
+  console.log(JSON.stringify({plan,freshness},null,2));
+  if (!freshness.readyForReview) process.exitCode=2;
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {
