@@ -27,7 +27,7 @@ export function analyzePrIntegration(snapshot) {
         typeof pr.draft !== 'boolean' ||
         !Array.isArray(pr.files) || pr.files.length === 0 ||
         pr.files.some(path => !validPath(path)) ||
-        new Set(pr.files).size !== pr.files.length)
+        new Set(pr.files.map(path=>path.toLowerCase())).size !== pr.files.length)
       throw new Error('Invalid PR metadata: ' + String(pr?.number));
     if (byNumber.has(pr.number) || byHead.has(pr.head))
       throw new Error('Duplicate PR number or branch: ' + pr.number);
@@ -64,7 +64,7 @@ export function analyzePrIntegration(snapshot) {
     return set;
   };
   const ancestry = new Map(ordered.map(number => [number, ancestors(number)]));
-  const overlaps = [];
+  const overlaps = [], caseVariantOverlaps = [];
   const numbers = [...byNumber.keys()].sort((a,b)=>a-b);
   for (let i=0; i<numbers.length; i++) {
     for (let j=i+1; j<numbers.length; j++) {
@@ -72,6 +72,13 @@ export function analyzePrIntegration(snapshot) {
       if (ancestry.get(left).has(right) || ancestry.get(right).has(left)) continue;
       const shared = byNumber.get(left).files.filter(path => byNumber.get(right).files.includes(path)).sort();
       if (shared.length) overlaps.push({left, right, shared});
+      // Windows and some offline filesystems fold case even when Git/Linux do not.
+      const rightByFolded = new Map(byNumber.get(right).files.map(path=>[path.toLowerCase(), path]));
+      const aliases = byNumber.get(left).files.flatMap(leftPath=>{
+        const rightPath=rightByFolded.get(leftPath.toLowerCase());
+        return rightPath && leftPath !== rightPath ? [{leftPath, rightPath}] : [];
+      }).sort((a,b)=>a.leftPath.localeCompare(b.leftPath));
+      if (aliases.length) caseVariantOverlaps.push({left, right, aliases});
     }
   }
 
@@ -84,10 +91,11 @@ export function analyzePrIntegration(snapshot) {
     chains:ordered.filter(number=>dependencies.get(number)!==null)
       .map(number=>({pr:number,requires:dependencies.get(number)})),
     potentialOverlaps:overlaps,
+    caseVariantOverlaps,
     draftPrs:numbers.filter(number=>byNumber.get(number).draft),
     warnings:[
       'Snapshot only: refresh GitHub metadata and branch SHAs immediately before review.',
-      'Shared filenames are review candidates, not proven merge conflicts.',
+      'Shared filenames and case-folded aliases are review candidates, not proven merge conflicts.',
       'Passing a plan does not authorize merging, deploying or redistributing artwork.',
     ],
   };
