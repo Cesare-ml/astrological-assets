@@ -36,9 +36,12 @@ function cli() {
     else throw new Error('Usage: --family img/simboli-bianchi/segni/ --out segni-review.local.json [--include-legacy]');
   }
   if(!opts['--family'] || !opts['--out']) throw new Error('Missing family or output');
+  // Worksheets are local scratch files, never authoritative approval registers.
+  if(!opts['--out'].endsWith('.local.json'))
+    throw new Error('Review --out must end with .local.json (never an approvals register)');
   const catalog=JSON.parse(readFileSync(opts['--catalog']||defaultCatalog,'utf8'));
   const list=prepareReview(catalog,opts['--family'],opts);
-  writeFileSync(resolve(opts['--out']),JSON.stringify(list,null,2)+'\n');
+  writeFileSync(resolve(opts['--out']),JSON.stringify(list,null,2)+'\n',{flag:'wx'});
   console.log('Prepared',list.assets.length,'PENDING review records; NO rights approved, NO binaries copied.');
 }
 if(process.argv[1] && resolve(process.argv[1])===resolve(fileURLToPath(import.meta.url))) {
