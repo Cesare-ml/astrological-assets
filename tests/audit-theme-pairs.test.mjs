@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { test } from 'node:test';
 import { spawnSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -260,6 +261,23 @@ test('CLI required inventory flags loss of both chart theme files', () => {
     writeFileSync(requiredFile, '{malformed');
     assert.equal(run().status, 1);
   } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('the required 49-pair baseline cannot be silently substituted while keeping its size', () => {
+  const baseline = JSON.parse(readFileSync(join(repo, 'manifests/required-theme-pairs.json'), 'utf8'));
+  const canonicalDigest = pairs => createHash('sha256')
+    .update(pairs.map(({ family, relativePath }) => family + '\\t' + relativePath)
+      .sort().join('\\n') + '\\n', 'utf8')
+    .digest('hex');
+  // Independently pinned against the initial complete 49-pair chart inventory.
+  // Intentional changes must update this check under the same reviewed PR.
+  const original = '6c96873cf4caaa83ace3a6709d1307c6778e2e146d1f971c78d3694e47d516e8';
+  assert.equal(baseline.pairs.length, 49);
+  assert.equal(canonicalDigest(baseline.pairs), original);
+  const changed = baseline.pairs.map((entry, i) =>
+    i === 0 ? { ...entry, relativePath: 'different-but-still-49.png' } : entry);
+  assert.equal(changed.length, baseline.pairs.length);
+  assert.notEqual(canonicalDigest(changed), original);
 });
 
 test('committed manifest has 26 overlay pairs, 23 planet pairs, one documented exception', () => {
