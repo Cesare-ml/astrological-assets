@@ -15,6 +15,11 @@ function checkedPath(path) {
   if (typeof path !== 'string' || !path || path.startsWith('/') || path.includes('\\') ||
       /[\x00-\x1f\x7f]/.test(path) || path.split('/').some(part => !part || part === '.' || part === '..' || part.includes(':')))
     throw new Error('Unsafe asset path: ' + String(path));
+  for (const segment of path.split('/')) {
+    if (/[<>:"|?*]/.test(segment) || /[. ]$/.test(segment) ||
+        /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(segment))
+      throw new Error('Windows-incompatible asset path: ' + path);
+  }
   return path;
 }
 
