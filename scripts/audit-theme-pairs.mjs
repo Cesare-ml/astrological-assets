@@ -30,7 +30,7 @@ function checkedPath(path) {
   return path;
 }
 
-export function auditThemePairs(manifest, register) {
+export function auditThemePairs(manifest, register, requiredPairs = null) {
   if (manifest?.schemaVersion !== 1 || !Array.isArray(manifest.assets) || !manifest.assets.length)
     throw new Error('Expected a nonempty version-1 asset manifest');
   if (register?.schemaVersion !== 1 || !Array.isArray(register.exceptions))
@@ -113,16 +113,50 @@ export function auditThemePairs(manifest, register) {
     const entry = exceptions.get(key);
     return { family: entry.family, relativePath: entry.relativePath, only: entry.only };
   });
-  const verdict = emptyFamilies.length || missingCounterparts.length || staleExceptions.length ? 'blocked' : 'verified';
-  return { schemaVersion: 1, families, emptyFamilies, approvedExceptions, missingCounterparts, staleExceptions, verdict };
+  const missingRequiredPairs = [];
+  if (requiredPairs !== null) {
+    if (requiredPairs?.schemaVersion !== 1 || !Array.isArray(requiredPairs.pairs) || !requiredPairs.pairs.length)
+      throw new Error('Expected a nonempty version-1 required theme pair inventory');
+    const seenRequired = new Set();
+    for (const entry of requiredPairs.pairs) {
+      const family = FAMILIES.find(f => f.id === entry?.family);
+      if (!family) throw new Error('Unknown required theme family: ' + String(entry?.family));
+      const relativePath = checkedPath(entry?.relativePath);
+      // Reuse importer type/path rules for both canonical consumer URLs.
+      validateAssetPath(family.prefix + 'light/' + relativePath);
+      validateAssetPath(family.prefix + 'dark/' + relativePath);
+      const key = family.id + '\0' + relativePath.toLowerCase();
+      if (seenRequired.has(key)) throw new Error('Duplicate or case-colliding required theme pair: ' + relativePath);
+      seenRequired.add(key);
+      const modes = byFamily.get(family.id);
+      const missingThemes = THEMES.filter(theme => !modes[theme].has(relativePath));
+      if (missingThemes.length) missingRequiredPairs.push({ family: family.id, relativePath, missingThemes });
+    }
+    missingRequiredPairs.sort((a, b) =>
+      a.family.localeCompare(b.family) || a.relativePath.localeCompare(b.relativePath));
+  }
+  const verdict = emptyFamilies.length || missingCounterparts.length || staleExceptions.length ||
+    missingRequiredPairs.length ? 'blocked' : 'verified';
+  return { schemaVersion: 1, families, emptyFamilies, approvedExceptions, missingCounterparts,
+    staleExceptions, missingRequiredPairs, verdict };
 }
 
 function main(args) {
-  if (args.length !== 4 || args[0] !== '--manifest' || args[2] !== '--exceptions')
-    throw new Error('Usage: node scripts/audit-theme-pairs.mjs --manifest <approved-assets.json> --exceptions <theme-pair-exceptions.json>');
-  const manifest = JSON.parse(readFileSync(args[1], 'utf8'));
-  const register = JSON.parse(readFileSync(args[3], 'utf8'));
-  const result = auditThemePairs(manifest, register);
+  const usage = 'Usage: node scripts/audit-theme-pairs.mjs --manifest <approved-assets.json> --exceptions <theme-pair-exceptions.json> [--required <required-theme-pairs.json>]';
+  if (args.length < 4 || args.length % 2) throw new Error(usage);
+  const flags = new Map();
+  for (let index = 0; index < args.length; index += 2) {
+    const name = args[index], value = args[index + 1];
+    if (!['--manifest', '--exceptions', '--required'].includes(name) ||
+        !value || value.startsWith('--') || flags.has(name)) throw new Error(usage);
+    flags.set(name, value);
+  }
+  if (!flags.has('--manifest') || !flags.has('--exceptions')) throw new Error(usage);
+  const manifest = JSON.parse(readFileSync(flags.get('--manifest'), 'utf8'));
+  const register = JSON.parse(readFileSync(flags.get('--exceptions'), 'utf8'));
+  const required = flags.has('--required') ?
+    JSON.parse(readFileSync(flags.get('--required'), 'utf8')) : null;
+  const result = auditThemePairs(manifest, register, required);
   console.log(JSON.stringify(result, null, 2));
   if (result.verdict !== 'verified') process.exitCode = 2;
 }
