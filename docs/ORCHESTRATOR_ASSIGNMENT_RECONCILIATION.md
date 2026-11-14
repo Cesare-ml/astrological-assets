@@ -4,14 +4,14 @@ This is a **structural, offline audit** intended for a future authorized integra
 
 ## Inputs and command
 
-Run only on an operator-authorized local machine, keeping private coordination snapshots **outside this public repository**:
+Run only on an operator-authorized local machine, keeping private coordination snapshots **outside this public repository**. First set `LEDGER_COMMIT_SHA` from an independently authenticated PRIVATE ledger read (the example uses POSIX shell expansion; in PowerShell use `$env:LEDGER_COMMIT_SHA`):
 
 ```sh
 npm run reconcile:agent-assignments -- \
   --manifest ./manifests/approved-assets.json \
   --results /private/path/review-results.local.json \
   --assignments /private/path/assignment-snapshot.local.json \
-  --expected-ledger-commit <independently-verified-private-commit-sha>
+  --expected-ledger-commit "$LEDGER_COMMIT_SHA"
 ```
 
 The results file follows [Agent review results](AGENT_REVIEW_RESULTS.md), and the manifest is the *same exact file bytes* used for the worklists in [PR #22](https://github.com/Cesare-ml/astrological-assets/pull/22).
