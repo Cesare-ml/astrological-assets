@@ -86,3 +86,38 @@ test('case collisions, malformed register and missing pack files are rejected', 
   assert.equal(r.ready, false);
   assert.match(r.issues[0], /Manifest file not present/);
 });
+
+test('public release requires exact pack spelling, including filename case', () => {
+  const publication = { schemaVersion: 1, assets: [publicRecord] };
+  const correct = assess(manifest, publication, [path]);
+  assert.equal(correct.ready, true);
+  const changedCase = assess(manifest, publication, [path.replace('01.png', '01.PNG')]);
+  assert.equal(changedCase.ready, false);
+  assert.ok(changedCase.issues.some(issue => issue.includes('canonical manifest spelling')));
+  assert.ok(changedCase.issues.some(issue => issue.includes('01.PNG') && issue.includes(path)));
+});
+
+test('public release rejects Unicode-normalization aliases of an approved file', () => {
+  const canonical = 'img/simboli-bianchi/segni/caf\u00e9.png';
+  const manifestWithUnicode = {
+    ...manifest,
+    assets: [{ ...manifest.assets[0], path: canonical }],
+  };
+  const publication = {
+    schemaVersion: 1,
+    assets: [{ ...publicRecord, path: canonical }],
+  };
+  assert.equal(assess(manifestWithUnicode, publication, [canonical]).ready, true);
+  const alias = canonical.normalize('NFD');
+  assert.notEqual(alias, canonical);
+  const result = assess(manifestWithUnicode, publication, [alias]);
+  assert.equal(result.ready, false);
+  assert.match(result.issues.join(' '), /canonical manifest spelling/);
+});
+
+test('multiple physical aliases remain blocked even when one spelling is canonical', () => {
+  const publication = { schemaVersion: 1, assets: [publicRecord] };
+  const result = assess(manifest, publication, [path, path.toUpperCase()]);
+  assert.equal(result.ready, false);
+  assert.match(result.issues.join(' '), /Case-colliding pack file/);
+});
