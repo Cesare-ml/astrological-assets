@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 // Prepare a PENDING worksheet only. The owner must make actual licensing decisions.
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateAssetPath } from './import-approved-assets.mjs';
+import { writePendingWorksheet } from './write-pending-worksheet.mjs';
 
 export function preparePublicationReview(manifest) {
   if (manifest?.schemaVersion !== 1 || !Array.isArray(manifest.assets) || manifest.assets.length === 0)
@@ -43,8 +44,11 @@ function main() {
     throw new Error('Usage: node scripts/prepare-publication-review.mjs --out ./artwork-review.local.json');
   const manifest = JSON.parse(readFileSync(resolve(process.cwd(), 'manifests/approved-assets.json'), 'utf8'));
   const result = preparePublicationReview(manifest);
-  const path = resolve(args[1]);
-  writeFileSync(path, JSON.stringify(result,null,2) + '\n', {flag:'wx'});
+  const path = writePendingWorksheet({
+    destination: args[1],
+    repositoryRoot: fileURLToPath(new URL('..', import.meta.url)),
+    worksheet: result,
+  });
   console.log('Wrote ' + result.assets.length + ' PENDING records to ' + path + '. No public rights granted.');
 }
 if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {
