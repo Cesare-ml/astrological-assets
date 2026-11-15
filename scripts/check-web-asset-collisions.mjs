@@ -5,9 +5,10 @@
  * This tool never deletes or copies any image.
  */
 import { createHash } from 'node:crypto';
-import { lstatSync, readFileSync, writeFileSync } from 'node:fs';
+import { lstatSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { writeCollisionReport } from './write-collision-report.mjs';
 
 const hash = data => createHash('sha256').update(data).digest('hex');
 
@@ -89,7 +90,9 @@ function main(args) {
     legacyRoot: flags['--legacy'], packRoot: flags['--pack'], manifest,
   });
   const output = JSON.stringify(report, null, 2) + '\n';
-  if (flags['--out']) writeFileSync(flags['--out'], output);
+  if (flags['--out']) writeCollisionReport(flags['--out'], output, {
+    legacyRoot: flags['--legacy'], packRoot: flags['--pack'], manifestPath: flags['--manifest'],
+  });
   console.log(output);
   if (report.verdict === 'blocked') process.exitCode = 2;
   else if (report.verdict === 'needs-exclusion') process.exitCode = 3;

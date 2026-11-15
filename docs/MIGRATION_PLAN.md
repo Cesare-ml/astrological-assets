@@ -34,6 +34,8 @@ After the first two phases pass, pin an exact version/commit of `astrological-as
 
 Use `scripts/check-web-asset-collisions.mjs` with `--legacy ../virgo-stars/public/assets`, `--pack ./public/assets` and `--manifest ./manifests/approved-assets.json`. Exit code `3` means the old asset files are still present with **identical bytes** and would be duplicated by a naive two-source copy. Exit code `2` means the pack is missing/altered or the old files differ: **stop and investigate**. Exit code `0` means approved pack files are disjoint from the legacy tree.
 
+For a saved diagnostic, pass `--out ./collision-report.local.json`. The optional report is written **exclusively**: it will not overwrite an existing file (choose a fresh filename), follow a symlink, or write inside either input asset tree or over the manifest. Inspect the report locally; it is not a public rights approval or a migration authorization. The report path's parent directory must already exist.
+
 **Important:** while VirgoStars is still the authoritative source, exit `3` is expected after an approved pack import. It is not permission to delete original files; a separate tested migration must explicitly exclude their legacy copy in the target web build, and only then re-check. Never overwrite the Angular build output from two conflicting sources.
 
 For every existing URL ensure the resulting site build has **exactly one emitted file** with the same bytes and path; compare manifests/checksums and check the browser network/cache. Then test deploy in staging, preserving rollback to the original build.
