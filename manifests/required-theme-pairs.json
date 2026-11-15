@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "description": "Current complete matched light/dark chart inventory; deliberate owner-reviewed changes required if removing either half of any pair.",
+  "pairs": [
+    {
+      "family": "chart-overlays",
+      "relativePath": "asse-as-piu-lungo.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "asse-as-transiti.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "asse-as.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "asse-mc-piu-lungo.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "asse-mc-transiti.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "asse-mc.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "cartaastrale-case-direzioni.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "cartaastrale-case-termini.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "cartaastrale-case.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "cartaastrale-dodecatemori.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "cartaastrale-segni-decadi-decani.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "cartaastrale-segni.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "cartaastrale-transiti-sinodici.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "cartaastrale-transiti.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "elementi-dodecatemori.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "elementi.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "latitudini-elementi-celesti.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "latitudini-segni.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "mappa-mondo-lat-lng-equirectangular1.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "mappa-mondo-lat-lng.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "ore-planetarie.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "sinastria-case-esterno.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "sinastria-case-interno.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "sinastria-deflettiva-case-esterno.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "sinastria-deflettiva-case-interno.png"
+    },
+    {
+      "family": "chart-overlays",
+      "relativePath": "sinastria-segni-interno.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/AS.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/Chiron.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/DS.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/IC.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/Jupiter.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/Mars.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/MC.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/mean Apogee.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/mean Node Sud.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/mean Node.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/mean Perigee.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/Mercury.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/Moon.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/Neptune.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/osc. Apogee.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/osc. Perigee.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/Pluto.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/Saturn.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/Sun.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/true Node Sud.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/true node.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/Uranus.png"
+    },
+    {
+      "family": "planet-circles",
+      "relativePath": "_circle/Venus.png"
+    }
+  ]
+}

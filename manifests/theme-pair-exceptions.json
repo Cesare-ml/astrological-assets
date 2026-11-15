@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "exceptions": [
+    {
+      "family": "chart-overlays",
+      "relativePath": "texture-carta-panna.png",
+      "only": "light",
+      "reason": "The existing paper texture is specific to the light chart skin; no dark counterpart exists in the approved inventory."
+    }
+  ]
+}

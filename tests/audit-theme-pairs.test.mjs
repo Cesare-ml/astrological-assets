@@ -1,0 +1,354 @@
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { test } from 'node:test';
+import { spawnSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { auditThemePairs } from '../scripts/audit-theme-pairs.mjs';
+
+const repo = join(dirname(fileURLToPath(import.meta.url)), '..');
+const overlay = 'img/grafici/';
+const planets = 'img/symbols/planets/';
+const paths = [
+  overlay + 'light/cartaastrale-case.png', overlay + 'dark/cartaastrale-case.png',
+  overlay + 'light/texture-carta-panna.png',
+  planets + 'light/_circle/Sun.png', planets + 'dark/_circle/Sun.png',
+  'img/simboli/segni/01.png',
+];
+const approved = path => ({
+  path, bytes: 1, sha256: 'a'.repeat(64), gitBlobSha: 'b'.repeat(40), rightsHolder: 'test author',
+  permissionBasis: 'synthetic private test asset', approvalEvidence: 'fixture only',
+});
+const manifest = assets => ({ schemaVersion: 1, assets: assets.map(approved) });
+const register = { schemaVersion: 1, exceptions: [{ family: 'chart-overlays', relativePath: 'texture-carta-panna.png', only: 'light', reason: 'Light-only' }] };
+
+test('known light-only texture is an explicit exception, and both families are paired', () => {
+  const result = auditThemePairs(manifest(paths), register);
+  assert.equal(result.verdict, 'verified');
+  assert.deepEqual(result.families.map(f => f.pairedCount), [1, 1]);
+  assert.equal(result.approvedExceptions.length, 1);
+  assert.deepEqual(result.missingCounterparts, []);
+});
+
+test('new missing dark artwork blocks the audit', () => {
+  const result = auditThemePairs(manifest([...paths, overlay + 'light/new.png']), register);
+  assert.equal(result.verdict, 'blocked');
+  assert.deepEqual(result.missingCounterparts, [{ family: 'chart-overlays', relativePath: 'new.png', only: 'light', missingTheme: 'dark' }]);
+});
+
+test('missing light circle glyph blocks the audit', () => {
+  const result = auditThemePairs(manifest(paths.filter(p => p !== planets + 'light/_circle/Sun.png')), register);
+  assert.equal(result.verdict, 'blocked');
+  assert.equal(result.missingCounterparts[0].missingTheme, 'light');
+});
+
+test('exceptions become stale if their asset disappears or gains a counterpart', () => {
+  for (const list of [paths.filter(p => !p.endsWith('texture-carta-panna.png')),
+    [...paths, overlay + 'dark/texture-carta-panna.png']]) {
+    const result = auditThemePairs(manifest(list), register);
+    assert.equal(result.verdict, 'blocked');
+    assert.equal(result.staleExceptions.length, 1);
+  }
+});
+
+test('unsafe manifest paths and cross-platform path collisions fail closed', () => {
+  assert.throws(() => auditThemePairs(manifest([...paths, '../secret.png']), register), /Unsafe/);
+  assert.throws(() => auditThemePairs(manifest([...paths, overlay + 'LIGHT/cartaastrale-case.png']), register), /case-colliding/);
+  assert.throws(() => auditThemePairs(manifest([...paths, overlay + 'light/te\u0301st.png', overlay + 'light/t\u00e9st.png']), register), /Non-canonical Unicode/);
+});
+
+test('noncanonical Unicode paths, unsupported types and asset roots are rejected', () => {
+  const decomposed = overlay + 'light/te\u0301st.png';
+  assert.throws(() => auditThemePairs(manifest([...paths, decomposed]), register), /Non-canonical Unicode/);
+  assert.throws(() => auditThemePairs(manifest([...paths, 'fonts/te\u0301st.woff2']), register), /Non-canonical Unicode/);
+  assert.throws(() => auditThemePairs(manifest([...paths, 'img/unknown/new.exe']), register), /Unsupported asset type/);
+  assert.throws(() => auditThemePairs(manifest([...paths, 'private/account.png']), register), /Unsafe asset path/);
+  assert.throws(() => auditThemePairs(manifest([...paths, 'img/not-an-asset']), register), /Unsupported asset type/);
+});
+
+test('noncanonical Unicode exception names cannot silently authorize differences', () => {
+  const exceptions = { schemaVersion: 1, exceptions: [{
+    ...register.exceptions[0], relativePath: 'te\u0301xture-carta-panna.png',
+  }] };
+  assert.throws(() => auditThemePairs(manifest(paths), exceptions), /Non-canonical Unicode/);
+});
+
+test('URL-ambiguous manifest paths and exception filenames fail closed for Charts consumers', () => {
+  for (const bad of ['planet%20glyph.png', 'planet%2fMoon.png', 'planet#dark.png']) {
+    assert.throws(
+      () => auditThemePairs(manifest([...paths, overlay + 'light/' + bad]), register),
+      /URL-ambiguous asset path/,
+    );
+    assert.throws(
+      () => auditThemePairs(manifest(paths), {
+        schemaVersion: 1,
+        exceptions: [{ ...register.exceptions[0], relativePath: bad }],
+      }),
+      /URL-ambiguous asset path/,
+    );
+  }
+});
+
+test('chart theme families, exceptions and required pairs reject font or data formats', () => {
+  const nonImageNames = ['new.woff2', 'new.ttf', 'new.otf'];
+  for (const name of nonImageNames) {
+    for (const prefix of [overlay, planets]) {
+      assert.throws(() => auditThemePairs(manifest([...paths, prefix + 'light/' + name]), register),
+        /Non-image chart theme asset/);
+    }
+    assert.throws(() => auditThemePairs(manifest(paths), {
+      schemaVersion: 1, exceptions: [{ ...register.exceptions[0], relativePath: name }],
+    }), /Non-image chart theme asset/);
+    assert.throws(() => auditThemePairs(manifest(paths), register, {
+      schemaVersion: 1, pairs: [{ family: 'chart-overlays', relativePath: name }],
+    }), /Non-image chart theme asset/);
+  }
+  const graphic = manifest([...paths, overlay + 'light/next.webp', overlay + 'dark/next.webp']);
+  assert.equal(auditThemePairs(graphic, register).verdict, 'verified');
+});
+
+test('Windows-incompatible asset names are rejected before offline integration', () => {
+  for (const name of ['CON.png', 'aux.png', 'COM1.png', 'Lpt9.png',
+    'planet?.png', 'planet*.png', 'planet|x.png', 'planet .png.']) {
+    const attempted = manifest([...paths, overlay + 'light/' + name]);
+    assert.throws(() => auditThemePairs(attempted, register), /Windows-incompatible/);
+  }
+});
+
+test('wrongly cased chart family paths are never silently ignored', () => {
+  for (const path of [
+    'img/Grafici/light/extra.png',
+    'IMG/grafici/light/extra.png',
+    'img/Symbols/planets/light/_circle/extra.png',
+  ]) {
+    const expected = path.startsWith('IMG/') ? /Unsafe asset path/ : /Chart family path casing mismatch/;
+    assert.throws(() => auditThemePairs(manifest([...paths, path]), register), expected);
+  }
+});
+
+test('exception spelling and case must exactly match a manifest filename', () => {
+  const wrongCase = { schemaVersion: 1, exceptions: [{
+    ...register.exceptions[0], relativePath: 'Texture-carta-panna.png',
+  }] };
+  const result = auditThemePairs(manifest(paths), wrongCase);
+  assert.equal(result.verdict, 'blocked');
+  assert.equal(result.approvedExceptions.length, 0);
+  assert.equal(result.missingCounterparts.length, 1);
+  assert.equal(result.staleExceptions.length, 1);
+});
+
+test('pending and incomplete approved-manifest metadata cannot pass', () => {
+  const baseline = manifest(paths);
+  for (const patch of [
+    { status: 'pending' }, { bytes: -1 }, { bytes: 1.5 }, { sha256: 'bad' },
+    { gitBlobSha: undefined }, { gitBlobSha: 'BAD' }, { gitBlobSha: 'C'.repeat(40) },
+    { rightsHolder: '' }, { permissionBasis: '' }, { approvalEvidence: '' },
+  ]) {
+    const changed = { ...baseline, assets: [{ ...baseline.assets[0], ...patch }, ...baseline.assets.slice(1)] };
+    assert.throws(() => auditThemePairs(changed, register), /not approved|hash or size|Git blob SHA-1|approval metadata/);
+  }
+});
+
+test('source Git blob metadata must have a canonical lowercase SHA-1 format', () => {
+  const base = manifest(paths);
+  for (const value of [null, undefined, '', 'a'.repeat(39), 'A'.repeat(40), 'z'.repeat(40)]) {
+    const modified = { ...base, assets: [{ ...base.assets[0], gitBlobSha: value }, ...base.assets.slice(1)] };
+    assert.throws(() => auditThemePairs(modified, register), /Invalid manifest Git blob SHA-1/);
+  }
+});
+
+test('invalid, repeated, or dangerous exceptions fail closed', () => {
+  assert.throws(() => auditThemePairs(manifest(paths), { schemaVersion: 1, exceptions: [{ ...register.exceptions[0], relativePath: '../oops.png' }] }), /Unsafe/);
+  assert.throws(() => auditThemePairs(manifest(paths), { schemaVersion: 1, exceptions: [...register.exceptions, ...register.exceptions] }), /Duplicate/);
+  assert.throws(() => auditThemePairs(manifest(paths), { schemaVersion: 1, exceptions: [{ ...register.exceptions[0], reason: ' ' }] }), /Invalid/);
+});
+
+test('CLI uses distinct success, parity-block, and invalid-input exit codes without writing', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'theme-parity-'));
+  const file = join(dir, 'manifest.json'), exceptionFile = join(dir, 'exceptions.json');
+  const run = () => spawnSync(process.execPath, [join(repo, 'scripts/audit-theme-pairs.mjs'), '--manifest', file, '--exceptions', exceptionFile, '--parity-only', 'yes'], { encoding: 'utf8' });
+  try {
+    writeFileSync(exceptionFile, JSON.stringify(register));
+    writeFileSync(file, JSON.stringify(manifest(paths)));
+    const valid = run();
+    assert.equal(valid.status, 0);
+    assert.equal(JSON.parse(valid.stdout).auditMode, 'parity-only');
+    writeFileSync(file, JSON.stringify(manifest([...paths, overlay + 'dark/unpaired.png'])));
+    assert.equal(run().status, 2);
+    writeFileSync(file, '{invalid');
+    assert.equal(run().status, 1);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('unknown, wrongly cased or incomplete theme directories are rejected', () => {
+  for (const path of [
+    overlay + 'LIGHT/new.png', overlay + 'Dark/new.png', overlay + 'sepia/new.png',
+    overlay + 'light', planets + 'BLUE/_circle/Neptune.png',
+  ]) {
+    const expected = path === overlay + 'light' ? /Unsupported asset type/ : /Unexpected chart theme/;
+    assert.throws(() => auditThemePairs(manifest([...paths, path]), register), expected);
+  }
+});
+
+test('the audit cannot pass if an entire chart theme family disappears', () => {
+  for (const prefix of [overlay, planets]) {
+    const result = auditThemePairs(manifest(paths.filter(p => !p.startsWith(prefix))), register);
+    assert.equal(result.verdict, 'blocked');
+    assert.equal(result.emptyFamilies.length, 1);
+  }
+});
+
+test('required baseline blocks removal of an entire matching pair that parity alone misses', () => {
+  const required = { schemaVersion: 1, pairs: [
+    { family: 'chart-overlays', relativePath: 'cartaastrale-case.png' },
+    { family: 'planet-circles', relativePath: '_circle/Sun.png' },
+  ] };
+  const extended = [...paths, overlay + 'light/asse-as.png', overlay + 'dark/asse-as.png'];
+  const removed = extended.filter(p => !p.endsWith('cartaastrale-case.png'));
+  assert.equal(auditThemePairs(manifest(removed), register).verdict, 'verified');
+  const report = auditThemePairs(manifest(removed), register, required);
+  assert.equal(report.verdict, 'blocked');
+  assert.deepEqual(report.missingRequiredPairs, [{
+    family: 'chart-overlays', relativePath: 'cartaastrale-case.png', missingThemes: ['light', 'dark'],
+  }]);
+});
+
+test('required baseline rejects invalid families, duplicates, unsafe names and empty inventories', () => {
+  const valid = { schemaVersion: 1, pairs: [{ family: 'chart-overlays', relativePath: 'cartaastrale-case.png' }] };
+  assert.equal(auditThemePairs(manifest(paths), register, valid).verdict, 'verified');
+  for (const required of [
+    { schemaVersion: 1, pairs: [] },
+    { schemaVersion: 2, pairs: valid.pairs },
+    { schemaVersion: 1, pairs: [{ family: 'other', relativePath: 'cartaastrale-case.png' }] },
+    { schemaVersion: 1, pairs: [{ family: 'chart-overlays', relativePath: '../escape.png' }] },
+    { schemaVersion: 1, pairs: [...valid.pairs, { ...valid.pairs[0], relativePath: 'Cartaastrale-case.png' }] },
+  ]) assert.throws(() => auditThemePairs(manifest(paths), register, required));
+});
+
+test('CLI refuses implicit parity-only verification or conflicting modes', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'theme-cli-mode-'));
+  const manifestFile = join(dir, 'manifest.json');
+  const exceptionsFile = join(dir, 'exceptions.json');
+  const requiredFile = join(dir, 'required.json');
+  const run = (...mode) => spawnSync(process.execPath, [
+    join(repo, 'scripts/audit-theme-pairs.mjs'),
+    '--manifest', manifestFile, '--exceptions', exceptionsFile, ...mode,
+  ], { encoding: 'utf8' });
+  try {
+    writeFileSync(manifestFile, JSON.stringify(manifest(paths)));
+    writeFileSync(exceptionsFile, JSON.stringify(register));
+    writeFileSync(requiredFile, JSON.stringify({ schemaVersion: 1, pairs: [
+      { family: 'chart-overlays', relativePath: 'cartaastrale-case.png' },
+    ] }));
+    for (const bad of [
+      [], ['--parity-only', 'no'], ['--required', requiredFile, '--parity-only', 'yes'],
+      ['--parity-only', 'yes', '--parity-only', 'yes'],
+    ]) {
+      const result = run(...bad);
+      assert.equal(result.status, 1, JSON.stringify(bad));
+      assert.match(result.stderr, /Usage:/);
+    }
+    const required = run('--fixture-required', requiredFile);
+    assert.equal(required.status, 0);
+    assert.equal(JSON.parse(required.stdout).auditMode, 'fixture-baseline');
+    const unpinned = run('--required', requiredFile);
+    assert.equal(unpinned.status, 1);
+    assert.match(unpinned.stderr, /Pinned theme baseline mismatch/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('CLI required inventory flags loss of both chart theme files', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'theme-baseline-'));
+  const manifestFile = join(dir, 'manifest.json'), exceptionsFile = join(dir, 'exceptions.json');
+  const requiredFile = join(dir, 'required.json');
+  const run = () => spawnSync(process.execPath, [
+    join(repo, 'scripts/audit-theme-pairs.mjs'),
+    '--manifest', manifestFile, '--exceptions', exceptionsFile, '--fixture-required', requiredFile,
+  ], { encoding: 'utf8' });
+  const extended = [...paths, overlay + 'light/asse-as.png', overlay + 'dark/asse-as.png'];
+  try {
+    writeFileSync(manifestFile, JSON.stringify(manifest(extended)));
+    writeFileSync(exceptionsFile, JSON.stringify(register));
+    writeFileSync(requiredFile, JSON.stringify({ schemaVersion: 1, pairs: [
+      { family: 'chart-overlays', relativePath: 'cartaastrale-case.png' },
+    ] }));
+    assert.equal(run().status, 0);
+    writeFileSync(manifestFile, JSON.stringify(manifest(extended.filter(p => !p.endsWith('cartaastrale-case.png')))));
+    const blocked = run();
+    assert.equal(blocked.status, 2);
+    assert.equal(JSON.parse(blocked.stdout).missingRequiredPairs.length, 1);
+    writeFileSync(requiredFile, '{malformed');
+    assert.equal(run().status, 1);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('release CLI rejects a substituted 49-pair baseline even when its count is unchanged', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'theme-release-pin-'));
+  const manifestFile = join(dir, 'manifest.json');
+  const exceptionsFile = join(dir, 'exceptions.json');
+  const requiredFile = join(dir, 'required.json');
+  const canonical = JSON.parse(readFileSync(join(repo, 'manifests/required-theme-pairs.json'), 'utf8'));
+  const run = () => spawnSync(process.execPath, [
+    join(repo, 'scripts/audit-theme-pairs.mjs'),
+    '--manifest', manifestFile, '--exceptions', exceptionsFile,
+    '--required', requiredFile,
+  ], { encoding: 'utf8' });
+  const familyPrefix = { 'chart-overlays': overlay, 'planet-circles': planets };
+  const complete = [
+    ...canonical.pairs.flatMap(({ family, relativePath }) => [
+      familyPrefix[family] + 'light/' + relativePath,
+      familyPrefix[family] + 'dark/' + relativePath,
+    ]),
+    overlay + 'light/texture-carta-panna.png',
+  ];
+  try {
+    writeFileSync(manifestFile, JSON.stringify(manifest(complete)));
+    writeFileSync(exceptionsFile, JSON.stringify(register));
+    writeFileSync(requiredFile, JSON.stringify(canonical));
+    const accepted = run();
+    assert.equal(accepted.status, 0, accepted.stderr);
+    assert.equal(JSON.parse(accepted.stdout).auditMode, 'required-baseline');
+    const changed = { ...canonical, pairs: canonical.pairs.map((pair, i) =>
+      i === 0 ? { ...pair, relativePath: 'substituted-but-49.png' } : pair) };
+    // Supply both variants of the substituted name, so only the independent
+    // baseline pin detects the otherwise self-consistent inventory.
+    const replaced = complete.filter(path => !path.endsWith(canonical.pairs[0].relativePath));
+    replaced.push(overlay + 'light/substituted-but-49.png', overlay + 'dark/substituted-but-49.png');
+    writeFileSync(manifestFile, JSON.stringify(manifest(replaced)));
+    writeFileSync(requiredFile, JSON.stringify(changed));
+    const rejected = run();
+    assert.equal(rejected.status, 1);
+    assert.match(rejected.stderr, /Pinned theme baseline mismatch/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('the required 49-pair baseline cannot be silently substituted while keeping its size', () => {
+  const baseline = JSON.parse(readFileSync(join(repo, 'manifests/required-theme-pairs.json'), 'utf8'));
+  const canonicalDigest = pairs => createHash('sha256')
+    .update(pairs.map(({ family, relativePath }) => family + '\t' + relativePath)
+      .sort().join('\n') + '\n', 'utf8')
+    .digest('hex');
+  // Independently pinned against the initial complete 49-pair chart inventory.
+  // Intentional changes must update this check under the same reviewed PR.
+  const original = '6c96873cf4caaa83ace3a6709d1307c6778e2e146d1f971c78d3694e47d516e8';
+  assert.equal(baseline.pairs.length, 49);
+  assert.equal(canonicalDigest(baseline.pairs), original);
+  const changed = baseline.pairs.map((entry, i) =>
+    i === 0 ? { ...entry, relativePath: 'different-but-still-49.png' } : entry);
+  assert.equal(changed.length, baseline.pairs.length);
+  assert.notEqual(canonicalDigest(changed), original);
+});
+
+test('committed manifest has 26 overlay pairs, 23 planet pairs, one documented exception', () => {
+  const realManifest = JSON.parse(readFileSync(join(repo, 'manifests/approved-assets.json'), 'utf8'));
+  const realExceptions = JSON.parse(readFileSync(join(repo, 'manifests/theme-pair-exceptions.json'), 'utf8'));
+  const realRequired = JSON.parse(readFileSync(join(repo, 'manifests/required-theme-pairs.json'), 'utf8'));
+  const result = auditThemePairs(realManifest, realExceptions, realRequired);
+  assert.equal(result.verdict, 'verified');
+  assert.deepEqual(result.families.map(f => [f.lightCount, f.darkCount, f.pairedCount]), [[27, 26, 26], [23, 23, 23]]);
+  assert.equal(realRequired.pairs.length, 49);
+  assert.deepEqual(result.missingRequiredPairs, []);
+  assert.equal(result.approvedExceptions.length, 1);
+});
