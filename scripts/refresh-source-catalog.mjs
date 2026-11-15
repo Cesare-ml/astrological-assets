@@ -5,9 +5,9 @@
  * Never reads/copies image bytes or calls GitHub/AWS.
  */
 import { execFileSync } from 'node:child_process';
-import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { writeLocalCatalogSnapshot } from './write-local-catalog-snapshot.mjs';
 
 const EXTS=new Set(['.png','.jpg','.jpeg','.webp','.svg','.gif','.avif','.bmp','.ico','.woff','.woff2','.ttf','.otf','.json']);
 const LEGACY=/(?:^|\/)(?:_old|old[^/]*|.*-old[^/]*)/i;
@@ -56,23 +56,38 @@ export function refreshCatalog(repoPath) {
 
 function cli(args) {
   let repo, out, write=false;
+  const usage='Usage: --repo ../virgo-stars [--write --out ./upstream-candidates.local.json]';
   for(let i=0;i<args.length;i++) {
     const flag=args[i];
-    if(flag==='--write') write=true;
-    else if(flag==='--repo') repo=args[++i];
-    else if(flag==='--out') out=args[++i];
-    else throw new Error('Usage: --repo ../virgo-stars [--out catalog/upstream-candidates.json --write]');
+    if(flag==='--write') {
+      if(write) throw new Error('Duplicate --write. '+usage);
+      write=true;
+    } else if(flag==='--repo' || flag==='--out') {
+      const value=args[++i];
+      if(!value || value.startsWith('--')) throw new Error('Missing value for '+flag+'. '+usage);
+      if(flag==='--repo') {
+        if(repo) throw new Error('Duplicate --repo. '+usage);
+        repo=value;
+      } else {
+        if(out) throw new Error('Duplicate --out. '+usage);
+        out=value;
+      }
+    } else throw new Error(usage);
   }
-  if(!repo) throw new Error('Missing --repo');
+  if(!repo) throw new Error('Missing --repo. '+usage);
+  if(out && !write) throw new Error('--out requires --write; dry run never writes');
+  if(write && !out) throw new Error('--write requires --out with a .local.json filename');
   const catalog=refreshCatalog(repo);
   const total=catalog.files.reduce((sum,f)=>sum+f.bytes,0);
   console.log('Source commit:',catalog.source.commit);
   console.log('Candidate paths:',catalog.fileCount,'bytes:',total);
   console.log('Catalog entries are metadata, not permissions; consult approvals separately. No binary files copied.');
   if(!write) return;
-  if(!out) throw new Error('--write requires --out');
-  writeFileSync(resolve(out),JSON.stringify(catalog,null,2)+'\n');
-  console.log('Wrote catalog metadata only:',resolve(out));
+  const path = writeLocalCatalogSnapshot({
+    output:out, catalog, repositoryRoot:fileURLToPath(new URL('..',import.meta.url)), sourceRepoRoot:repo,
+  });
+  console.log('Wrote unreviewed local catalog snapshot:',path);
+  console.log('Review with npm run audit:catalog -- '+path+' before manually updating catalog/upstream-candidates.json.');
 }
 if(process.argv[1]&&resolve(process.argv[1])===resolve(fileURLToPath(import.meta.url))) {
   try{cli(process.argv.slice(2));}
