@@ -50,6 +50,8 @@ The command verifies every canonical `assets/<manifest path>` and SHA-256, scans
 
 The gate has been exercised with synthetic files, including a 392-file synthetic output and a deliberately added duplicate. No VirgoStars build or production asset manifest has been checked yet.
 
+**Build-root path safety:** The output verifier rejects symbolic links and junctions not only *inside* the build output but also in **any ancestor of the `--build` path**. A linked parent could otherwise redirect the verifier into a different directory while the final output folder appears regular. Pass an explicit, physical build output path (resolve any intentional development aliases first), and inspect any failure rather than bypassing the guard. The verifier exits with status `1` for an unsafe path; passing this path check does not approve image rights.
+
 **No integration in production has been made by this repository.**
 
 ## Phase D — offline Astrolabio

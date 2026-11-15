@@ -2,17 +2,31 @@
 // Read-only check of the actual emitted web files against an approved manifest.
 import { createHash } from 'node:crypto';
 import { lstatSync, readdirSync, readFileSync } from 'node:fs';
-import { join, relative, resolve, sep } from 'node:path';
+import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateAssetPath } from './import-approved-assets.mjs';
 
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 
+// A symlinked parent can redirect a seemingly ordinary build directory to a
+// different tree. Refuse it before reading any emitted assets.
+function assertSafeBuildRoot(root) {
+  let current = root;
+  while (true) {
+    const info = lstatSync(current);
+    if (info.isSymbolicLink()) throw new Error('Symlink in build root path: ' + current);
+    if (!info.isDirectory()) throw new Error('Non-directory build root path: ' + current);
+    const parent = dirname(current);
+    if (parent === current) return;
+    current = parent;
+  }
+}
+
 export function inspectBuildOutput({buildRoot, manifest}) {
   if (!buildRoot || !manifest || manifest.schemaVersion !== 1 || !Array.isArray(manifest.assets) || !manifest.assets.length)
     throw new Error('Build root and nonempty approved manifest are required');
-  const root=resolve(buildRoot), rootInfo=lstatSync(root);
-  if(rootInfo.isSymbolicLink() || !rootInfo.isDirectory()) throw new Error('Unsafe build root');
+  const root=resolve(buildRoot);
+  assertSafeBuildRoot(root);
   const expected=new Map(), sizes=new Set(), hashes=new Set(), folded=new Set();
   for(const record of manifest.assets) {
     const path=validateAssetPath(record?.path), key=path.normalize('NFC').toLowerCase();
