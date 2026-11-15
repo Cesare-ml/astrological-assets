@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 1,
+  "family": "VirgoStars Astro",
+  "version": "0.0.0-planning",
+  "status": "planning",
+  "provenancePolicy": "independent-original-outlines-only",
+  "licenseStatus": "not-selected",
+  "geometryIncluded": false,
+  "metrics": {
+    "unitsPerEm": 1000,
+    "ascender": 800,
+    "descender": -200,
+    "defaultAdvance": 1000
+  },
+  "glyphs": [
+    {
+      "id": "aries",
+      "category": "zodiac",
+      "name": "Aries",
+      "unicode": "U+2648",
+      "character": "♈",
+      "legacyReferenceKey": "A",
+      "traditionalForm": "paired-horns",
+      "status": "planned"
+    },
+    {
+      "id": "taurus",
+      "category": "zodiac",
+      "name": "Taurus",
+      "unicode": "U+2649",
+      "character": "♉",
+      "legacyReferenceKey": "B",
+      "traditionalForm": "horns-above-circle",
+      "status": "planned"
+    },
+    {
+      "id": "gemini",
+      "category": "zodiac",
+      "name": "Gemini",
+      "unicode": "U+264A",
+      "character": "♊",
+      "legacyReferenceKey": "C",
+      "traditionalForm": "paired-pillars",
+      "status": "planned"
+    },
+    {
+      "id": "cancer",
+      "category": "zodiac",
+      "name": "Cancer",
+      "unicode": "U+264B",
+      "character": "♋",
+      "legacyReferenceKey": "D",
+      "traditionalForm": "opposed-curls",
+      "status": "planned"
+    },
+    {
+      "id": "leo",
+      "category": "zodiac",
+      "name": "Leo",
+      "unicode": "U+264C",
+      "character": "♌",
+      "legacyReferenceKey": "E",
+      "traditionalForm": "loop-and-tail",
+      "status": "planned"
+    },
+    {
+      "id": "virgo",
+      "category": "zodiac",
+      "name": "Virgo",
+      "unicode": "U+264D",
+      "character": "♍",
+      "legacyReferenceKey": "F",
+      "traditionalForm": "inward-tail",
+      "status": "planned"
+    },
+    {
+      "id": "libra",
+      "category": "zodiac",
+      "name": "Libra",
+      "unicode": "U+264E",
+      "character": "♎",
+      "legacyReferenceKey": "G",
+      "traditionalForm": "arch-and-line",
+      "status": "planned"
+    },
+    {
+      "id": "scorpio",
+      "category": "zodiac",
+      "name": "Scorpio",
+      "unicode": "U+264F",
+      "character": "♏",
+      "legacyReferenceKey": "H",
+      "traditionalForm": "outward-arrow-tail",
+      "status": "planned"
+    },
+    {
+      "id": "sagittarius",
+      "category": "zodiac",
+      "name": "Sagittarius",
+      "unicode": "U+2650",
+      "character": "♐",
+      "legacyReferenceKey": "I",
+      "traditionalForm": "diagonal-arrow",
+      "status": "planned"
+    },
+    {
+      "id": "capricorn",
+      "category": "zodiac",
+      "name": "Capricorn",
+      "unicode": "U+2651",
+      "character": "♑",
+      "legacyReferenceKey": "J",
+      "traditionalForm": "angular-curl",
+      "status": "planned"
+    },
+    {
+      "id": "aquarius",
+      "category": "zodiac",
+      "name": "Aquarius",
+      "unicode": "U+2652",
+      "character": "♒",
+      "legacyReferenceKey": "K",
+      "traditionalForm": "parallel-waves",
+      "status": "planned"
+    },
+    {
+      "id": "pisces",
+      "category": "zodiac",
+      "name": "Pisces",
+      "unicode": "U+2653",
+      "character": "♓",
+      "legacyReferenceKey": "L",
+      "traditionalForm": "linked-opposed-curves",
+      "status": "planned"
+    },
+    {
+      "id": "sun",
+      "category": "body",
+      "name": "Sun",
+      "unicode": "U+2609",
+      "character": "☉",
+      "legacyReferenceKey": "Q",
+      "traditionalForm": "circle-dot",
+      "status": "planned"
+    },
+    {
+      "id": "moon",
+      "category": "body",
+      "name": "Moon",
+      "unicode": "U+263D",
+      "character": "☽",
+      "legacyReferenceKey": "R",
+      "traditionalForm": "crescent",
+      "status": "planned"
+    },
+    {
+      "id": "mercury",
+      "category": "body",
+      "name": "Mercury",
+      "unicode": "U+263F",
+      "character": "☿",
+      "legacyReferenceKey": "S",
+      "traditionalForm": "crescent-circle-cross",
+      "status": "planned"
+    },
+    {
+      "id": "venus",
+      "category": "body",
+      "name": "Venus",
+      "unicode": "U+2640",
+      "character": "♀",
+      "legacyReferenceKey": "T",
+      "traditionalForm": "circle-cross",
+      "status": "planned"
+    },
+    {
+      "id": "mars",
+      "category": "body",
+      "name": "Mars",
+      "unicode": "U+2642",
+      "character": "♂",
+      "legacyReferenceKey": "U",
+      "traditionalForm": "circle-arrow",
+      "status": "planned"
+    },
+    {
+      "id": "jupiter",
+      "category": "body",
+      "name": "Jupiter",
+      "unicode": "U+2643",
+      "character": "♃",
+      "legacyReferenceKey": "V",
+      "traditionalForm": "curl-cross",
+      "status": "planned"
+    },
+    {
+      "id": "saturn",
+      "category": "body",
+      "name": "Saturn",
+      "unicode": "U+2644",
+      "character": "♄",
+      "legacyReferenceKey": "W",
+      "traditionalForm": "cross-hook",
+      "status": "planned"
+    },
+    {
+      "id": "uranus",
+      "category": "body",
+      "name": "Uranus",
+      "unicode": "U+2645",
+      "character": "♅",
+      "legacyReferenceKey": "X",
+      "traditionalForm": "h-and-circle",
+      "status": "planned"
+    },
+    {
+      "id": "neptune",
+      "category": "body",
+      "name": "Neptune",
+      "unicode": "U+2646",
+      "character": "♆",
+      "legacyReferenceKey": "Y",
+      "traditionalForm": "trident-cross",
+      "status": "planned"
+    },
+    {
+      "id": "pluto",
+      "category": "body",
+      "name": "Pluto",
+      "unicode": "U+2647",
+      "character": "♇",
+      "legacyReferenceKey": "Z",
+      "traditionalForm": "circle-crescent-cross",
+      "status": "planned"
+    }
+  ]
+}

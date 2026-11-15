@@ -1,6 +1,6 @@
 # Migration plan: one asset source, no double import
 
-> **Publication is a separate gate.** This plan describes private development and later production integration; it does not authorize public redistribution of the committed images. Before publication follow [public release checklist](PUBLIC_RELEASE_CHECKLIST.md), including the full-history audit.
+> **The asset repository is now public.** Public GitHub visibility does not establish that every historical raster image has completed third-party-rights review. The [public-release checklist](PUBLIC_RELEASE_CHECKLIST.md) and [rights issue #2](https://github.com/Cesare-ml/astrological-assets/issues/2) remain open. No production integration is implied.
 
 
 ## Current production behavior
@@ -9,7 +9,7 @@ The VirgoStars Angular workspace presently copies the monorepo `public/` directo
 
 **Do not change production until the newly separated charts library compiles and every required asset has been reviewed and tested.**
 
-## Phase A — private asset pack (this repo)
+## Phase A — curated asset pack (this public repo)
 
 1. Review `catalog/upstream-candidates.json` and select active graphics only.
 2. Record **explicit** rights approvals in `catalog/approvals.json`, by path.
@@ -20,7 +20,7 @@ The VirgoStars Angular workspace presently copies the monorepo `public/` directo
 
 ## Phase B — independent chart demo
 
-Clone the two private repositories as siblings. Use `astrological-charts/scripts/serve-local-assets.mjs` pointed to `../astrological-assets/public/assets`. Load the URL `http://127.0.0.1:4177/assets/` through the charts library's host-owned asset resolver. Confirm correct rendering for natal, transits, synastry, latitudes, different skins, browser and mobile.
+Clone the chart and asset repositories as siblings. Their GitHub visibility and asset release permissions must be checked independently. Use `astrological-charts/scripts/serve-local-assets.mjs` pointed to `../astrological-assets/public/assets`. Load the URL `http://127.0.0.1:4177/assets/` through the charts library's host-owned asset resolver. Confirm correct rendering for natal, transits, synastry, latitudes, different skins, browser and mobile.
 
 The demo should not require access to production APIs, AWS, user themes, or the private VirgoStars source.
 
@@ -55,6 +55,18 @@ The gate has been exercised with synthetic files, including a 392-file synthetic
 ## Phase D — offline Astrolabio
 
 Produce a per-device versioned subset by manifest and hash; package one local copy per required asset. Pin the device's renderer version and its asset version, and deploy with rollback only after actual browser/headless/e-ink tests. No implicit device updates from the GitHub repository.
+
+## Phase E — original VirgoStars Astro symbol font (planned)
+
+This is a **separate, optional workstream**: [roadmap](ROADMAP.md), [font plan](VIRGOSTARS_ASTRO_FONT_PLAN.md), [iconography specification](VIRGOSTARS_ASTRO_ICONOGRAPHY.md), [issue #8](https://github.com/Cesare-ml/astrological-assets/issues/8).
+
+1. Independently design 22 glyphs (12 zodiac signs, 10 primary bodies) from the owner's selected *traditional iconographic variants* in Astro-SemiBold, **without copying the old font's actual contours or binary**.
+2. Map the original new glyphs to canonical Unicode instead of legacy ASCII letter positions; preserve stable application/renderer entity IDs.
+3. Generate TTF/WOFF2 from the original source and validate glyph metrics, 16–64 px readability, light/dark themes, exports, focus and hover behavior.
+4. Agree an explicit **VirgoStars-owned font license**, including embedding and downstream binary redistribution with open-source Desktop and web clients, before adding or bundling font files.
+5. Migrate charts on a separate branch with tested fallback and rollback. Leave existing raster asset URLs intact until independently reviewed.
+
+This future font **does not resolve** third-party rights in already-public glyph-derived raster images. Treat the historical font licensing work in [issue #2](https://github.com/Cesare-ml/astrological-assets/issues/2) as an independent P0 task. No Astro-SemiBold binary is permitted in the public repository.
 
 ## Rollback
 

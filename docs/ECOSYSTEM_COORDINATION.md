@@ -1,6 +1,6 @@
 # VirgoStars graphics ecosystem — operating contract
 
-**Historical coordination snapshot updated 2026-11-10; public-release preparation added 2026-11-12.** This file is the cross-repository design and release contract. It describes implemented work and explicitly identifies what is still pending; it does not approve asset licenses or authorize production deployment.
+**Historical coordination snapshot from 2026-11-10, updated after the 2026-11-12 public repository release.** This file is the cross-repository design and release contract. It describes implemented work and explicitly identifies what is still pending; it does not approve asset licenses or authorize production deployment.
 
 ## 1. Ownership and boundaries
 
@@ -8,7 +8,9 @@
 |---|---|---|---|
 | [virgo-stars](https://github.com/Cesare-ml/virgo-stars) | Private | Live Angular website, business/backend, account data, Astrolabio software, deployment and currently deployed `public/assets` | Independent development access for graphics contributors |
 | [astrological-charts](https://github.com/Cesare-ml/astrological-charts) | Private | Angular 20 + Three.js renderer source, API, skins, URL resolver, graphics tests and a development-only read-only asset server | Real asset binaries, data/calculation backend, deployments |
-| [astrological-assets](https://github.com/Cesare-ml/astrological-assets) | Private, open-source preparation | Candidate inventories, rights review and eventually **one authoritative Git source** of the approved chart images/fonts | Source renderer, private user charts, general site media, production deployment |
+| [astrological-assets](https://github.com/Cesare-ml/astrological-assets) | **Public** (since 2026-11-12; artwork clearance review still open) | Candidate inventories, rights review and eventually **one authoritative Git source** of the approved chart images/fonts | Source renderer, private user charts, general site media, production deployment |
+
+**New planned workstream:** [VirgoStars Astro](ROADMAP.md) is a VirgoStars-owned original-font design, tracked in [issue #8](https://github.com/Cesare-ml/astrological-assets/issues/8). It is **not implemented or licensed for release**. It will replace selected runtime glyph needs only after separate technical and legal validation.
 
 The independent renderer can *compile* without graphics. To visually render the original artwork it **must have reachable assets**. An invited contributor does **not** need access to `virgo-stars` if granted access to this repo **after assets are reviewed and imported**; alternatively, synthetic licensed fixtures can be used for limited tests. URL access and Git repository access are distinct.
 
@@ -38,7 +40,7 @@ The Charts stack was integrated oldest-first, updating the base and verifying th
 
 Source catalog: `catalog/upstream-candidates.json`, pinned to `virgo-stars` commit `9900c36acc309bc2a6e87009f554b2e4141e4864`, 1,124 candidate paths, 80.44 MiB summed sizes, 552 distinct Git blobs. The catalog contains **metadata only** and may include old graphics or fonts not needed in production. The separate pack contains 1,013 imported image files, including 78 `simboli-bianchi` and 46 `_circle` files; obsolete catalog entries and all font files were excluded.
 
-`catalog/approvals.json` records the owner's 2026-11-10 declaration that the images were created by the owner and that private sharing is authorized, including images derived from a font of unknown license. The font itself is excluded; the declaration does not establish a license for the font or public redistribution. Only the owner/rightsholder's explicit review may approve additional assets. Public open-source release still requires per-asset licensing decisions and review of Git history. See [the public release checklist](PUBLIC_RELEASE_CHECKLIST.md).
+`catalog/approvals.json` records the owner's 2026-11-10 declaration that the images were created by the owner and that private sharing is authorized, including images derived from a font of unknown license. The font itself is excluded; the declaration does not establish a license for the font or public redistribution. Only the owner/rightsholder's explicit review may approve additional assets. The asset repository is already public, but that visibility **does not certify** rights for all previously imported raster files. The project owner's original artwork policy is CC BY 4.0; per-asset third-party review and a Git history content audit remain open. See [the public release checklist](PUBLIC_RELEASE_CHECKLIST.md).
 
 The source originally referenced the absent `risuonatore-solare-bianco.png` in two skins; the owner authorized using the included `risuonatore-solare-bn.png` instead. Verify its visual appearance separately. The independent Charts renderer uses the same house symbols as the base chart and the `_circle` planet artwork for latitudes; advanced options require separate testing.
 
@@ -71,11 +73,24 @@ The source originally referenced the absent `risuonatore-solare-bianco.png` in t
 
 Charts PR #13 now includes a narrower synthetic smoke test: a desktop Firefox context is offline, verifies a generated fixture manifest, reads assets via `file://` and exports four chart modes. It does not exercise the shipped Astrolabio adapter, an approved/minimal asset subset, e-ink, updates or hardware, so the gate above remains open.
 
+## 5A. Planned Gate E — original VirgoStars Astro font
+
+**Status: planned / not implemented.** Follow [the font roadmap](ROADMAP.md), [design and rights plan](VIRGOSTARS_ASTRO_FONT_PLAN.md), [traditional glyph variants](VIRGOSTARS_ASTRO_ICONOGRAPHY.md) and [issue #8](https://github.com/Cesare-ml/astrological-assets/issues/8).
+
+- [ ] Independently author 12 traditional zodiac and 10 celestial-body glyphs. Astro-SemiBold is the owner's **iconographic reference for symbol variants**, not a source of reusable outlines, vectors or font binaries.
+- [ ] Use Unicode mappings and newly designed glyph metrics; retain front-end entity IDs and chart interaction events.
+- [ ] Build TTF/WOFF2 only from newly authored contours; validate 16–64 px rendering, light/dark mode, exports and fallback.
+- [ ] Choose and document **VirgoStars-controlled font ownership and explicit embedding/redistribution permissions** before distributing with the open-source Desktop/site.
+- [ ] Integrate through separate, version-pinned chart/desktop pull requests with visual QA and rollback.
+- [ ] Keep legacy image rights and existing font provenance audits under issue #2; a new font does **not** retroactively cure any old raster licensing issues.
+
+Do not import or commit `ASTRO-SE.TTF` or its derived contours to the public repository. This workstream is distinct from the CPAL-1.0 software tools and CC BY 4.0 original-artwork policy.
+
 ## 6. Contributor permissions and safety
 
-All three repositories are currently private. On GitHub **personal-account** repositories, invitations to private repos do not necessarily offer a strict read-only role. For actual permission separation consider an organization with `read`/`write` roles; otherwise assume code/assets collaborators may have write rights and protect review branches accordingly.
+This asset repository is **public**; each other VirgoStars repository has its own access and collaboration rules. On GitHub **personal-account** repositories, invitations to private repos do not necessarily offer a strict read-only role. For actual permission separation consider an organization with `read`/`write` roles; otherwise assume code/assets collaborators may have write rights and protect review branches accordingly.
 
-No GitHub Actions, AWS deploys, scheduled jobs or automatic PR merges have been configured. The asset-pack software tooling now has a proposed CPAL-1.0 license on a preparation branch. The image binaries remain private-only and must pass the separate public rights gate; no public repository visibility change is authorized. Renderer licensing is managed in its own repository. The public site and shipped Astrolabi remain untouched by this work.
+No GitHub Actions, AWS deploys, scheduled jobs or automatic PR merges have been configured. The original asset-tooling license is CPAL-1.0. The owner selected CC BY 4.0 for their original artwork, but file-specific third-party clearance remains incomplete. The repository is already publicly visible; no future deployment, font release or asset migration is authorized merely by its visibility. Renderer licensing is managed in its own repository. The public site and shipped Astrolabi remain untouched by this work.
 
 ## 7. Quick commands for owner (no network side effects)
 
