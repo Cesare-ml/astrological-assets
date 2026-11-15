@@ -12,7 +12,7 @@
 - [x] **Owner selected CC BY 4.0** for the original artistic contributions. See [artwork licensing policy](ARTWORK_LICENSING_POLICY.md).
 - [ ] **Human reviewer clears each complete image file** for public redistribution, including underlying third-party material. Check any third-party fonts, glyphs, maps, textures, marks, and generated images for source restrictions.
 - [ ] Populate `catalog/publication-approvals.json` with exact image paths and SHA-256s, CC-BY-4.0, rights holder and evidence, plus `thirdPartyStatus: "cleared"` and a specific third-party review. No automatic approval.
-- [ ] Verify every current binary: `npm run verify:pack` and `npm run check:public-release` both succeed (exit 0). Review unexpected/unlisted files manually.
+- [ ] Verify the complete current pack: `npm run verify:pack -- --strict` (see [strict pack closure gate](PACK_CLOSURE_GATE.md)) and `npm run check:public-release` both succeed (exit 0). Review unexpected/unlisted files manually.
 - [ ] Audit contents and metadata of ALL historical Git blobs and earlier commits for non-public asset files, personal information, credentials, third-party content, restricted materials, and other unpublished work. A clean HEAD does **not** mean safe history.
 - [ ] If rights-restricted material is found in publicly reachable history, promptly assess mitigation with the owner. Removing it from the current tree or moving to a clean-history export does **not** reverse prior public access, clones, caches or forks.
 - [ ] Run `npm test` and `npm run audit:catalog`. Run renderer integration and compatibility tests where meaningful.
@@ -27,11 +27,12 @@
 npm test
 npm run audit:catalog
 npm run verify:pack
+npm run verify:pack -- --strict
 npm run check:public-release
 npm run review:public -- --out ./artwork-review.local.json
 ```
 
-The last command returns **exit code 2** when any image is missing explicit public approval, a record is inconsistent, or the current pack includes an unlisted binary; it returns **exit code 0** only if the *current pack* meets the recorded metadata checks. The script does **not** authenticate legal ownership, discover unknown third-party rights, or scan historical Git objects. This is a technical guardrail, **not legal certification**.
+The `check:public-release` command returns **exit code 2** when any image is missing explicit public approval, a record is inconsistent, or the current pack includes an unlisted binary; it returns **exit code 0** only if the *current pack* meets the recorded metadata checks. The script does **not** authenticate legal ownership, discover unknown third-party rights, or scan historical Git objects. This is a technical guardrail, **not legal certification**.
 
 ### Public authorization record format (illustrative only)
 
