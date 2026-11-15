@@ -79,6 +79,7 @@ This repository contains **assets and asset-management tooling**, not the render
 | `npm test` | Run Node.js tests |
 | `npm run audit:catalog` | Inspect the source asset catalog |
 | `npm run verify:pack` | Verify all committed images against the SHA-256 manifest |
+| `npm run check:raster-headers` | Check actual PNG/JPEG/WebP headers and SHA-256 without decoding or modifying images |
 | `npm run review:public -- --out ./artwork-review.local.json` | Generate a **pending-only** worksheet for human rights review |
 | `npm run check:public-release` | Check image-specific public clearance records, hashes, and owner license policy |
 
