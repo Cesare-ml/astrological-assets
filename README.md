@@ -78,6 +78,7 @@ This repository contains **assets and asset-management tooling**, not the render
 | --- | --- |
 | `npm test` | Run Node.js tests |
 | `npm run audit:catalog` | Inspect the source asset catalog |
+| `node scripts/report-asset-footprint.mjs` | Estimate manifest-only logical and deduplicated storage for offline subsets (not an integrity or rights check) |
 | `npm run verify:pack` | Verify all committed images against the SHA-256 manifest |
 | `npm run review:public -- --out ./artwork-review.local.json` | Generate a **pending-only** worksheet for human rights review |
 | `npm run check:public-release` | Check image-specific public clearance records, hashes, and owner license policy |
@@ -121,6 +122,7 @@ Contributions to the tools, tests, documentation, and compatible original assets
 ## Documentation
 
 - [Asset scope and upstream inventory](docs/ASSET_SCOPE.md)
+- [Read-only footprint planning for Desktop and Astrolabio](docs/ASSET_FOOTPRINT.md)
 - [Artwork licensing policy](docs/ARTWORK_LICENSING_POLICY.md)
 - [Licensing and credits](docs/LICENSING_AND_CREDITS.md)
 - [Public release checks and unresolved gates](docs/PUBLIC_RELEASE_CHECKLIST.md)
