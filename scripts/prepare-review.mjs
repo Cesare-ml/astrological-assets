@@ -12,7 +12,9 @@ export function prepareReview(catalog,family,{includeLegacy=false}={}) {
   if(typeof family!=='string' || !/^(?:img|fonts)\/[a-zA-Z0-9_\-./ ]+\/?$/.test(family)
     || family.includes('..') || family.includes('\\'))
     throw new Error('Specify a safe non-root --family prefix');
-  const records=catalog.files.filter(x=>x.path.startsWith(family) && (includeLegacy || !x.legacy));
+  // Match a directory boundary, not similarly named sibling families.
+  const prefix=family.endsWith('/') ? family : family+'/';
+  const records=catalog.files.filter(x=>x.path.startsWith(prefix) && (includeLegacy || !x.legacy));
   if(!records.length) throw new Error('No candidate images/fonts match that family');
   return {
     schemaVersion:1,
@@ -36,9 +38,12 @@ function cli() {
     else throw new Error('Usage: --family img/simboli-bianchi/segni/ --out segni-review.local.json [--include-legacy]');
   }
   if(!opts['--family'] || !opts['--out']) throw new Error('Missing family or output');
+  // Worksheets are local scratch files, never authoritative approval registers.
+  if(!opts['--out'].endsWith('.local.json'))
+    throw new Error('Review --out must end with .local.json (never an approvals register)');
   const catalog=JSON.parse(readFileSync(opts['--catalog']||defaultCatalog,'utf8'));
   const list=prepareReview(catalog,opts['--family'],opts);
-  writeFileSync(resolve(opts['--out']),JSON.stringify(list,null,2)+'\n');
+  writeFileSync(resolve(opts['--out']),JSON.stringify(list,null,2)+'\n',{flag:'wx'});
   console.log('Prepared',list.assets.length,'PENDING review records; NO rights approved, NO binaries copied.');
 }
 if(process.argv[1] && resolve(process.argv[1])===resolve(fileURLToPath(import.meta.url))) {
