@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { assessPublicRelease } from '../scripts/check-public-release.mjs';
+import { assessPublicRelease, listPackFiles } from '../scripts/check-public-release.mjs';
+import { mkdtempSync, mkdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 const path = 'img/simboli-bianchi/segni/01.png';
 const sha256 = 'a'.repeat(64);
@@ -81,8 +84,121 @@ test('unlisted binaries and stale publication approvals fail closed', () => {
 test('case collisions, malformed register and missing pack files are rejected', () => {
   assert.throws(() => assess(manifest, { schemaVersion: 0, assets: [] }, [path]), /version 1/);
   assert.throws(() => assess(manifest, { schemaVersion: 1, assets: [publicRecord,
-    { ...publicRecord, path: path.toUpperCase() }] }, [path]), /case-colliding public approval/);
+    { ...publicRecord, path: path.replace('01.png', '01.PNG') }] }, [path]), /case-colliding public approval/);
   const r = assess(manifest, { schemaVersion: 1, assets: [publicRecord] }, []);
   assert.equal(r.ready, false);
   assert.match(r.issues[0], /Manifest file not present/);
+});
+
+test('public release requires exact pack spelling, including filename case', () => {
+  const publication = { schemaVersion: 1, assets: [publicRecord] };
+  const correct = assess(manifest, publication, [path]);
+  assert.equal(correct.ready, true);
+  const changedCase = assess(manifest, publication, [path.replace('01.png', '01.PNG')]);
+  assert.equal(changedCase.ready, false);
+  assert.ok(changedCase.issues.some(issue => issue.includes('canonical manifest spelling')));
+  assert.ok(changedCase.issues.some(issue => issue.includes('01.PNG') && issue.includes(path)));
+});
+
+test('public release rejects Unicode-normalization aliases of an approved file', () => {
+  const canonical = 'img/simboli-bianchi/segni/caf\u00e9.png';
+  const manifestWithUnicode = {
+    ...manifest,
+    assets: [{ ...manifest.assets[0], path: canonical }],
+  };
+  const publication = {
+    schemaVersion: 1,
+    assets: [{ ...publicRecord, path: canonical }],
+  };
+  assert.equal(assess(manifestWithUnicode, publication, [canonical]).ready, true);
+  const alias = canonical.normalize('NFD');
+  assert.notEqual(alias, canonical);
+  const result = assess(manifestWithUnicode, publication, [alias]);
+  assert.equal(result.ready, false);
+  assert.match(result.issues.join(' '), /canonical manifest spelling/);
+});
+
+test('multiple physical aliases remain blocked even when one spelling is canonical', () => {
+  const publication = { schemaVersion: 1, assets: [publicRecord] };
+  const result = assess(manifest, publication, [path, path.replace('01.png', '01.PNG')]);
+  assert.equal(result.ready, false);
+  assert.match(result.issues.join(' '), /Case-colliding pack file/);
+});
+
+test('real pack directory enumeration exposes noncanonical filename casing', () => {
+  const root = mkdtempSync(join(tmpdir(), 'astro-public-paths-'));
+  try {
+    const folder = join(root, 'img', 'simboli-bianchi', 'segni');
+    mkdirSync(folder, { recursive: true });
+    writeFileSync(join(folder, '01.PNG'), Buffer.from('synthetic fixture only'));
+    const files = listPackFiles(root);
+    assert.deepEqual(files, [path.replace('01.png', '01.PNG')]);
+    const result = assess(manifest, { schemaVersion: 1, assets: [publicRecord] }, files);
+    assert.equal(result.ready, false);
+    assert.match(result.issues.join(' '), /canonical manifest spelling/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('public pack enumeration rejects a directly symlinked root', t => {
+  const base = mkdtempSync(join(tmpdir(), 'astro-public-symlink-root-'));
+  try {
+    const actual = join(base, 'actual');
+    mkdirSync(actual);
+    const alias = join(base, 'alias');
+    try { symlinkSync(actual, alias, process.platform === 'win32' ? 'junction' : 'dir'); }
+    catch (error) {
+      if (process.platform === 'win32' && ['EPERM', 'EACCES'].includes(error.code))
+        return t.skip('Junction creation not allowed');
+      throw error;
+    }
+    assert.throws(() => listPackFiles(alias), /Symlink in public pack root path/);
+  } finally { rmSync(base, { recursive: true, force: true }); }
+});
+
+test('public pack enumeration rejects symlink ancestors above the supplied root', t => {
+  const base = mkdtempSync(join(tmpdir(), 'astro-public-symlink-parent-'));
+  try {
+    const actual = join(base, 'actual');
+    const pack = join(actual, 'nested', 'assets');
+    mkdirSync(pack, { recursive: true });
+    writeFileSync(join(pack, 'fixture.png'), 'local synthetic bytes');
+    assert.deepEqual(listPackFiles(pack), ['fixture.png']);
+    const alias = join(base, 'alias');
+    try { symlinkSync(actual, alias, process.platform === 'win32' ? 'junction' : 'dir'); }
+    catch (error) {
+      if (process.platform === 'win32' && ['EPERM', 'EACCES'].includes(error.code))
+        return t.skip('Junction creation not allowed');
+      throw error;
+    }
+    assert.throws(() => listPackFiles(join(alias, 'nested', 'assets')),
+      /Symlink in public pack root path/);
+  } finally { rmSync(base, { recursive: true, force: true }); }
+});
+
+test('public pack enumeration rejects a file root or missing root', () => {
+  const base = mkdtempSync(join(tmpdir(), 'astro-public-bad-root-'));
+  try {
+    const file = join(base, 'file');
+    writeFileSync(file, 'synthetic');
+    assert.throws(() => listPackFiles(file), /Non-directory in public pack root path/);
+    assert.throws(() => listPackFiles(join(base, 'missing')), /ENOENT/);
+  } finally { rmSync(base, { recursive: true, force: true }); }
+});
+
+test('public pack enumeration still rejects links nested inside an otherwise valid root', t => {
+  const base = mkdtempSync(join(tmpdir(), 'astro-public-symlink-entry-'));
+  try {
+    const pack = join(base, 'pack'), other = join(base, 'other');
+    mkdirSync(pack); mkdirSync(other);
+    const link = join(pack, 'linked');
+    try { symlinkSync(other, link, process.platform === 'win32' ? 'junction' : 'dir'); }
+    catch (error) {
+      if (process.platform === 'win32' && ['EPERM', 'EACCES'].includes(error.code))
+        return t.skip('Junction creation not allowed');
+      throw error;
+    }
+    assert.throws(() => listPackFiles(pack), /Symlinks forbidden in public pack/);
+  } finally { rmSync(base, { recursive: true, force: true }); }
 });

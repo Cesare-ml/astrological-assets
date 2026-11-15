@@ -83,7 +83,10 @@ export function assessPublicRelease(manifest, publication, assetPaths = [], lice
     const key = checkedPath(path);
     if (packPaths.has(key)) issues.push('Case-colliding pack file: ' + path);
     packPaths.add(key);
-    if (!manifestByPath.has(key)) issues.push('Pack file missing from manifest: ' + path);
+    const canonical = manifestByPath.get(key);
+    if (!canonical) issues.push('Pack file missing from manifest: ' + path);
+    else if (path !== canonical.path)
+      issues.push('Pack path differs from canonical manifest spelling: ' + path + ' (expected ' + canonical.path + ')');
   }
   for (const [key, asset] of manifestByPath) {
     if (!packPaths.has(key)) issues.push('Manifest file not present in pack: ' + asset.path);
@@ -112,8 +115,18 @@ export function listPackFiles(root) {
       else throw new Error('Unsupported file in public pack: ' + full);
     }
   }
-  if (lstatSync(root).isSymbolicLink()) throw new Error('Symlink pack root forbidden');
-  visit(root, '');
+  // Resolve the requested root without following any symlink/junction along
+  // its ancestor chain. Checking only the final directory permits aliases.
+  let current = resolve(root);
+  while (true) {
+    const stat = lstatSync(current);
+    if (stat.isSymbolicLink()) throw new Error('Symlink in public pack root path: ' + current);
+    if (!stat.isDirectory()) throw new Error('Non-directory in public pack root path: ' + current);
+    const parent = resolve(current, '..');
+    if (parent === current) break;
+    current = parent;
+  }
+  visit(resolve(root), '');
   return result.sort();
 }
 

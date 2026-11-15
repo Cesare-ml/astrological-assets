@@ -31,6 +31,14 @@ npm run check:public-release
 npm run review:public -- --out ./artwork-review.local.json
 ```
 
+The automated suite also includes `tests/public-release-cli.test.mjs`: it runs
+the **actual CLI** with disposable synthetic files, checking the expected
+`0` (synthetic metadata complete), `2` (public approvals missing,
+unexpected files) and `1` (tampered bytes, invalid pinned policy, unsafe
+pack roots) exit paths. Its fixture-based `approved` records exist only
+inside temporary test directories and **are not legal evidence** or real
+permission to publish any VirgoStars artwork.
+
 The last command returns **exit code 2** when any image is missing explicit public approval, a record is inconsistent, or the current pack includes an unlisted binary; it returns **exit code 0** only if the *current pack* meets the recorded metadata checks. The script does **not** authenticate legal ownership, discover unknown third-party rights, or scan historical Git objects. This is a technical guardrail, **not legal certification**.
 
 ### Public authorization record format (illustrative only)
@@ -55,6 +63,18 @@ This is an example of the *shape* of a future, independently documented approval
   ]
 }
 ```
+
+The public-release preflight also requires each **physical pack filename** to match the exact
+manifest spelling, including case and Unicode normalization. A case-insensitive
+match alone is not sufficient: an alias that works on one Windows checkout may
+produce a missing `/assets/img/...` URL on a case-sensitive server or offline
+device. Keep canonical paths unchanged rather than silently renaming files.
+The pack enumeration also rejects symlink/junction roots, symlinked ancestor
+directories and any symbolic links nested within the pack. This prevents an
+indirect path alias from bypassing the physical-pack inventory. Run the check
+from a trusted checkout: these checks are not atomic against an adversary
+concurrently swapping directories. This safeguard is separate from SHA-256
+verification and does not establish legal rights.
 
 The approval must match the owner's selected license and the pinned manifest in `catalog/artwork-license-decision.json`. The path and SHA-256 must match the corresponding record in `manifests/approved-assets.json`. All non-empty legal fields require a **real human decision**. Do not include contract scans, personal contact information or secrets in Git history.
 
