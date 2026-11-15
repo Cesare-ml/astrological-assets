@@ -9,8 +9,13 @@ const defaultCatalog=resolve(fileURLToPath(new URL('../catalog/upstream-candidat
 
 export function auditCatalog(catalog) {
   if(!catalog || catalog.schemaVersion!==1 || !Array.isArray(catalog.files) ||
-     catalog.source?.assetRoot!=='public/assets')
-    throw new Error('Invalid upstream catalog schema');
+     catalog.files.length===0 || !Number.isSafeInteger(catalog.fileCount) ||
+     catalog.fileCount!==catalog.files.length ||
+     catalog.source?.repository!=='Cesare-ml/virgo-stars' ||
+     catalog.source?.assetRoot!=='public/assets' ||
+     !/^[a-f0-9]{40}$/.test(catalog.source?.commit || '') ||
+     catalog.rightsStatus!=='unreviewed')
+    throw new Error('Invalid upstream catalog schema, provenance or rights status');
   const paths=new Set(), folded=new Map(), blobs=new Set();
   const groups={}, warnings=[];
   let totalBytes=0,legacyCount=0;
@@ -18,6 +23,7 @@ export function auditCatalog(catalog) {
     validateAssetPath(file.path);
     if(!Number.isSafeInteger(file.bytes)||file.bytes<0||!/^[a-f0-9]{40}$/.test(file.gitBlobSha))
       throw new Error('Invalid source blob record: '+file.path);
+    if(typeof file.legacy!=='boolean') throw new Error('Invalid legacy marker: '+file.path);
     if(paths.has(file.path)) throw new Error('Repeated asset path: '+file.path);
     paths.add(file.path);
     const foldedPath=file.path.normalize('NFC').toLowerCase();
@@ -25,15 +31,14 @@ export function auditCatalog(catalog) {
     folded.set(foldedPath,file.path);
     blobs.add(file.gitBlobSha);
     totalBytes+=file.bytes;
+    if(!Number.isSafeInteger(totalBytes)) throw new Error('Catalog byte total exceeds safe integer range');
     if(file.legacy) legacyCount++;
     const family=file.path.startsWith('img/risuonatore-solare')?'img/risuonatore-solare':
       file.path.split('/').slice(0,2).join('/');
     groups[family]=(groups[family]||0)+1;
   }
-  if(catalog.fileCount!==catalog.files.length) throw new Error('Catalog fileCount inconsistent');
   if(!paths.has('img/risuonatore-solare-bianco.png') && paths.has('img/risuonatore-solare-bn.png'))
     warnings.push('Some skins refer to risuonatore-solare-bianco.png; only risuonatore-solare-bn.png appears in candidate snapshot');
-  if(catalog.rightsStatus!=='unreviewed') warnings.push('Catalog candidate metadata is not a license; review each asset or family');
   return {
     sourceCommit:catalog.source.commit,
     fileCount:paths.size,
